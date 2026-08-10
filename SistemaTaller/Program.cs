@@ -1,4 +1,4 @@
-using Datos.Context;
+ï»¿using Datos.Context;
 using Datos.Interfaces;
 using Datos.Models;
 using Datos.Repositories;
@@ -37,139 +37,65 @@ builder.Services
 // REPOSITORIES - DATOS
 // =====================================================
 
-// Clientes
-builder.Services.AddScoped<
-    IClienteRepository,
-    ClienteRepository>();
+// MÃ³dulos principales
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IVehiculoRepository, VehiculoRepository>();
+builder.Services.AddScoped<IRecepcionRepository, RecepcionRepository>();
+builder.Services.AddScoped<IDiagnosticoRepository, DiagnosticoRepository>();
+builder.Services.AddScoped<ICotizacionRepository, CotizacionRepository>();
+builder.Services.AddScoped<IOrdenTrabajoRepository, OrdenTrabajoRepository>();
+builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
+builder.Services.AddScoped<IServicioRepository, ServicioRepository>();
 
-// Vehículos
-builder.Services.AddScoped<
-    IVehiculoRepository,
-    VehiculoRepository>();
+// Inventario y compras
+builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
+builder.Services.AddScoped<IMovimientoInventarioRepository, MovimientoInventarioRepository>();
+builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
+builder.Services.AddScoped<ICompraRepository, CompraRepository>();
 
-// Empleados
-builder.Services.AddScoped<
-    IEmpleadoRepository,
-    EmpleadoRepository>();
-
-// Servicios
-builder.Services.AddScoped<
-    IServicioRepository,
-    ServicioRepository>();
-
-// Productos
-builder.Services.AddScoped<
-    IProductoRepository,
-    ProductoRepository>();
-
-// Proveedores
-builder.Services.AddScoped<
-    IProveedorRepository,
-    ProveedorRepository>();
-
-// Recepciones
-builder.Services.AddScoped<
-    IRecepcionRepository,
-    RecepcionRepository>();
-
-// Diagnósticos
-builder.Services.AddScoped<
-    IDiagnosticoRepository,
-    DiagnosticoRepository>();
-
-// Cotizaciones
-builder.Services.AddScoped<
-    ICotizacionRepository,
-    CotizacionRepository>();
-
-// Órdenes de trabajo
-builder.Services.AddScoped<
-    IOrdenTrabajoRepository,
-    OrdenTrabajoRepository>();
-
-// Movimientos de inventario
-builder.Services.AddScoped<
-    IMovimientoInventarioRepository,
-    MovimientoInventarioRepository>();
-
-// Compras
-builder.Services.AddScoped<
-    ICompraRepository,
-    CompraRepository>();
+// CatÃ¡logos
+builder.Services.AddScoped<ICategoriaProductoRepository, CategoriaProductoRepository>();
+builder.Services.AddScoped<IMarcaRepository, MarcaRepository>();
+builder.Services.AddScoped<IModeloRepository, ModeloRepository>();
+builder.Services.AddScoped<ITipoVehiculoRepository, TipoVehiculoRepository>();
+builder.Services.AddScoped<ITipoCombustibleRepository, TipoCombustibleRepository>();
+builder.Services.AddScoped<IPuestoRepository, PuestoRepository>();
+builder.Services.AddScoped<IEspecialidadRepository, EspecialidadRepository>();
 
 // =====================================================
 // SERVICES - NEGOCIOS
 // =====================================================
 
-// Clientes
-builder.Services.AddScoped<
-    IClienteService,
-    ClienteService>();
+// MÃ³dulos principales
+builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<IVehiculoService, VehiculoService>();
+builder.Services.AddScoped<IRecepcionService, RecepcionService>();
+builder.Services.AddScoped<IDiagnosticoService, DiagnosticoService>();
+builder.Services.AddScoped<ICotizacionService, CotizacionService>();
+builder.Services.AddScoped<IOrdenTrabajoService, OrdenTrabajoService>();
+builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
+builder.Services.AddScoped<IServicioService, ServicioService>();
 
-// Vehículos
-builder.Services.AddScoped<
-    IVehiculoService,
-    VehiculoService>();
+// Inventario y compras
+builder.Services.AddScoped<IProductoService, ProductoService>();
+builder.Services.AddScoped<IMovimientoInventarioService, MovimientoInventarioService>();
+builder.Services.AddScoped<IProveedorService, ProveedorService>();
+builder.Services.AddScoped<ICompraService, CompraService>();
 
-// Empleados
-builder.Services.AddScoped<
-    IEmpleadoService,
-    EmpleadoService>();
-
-// Servicios
-builder.Services.AddScoped<
-    IServicioService,
-    ServicioService>();
-
-// Productos
-builder.Services.AddScoped<
-    IProductoService,
-    ProductoService>();
-
-// Proveedores
-builder.Services.AddScoped<
-    IProveedorService,
-    ProveedorService>();
-
-// Recepciones
-builder.Services.AddScoped<
-    IRecepcionService,
-    RecepcionService>();
-
-// Diagnósticos
-builder.Services.AddScoped<
-    IDiagnosticoService,
-    DiagnosticoService>();
-
-// Cotizaciones
-builder.Services.AddScoped<
-    ICotizacionService,
-    CotizacionService>();
-
-// Órdenes de trabajo
-builder.Services.AddScoped<
-    IOrdenTrabajoService,
-    OrdenTrabajoService>();
-
-// Movimientos de inventario
-builder.Services.AddScoped<
-    IMovimientoInventarioService,
-    MovimientoInventarioService>();
-
-// Compras
-builder.Services.AddScoped<
-    ICompraService,
-    CompraService>();
+// CatÃ¡logos
+builder.Services.AddScoped<ICategoriaProductoService, CategoriaProductoService>();
+builder.Services.AddScoped<IMarcaService, MarcaService>();
+builder.Services.AddScoped<IModeloService, ModeloService>();
+builder.Services.AddScoped<ITipoVehiculoService, TipoVehiculoService>();
+builder.Services.AddScoped<ITipoCombustibleService, TipoCombustibleService>();
+builder.Services.AddScoped<IPuestoService, PuestoService>();
+builder.Services.AddScoped<IEspecialidadService, EspecialidadService>();
 
 // =====================================================
 // MVC
 // =====================================================
 
 builder.Services.AddControllersWithViews();
-
-// =====================================================
-// CONSTRUCCIÓN DE LA APLICACIÓN
-// =====================================================
 
 var app = builder.Build();
 
@@ -190,7 +116,6 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 // =====================================================
