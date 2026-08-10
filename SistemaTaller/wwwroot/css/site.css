@@ -146,6 +146,658 @@ body {
         padding: 0 20px;
     }
 }
+/* =========================================================
+   AXIS APP SHELL
+   ========================================================= */
+
+:root {
+    --axis-bg: #eeece3;
+    --axis-sidebar: #202123;
+    --axis-sidebar-light: #292a2c;
+    --axis-paper: #f1efe6;
+    --axis-white: #ffffff;
+    --axis-text: #252525;
+    --axis-muted-dark: #77766f;
+    --axis-muted-light: #a7a59d;
+    --axis-border: rgba(255, 255, 255, 0.12);
+    --axis-border-light: rgba(255, 255, 255, 0.65);
+    --axis-glow: 0 0 8px rgba(255, 255, 255, 0.25), 0 0 22px rgba(255, 255, 255, 0.08);
+    --axis-transition: 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    background: var(--axis-bg);
+    color: var(--axis-text);
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+
+/* =========================================================
+   APP
+   ========================================================= */
+
+.axis-app {
+    min-height: 100vh;
+    display: flex;
+    background: var(--axis-bg);
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.axis-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 276px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient( 180deg, #1d1e20 0%, #222325 100% );
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 10px 0 35px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    transition: width var(--axis-transition);
+}
+
+
+/* =========================================================
+   SIDEBAR BRAND
+   ========================================================= */
+
+.axis-sidebar-brand {
+    position: relative;
+    min-height: 108px;
+    display: flex;
+    align-items: center;
+    padding: 24px 24px 20px;
+}
+
+
+.axis-logo {
+    display: flex;
+    flex-direction: column;
+    color: var(--axis-paper);
+    text-decoration: none;
+    line-height: 1;
+}
+
+
+.axis-logo-name {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    text-shadow: 0 0 10px rgba(255,255,255,.18);
+}
+
+
+.axis-logo-subtitle {
+    margin-top: 6px;
+    color: rgba(241,239,230,.58);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+}
+
+
+/* =========================================================
+   SIDEBAR TOGGLE
+   ========================================================= */
+
+.axis-sidebar-toggle {
+    position: absolute;
+    right: -17px;
+    top: 28px;
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: #252629;
+    color: var(--axis-paper);
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 4px 15px rgba(0,0,0,.25);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+
+    .axis-sidebar-toggle:hover {
+        box-shadow: 0 0 0 1px rgba(255,255,255,.5), var(--axis-glow);
+    }
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.axis-navigation {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 4px 18px 18px;
+}
+
+
+    .axis-navigation::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .axis-navigation::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,.15);
+        border-radius: 10px;
+    }
+
+
+.axis-nav-section {
+    margin-bottom: 20px;
+}
+
+
+.axis-nav-section-title {
+    display: block;
+    padding: 0 14px 8px;
+    color: rgba(241,239,230,.40);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.8px;
+}
+
+
+/* =========================================================
+   NAV ITEM
+   ========================================================= */
+
+.axis-nav-item {
+    position: relative;
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 3px;
+    padding: 0 13px;
+    color: rgba(241,239,230,.82);
+    border: 1px solid transparent;
+    border-radius: 11px;
+    text-decoration: none;
+    font-size: 13px;
+    transition: color .25s ease, background .25s ease, border .25s ease, box-shadow .25s ease;
+}
+
+
+    .axis-nav-item:hover {
+        color: var(--axis-white);
+        background: rgba(255,255,255,.055);
+        border-color: rgba(255,255,255,.14);
+    }
+
+
+    .axis-nav-item.active {
+        color: var(--axis-white);
+        background: linear-gradient( 90deg, rgba(255,255,255,.12), rgba(255,255,255,.04) );
+        border-color: rgba(255,255,255,.65);
+        box-shadow: 0 0 10px rgba(255,255,255,.12), inset 0 0 12px rgba(255,255,255,.035);
+    }
+
+
+        .axis-nav-item.active::before {
+            content: "";
+            position: absolute;
+            left: -1px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 0 8px rgba(255,255,255,.9);
+        }
+
+
+/* =========================================================
+   NAV ICON
+   ========================================================= */
+
+.axis-nav-icon {
+    width: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(241,239,230,.68);
+    font-size: 16px;
+}
+
+
+.axis-nav-text {
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   SIDEBAR USER
+   ========================================================= */
+
+.axis-sidebar-user {
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin: 0 17px 18px;
+    padding: 11px;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 14px;
+    background: rgba(255,255,255,.035);
+    box-shadow: 0 0 12px rgba(255,255,255,.04);
+}
+
+
+.axis-user-avatar,
+.axis-topbar-avatar {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient( 145deg, #55565a, #252629 );
+    border: 1px solid rgba(255,255,255,.55);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+.axis-user-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+
+    .axis-user-info strong {
+        overflow: hidden;
+        color: var(--axis-paper);
+        font-size: 11px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+
+    .axis-user-info span {
+        margin-top: 4px;
+        color: rgba(241,239,230,.48);
+        font-size: 9px;
+    }
+
+
+.axis-user-menu {
+    border: 0;
+    background: transparent;
+    color: rgba(241,239,230,.65);
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.axis-content {
+    width: calc(100% - 276px);
+    min-height: 100vh;
+    margin-left: 276px;
+    transition: margin-left var(--axis-transition), width var(--axis-transition);
+}
+
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.axis-topbar {
+    height: 78px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    padding: 0 34px;
+    background: rgba(238,236,227,.92);
+    border-bottom: 1px solid rgba(35,35,35,.07);
+    backdrop-filter: blur(18px);
+    position: sticky;
+    top: 0;
+    z-index: 900;
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.axis-search {
+    width: min(430px, 42vw);
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 13px;
+    background: rgba(255,255,255,.45);
+    border: 1px solid rgba(40,40,40,.08);
+    border-radius: 13px;
+    transition: border .25s ease, box-shadow .25s ease;
+}
+
+
+    .axis-search:focus-within {
+        border-color: rgba(40,40,40,.22);
+        box-shadow: 0 0 0 4px rgba(0,0,0,.035);
+    }
+
+
+.axis-search-icon {
+    color: #77756e;
+    font-size: 18px;
+}
+
+
+.axis-search input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #333;
+    font-size: 12px;
+}
+
+
+    .axis-search input::placeholder {
+        color: #99978f;
+    }
+
+
+.axis-search-shortcut {
+    padding: 3px 7px;
+    border-radius: 6px;
+    background: rgba(0,0,0,.06);
+    color: #8c8981;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   TOPBAR ACTIONS
+   ========================================================= */
+
+.axis-topbar-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+
+.axis-topbar-button {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(0,0,0,.07);
+    border-radius: 50%;
+    background: rgba(255,255,255,.45);
+    color: #45443f;
+    font-size: 17px;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+
+    .axis-topbar-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    }
+
+
+.axis-notification-count {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 17px;
+    height: 17px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #4b4a47;
+    color: white;
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   TOPBAR USER
+   ========================================================= */
+
+.axis-topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 6px;
+}
+
+
+.axis-topbar-avatar {
+    width: 38px;
+    height: 38px;
+}
+
+
+.axis-topbar-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+
+    .axis-topbar-user-info strong {
+        color: #272622;
+        font-size: 12px;
+    }
+
+
+    .axis-topbar-user-info span {
+        margin-top: 3px;
+        color: #8b8982;
+        font-size: 10px;
+    }
+
+
+.axis-user-chevron {
+    margin-left: 5px;
+    color: #77756f;
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   MOBILE MENU
+   ========================================================= */
+
+.axis-mobile-menu {
+    display: none;
+    border: 0;
+    background: transparent;
+    color: #333;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.axis-main {
+    min-height: calc(100vh - 78px);
+    padding: 34px;
+}
+
+
+/* =========================================================
+   SIDEBAR COLLAPSED
+   ========================================================= */
+
+.axis-app.axis-sidebar-collapsed
+.axis-sidebar {
+    width: 82px;
+}
+
+
+.axis-app.axis-sidebar-collapsed
+.axis-content {
+    width: calc(100% - 82px);
+    margin-left: 82px;
+}
+
+
+.axis-app.axis-sidebar-collapsed
+.axis-logo {
+    align-items: center;
+}
+
+
+.axis-app.axis-sidebar-collapsed
+.axis-logo-name {
+    font-size: 17px;
+    letter-spacing: 2px;
+}
+
+
+.axis-app.axis-sidebar-collapsed
+.axis-logo-subtitle {
+    display: none;
+}
+
+
+.axis-app.axis-sidebar-collapsed
+.axis-nav-section-title,
+.axis-app.axis-sidebar-collapsed
+.axis-nav-text,
+.axis-app.axis-sidebar-collapsed
+.axis-user-info,
+.axis-app.axis-sidebar-collapsed
+.axis-user-menu {
+    display: none;
+}
+
+
+.axis-app.axis-sidebar-collapsed
+.axis-nav-item {
+    justify-content: center;
+    padding: 0;
+}
+
+
+.axis-app.axis-sidebar-collapsed
+.axis-sidebar-user {
+    justify-content: center;
+    padding: 8px;
+}
+
+
+.axis-app.axis-sidebar-collapsed
+.axis-sidebar-toggle {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .axis-sidebar {
+        transform: translateX(-100%);
+    }
+
+        .axis-sidebar.axis-mobile-open {
+            transform: translateX(0);
+        }
+
+    .axis-content {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .axis-mobile-menu {
+        display: block;
+    }
+
+    .axis-topbar {
+        padding: 0 22px;
+    }
+
+    .axis-search {
+        width: min(400px, 55vw);
+    }
+
+    .axis-topbar-user-info {
+        display: none;
+    }
+
+    .axis-main {
+        padding: 25px;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .axis-topbar {
+        gap: 12px;
+        padding: 0 16px;
+    }
+
+    .axis-search {
+        flex: 1;
+        width: auto;
+    }
+
+    .axis-search-shortcut {
+        display: none;
+    }
+
+    .axis-topbar-button {
+        width: 36px;
+        height: 36px;
+    }
+
+    .axis-topbar-user {
+        display: none;
+    }
+
+    .axis-main {
+        padding: 18px;
+    }
+}
 
 
 /* =========================================================
@@ -449,5 +1101,894 @@ body {
     .axis-module-info {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   AXIS INTERNAL LAYOUT
+   ========================================================= */
+
+.axis-internal-app {
+    min-height: 100vh;
+    display: flex;
+    background: var(--axis-paper);
+    color: #252525;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.axis-internal-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 276px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient( 180deg, #1c1d1f 0%, #252628 100% );
+    border-right: 1px solid rgba(255,255,255,.10);
+    box-shadow: 8px 0 30px rgba(0,0,0,.18);
+    z-index: 1000;
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.axis-internal-brand {
+    position: relative;
+    min-height: 105px;
+    display: flex;
+    align-items: center;
+    padding: 24px;
+}
+
+
+.axis-internal-logo {
+    display: flex;
+    flex-direction: column;
+    color: var(--axis-paper);
+    text-decoration: none;
+    line-height: 1;
+}
+
+
+.axis-internal-logo-name {
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: 4px;
+}
+
+
+.axis-internal-logo-subtitle {
+    margin-top: 6px;
+    color: rgba(241,239,230,.52);
+    font-size: 8px;
+    letter-spacing: 2px;
+}
+
+
+/* =========================================================
+   COLLAPSE
+   ========================================================= */
+
+.axis-internal-collapse {
+    position: absolute;
+    right: -17px;
+    top: 30px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.35);
+    background: #252629;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 12px rgba(255,255,255,.08);
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.axis-internal-navigation {
+    flex: 1;
+    overflow-y: auto;
+    padding: 5px 18px 20px;
+}
+
+
+.axis-internal-section {
+    margin-bottom: 22px;
+}
+
+
+.axis-internal-section-title {
+    display: block;
+    margin-bottom: 7px;
+    padding: 0 13px;
+    color: rgba(241,239,230,.38);
+    font-size: 9px;
+    letter-spacing: 1.8px;
+}
+
+
+.axis-internal-nav-item {
+    min-height: 39px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 13px;
+    margin-bottom: 3px;
+    color: rgba(241,239,230,.80);
+    border: 1px solid transparent;
+    border-radius: 11px;
+    text-decoration: none;
+    font-size: 13px;
+    transition: .25s ease;
+}
+
+
+    .axis-internal-nav-item:hover {
+        color: white;
+        background: rgba(255,255,255,.055);
+        border-color: rgba(255,255,255,.16);
+    }
+
+
+.axis-internal-nav-icon {
+    width: 20px;
+    display: inline-flex;
+    justify-content: center;
+    color: rgba(241,239,230,.65);
+}
+
+
+/* =========================================================
+   USER
+   ========================================================= */
+
+.axis-internal-user {
+    margin: 0 17px 18px;
+    padding: 11px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 14px;
+    background: rgba(255,255,255,.035);
+}
+
+
+.axis-internal-avatar {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.5);
+    background: #353638;
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+.axis-internal-user-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+
+    .axis-internal-user-info strong {
+        color: var(--axis-paper);
+        font-size: 11px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    .axis-internal-user-info span {
+        margin-top: 3px;
+        color: rgba(241,239,230,.45);
+        font-size: 9px;
+    }
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.axis-internal-content {
+    width: calc(100% - 276px);
+    min-height: 100vh;
+    margin-left: 276px;
+}
+
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.axis-internal-topbar {
+    height: 78px;
+    display: flex;
+    align-items: center;
+    padding: 0 34px;
+    background: rgba(239,237,227,.90);
+    border-bottom: 1px solid rgba(0,0,0,.07);
+    backdrop-filter: blur(16px);
+}
+
+
+.axis-internal-back {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #6f6d66;
+    text-decoration: none;
+    font-size: 12px;
+    transition: .2s ease;
+}
+
+
+    .axis-internal-back:hover {
+        color: #222;
+    }
+
+
+.axis-internal-page-title {
+    margin-left: 35px;
+    color: #272622;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.axis-internal-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+
+.axis-internal-action {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(0,0,0,.07);
+    border-radius: 50%;
+    background: rgba(255,255,255,.45);
+    cursor: pointer;
+}
+
+
+.axis-internal-user-name {
+    color: #65635d;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   INTERNAL MAIN
+   ========================================================= */
+
+.axis-internal-main {
+    min-height: calc(100vh - 78px);
+    padding: 34px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .axis-internal-sidebar {
+        width: 230px;
+    }
+
+    .axis-internal-content {
+        width: calc(100% - 230px);
+        margin-left: 230px;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .axis-internal-sidebar {
+        position: relative;
+        width: 100%;
+        min-height: auto;
+    }
+
+    .axis-internal-app {
+        flex-direction: column;
+    }
+
+    .axis-internal-content {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .axis-internal-topbar {
+        padding: 0 20px;
+    }
+
+    .axis-internal-main {
+        padding: 22px;
+    }
+}
+
+/* =========================================================
+   AXIS INTERNAL PAGES
+   ========================================================= */
+
+.axis-page {
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.axis-page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.axis-page-kicker {
+    display: block;
+    margin-bottom: 9px;
+    color: #89877f;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.2px;
+}
+
+.axis-page-header h1 {
+    margin: 0;
+    color: #252421;
+    font-size: 38px;
+    font-weight: 650;
+    letter-spacing: -1.5px;
+}
+
+.axis-page-header p {
+    margin: 9px 0 0;
+    color: #85827a;
+    font-size: 13px;
+}
+
+.axis-page-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.axis-button {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 17px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 12px;
+    cursor: pointer;
+    transition: .25s ease;
+}
+
+.axis-button-primary {
+    background: #252525;
+    border: 1px solid #252525;
+    color: #f5f2e9;
+    box-shadow: 0 5px 15px rgba(0,0,0,.12);
+}
+
+    .axis-button-primary:hover {
+        background: #111;
+        transform: translateY(-1px);
+    }
+
+.axis-button-secondary {
+    background: rgba(255,255,255,.45);
+    border: 1px solid rgba(0,0,0,.10);
+    color: #4c4a45;
+}
+
+    .axis-button-secondary:hover {
+        border-color: rgba(0,0,0,.22);
+    }
+
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.axis-alert {
+    padding: 13px 16px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.axis-alert-success {
+    background: rgba(80,120,80,.10);
+    border: 1px solid rgba(80,120,80,.20);
+    color: #496349;
+}
+
+.axis-alert-error {
+    background: rgba(160,70,70,.10);
+    border: 1px solid rgba(160,70,70,.20);
+    color: #874848;
+}
+
+
+/* =========================================================
+   TOOLBAR
+   ========================================================= */
+
+.axis-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 14px;
+}
+
+.axis-table-search {
+    width: 380px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 0 8px 0 13px;
+    background: rgba(255,255,255,.52);
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 11px;
+}
+
+    .axis-table-search span {
+        color: #85827a;
+    }
+
+    .axis-table-search input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: #292824;
+        font-size: 12px;
+    }
+
+    .axis-table-search button {
+        height: 30px;
+        padding: 0 11px;
+        border: 0;
+        border-radius: 7px;
+        background: #292927;
+        color: #f3f0e7;
+        font-size: 11px;
+        cursor: pointer;
+    }
+
+.axis-record-count {
+    color: #88857d;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.axis-table-card {
+    overflow: hidden;
+    background: rgba(255,255,255,.48);
+    border: 1px solid rgba(0,0,0,.09);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.045);
+}
+
+.axis-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.axis-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .axis-table th {
+        padding: 15px 18px;
+        background: rgba(0,0,0,.025);
+        border-bottom: 1px solid rgba(0,0,0,.08);
+        color: #85827a;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        text-align: left;
+        text-transform: uppercase;
+    }
+
+    .axis-table td {
+        padding: 16px 18px;
+        border-bottom: 1px solid rgba(0,0,0,.055);
+        color: #68665f;
+        font-size: 12px;
+    }
+
+    .axis-table tbody tr {
+        transition: background .2s ease;
+    }
+
+        .axis-table tbody tr:hover {
+            background: rgba(255,255,255,.45);
+        }
+
+        .axis-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+.axis-primary-text {
+    color: #292824;
+}
+
+.axis-client-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.axis-client-avatar {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #292927;
+    color: #f1eee5;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.axis-client-cell strong {
+    color: #34322e;
+    font-size: 12px;
+}
+
+.axis-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.axis-status-active {
+    background: rgba(76,120,76,.12);
+    color: #507050;
+}
+
+.axis-status-inactive {
+    background: rgba(100,100,100,.10);
+    color: #77756e;
+}
+
+.axis-table-actions-column {
+    width: 210px;
+}
+
+.axis-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.axis-row-action {
+    padding: 6px 9px;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 7px;
+    background: rgba(255,255,255,.35);
+    color: #5b5953;
+    font-size: 10px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    .axis-row-action:hover {
+        border-color: rgba(0,0,0,.20);
+        color: #222;
+    }
+
+.axis-row-danger:hover {
+    color: #9a4e4e;
+    border-color: rgba(150,70,70,.25);
+}
+
+.axis-empty {
+    padding: 50px 20px !important;
+    color: #99968e !important;
+    text-align: center;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .axis-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .axis-page-actions {
+        width: 100%;
+    }
+
+    .axis-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .axis-table-search {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   AXIS FORMS
+   ========================================================= */
+
+.axis-form-card {
+    max-width: 1050px;
+    background: rgba(255,255,255,.48);
+    border: 1px solid rgba(0,0,0,.09);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.045);
+    overflow: hidden;
+}
+
+.axis-form {
+    padding: 30px;
+}
+
+.axis-form-section {
+    padding-bottom: 28px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid rgba(0,0,0,.07);
+}
+
+    .axis-form-section:last-of-type {
+        margin-bottom: 0;
+        border-bottom: 0;
+    }
+
+.axis-form-section-title {
+    margin-bottom: 20px;
+    color: #34322e;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.axis-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 19px;
+}
+
+.axis-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.axis-field-full {
+    grid-column: 1 / -1;
+}
+
+.axis-field label {
+    color: #66635c;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.axis-field input,
+.axis-field textarea,
+.axis-field select {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid rgba(0,0,0,.10);
+    border-radius: 9px;
+    outline: none;
+    background: rgba(255,255,255,.62);
+    color: #292824;
+    font-family: inherit;
+    font-size: 12px;
+    transition: .2s ease;
+}
+
+.axis-field input {
+    height: 42px;
+}
+
+.axis-field textarea {
+    resize: vertical;
+    min-height: 85px;
+}
+
+    .axis-field input:focus,
+    .axis-field textarea:focus,
+    .axis-field select:focus {
+        border-color: rgba(40,40,40,.45);
+        background: rgba(255,255,255,.82);
+        box-shadow: 0 0 0 3px rgba(40,40,40,.045);
+    }
+
+.axis-field span.field-validation-error {
+    color: #9a4e4e;
+    font-size: 10px;
+}
+
+.axis-form-validation {
+    margin-bottom: 20px;
+    color: #9a4e4e;
+    font-size: 11px;
+}
+
+.axis-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 4px;
+}
+
+
+/* =========================================================
+   AXIS DETAILS
+   ========================================================= */
+
+.axis-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.axis-detail-card {
+    padding: 26px;
+    background: rgba(255,255,255,.48);
+    border: 1px solid rgba(0,0,0,.09);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.04);
+}
+
+    .axis-detail-card:first-child {
+        grid-column: 1 / -1;
+    }
+
+.axis-detail-card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.axis-detail-avatar {
+    width: 62px;
+    height: 62px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #292927;
+    color: #f1eee5;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.axis-detail-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #89867e;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+}
+
+.axis-detail-card h2 {
+    margin: 0;
+    color: #292824;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.axis-detail-status {
+    margin-top: 20px;
+}
+
+.axis-detail-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.axis-detail-row {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid rgba(0,0,0,.055);
+}
+
+    .axis-detail-row:last-child {
+        border-bottom: 0;
+    }
+
+    .axis-detail-row span {
+        color: #88857d;
+        font-size: 11px;
+    }
+
+    .axis-detail-row strong {
+        max-width: 65%;
+        color: #35332f;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: right;
+    }
+
+.axis-detail-active-text {
+    color: #507050 !important;
+}
+
+
+/* =========================================================
+   FORM / DETAIL RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 750px) {
+
+    .axis-form-grid,
+    .axis-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .axis-field-full {
+        grid-column: auto;
+    }
+
+    .axis-detail-card:first-child {
+        grid-column: auto;
+    }
+
+    .axis-form {
+        padding: 20px;
+    }
+
+    .axis-detail-card {
+        padding: 20px;
     }
 }

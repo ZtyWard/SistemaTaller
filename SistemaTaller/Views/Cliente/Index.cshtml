@@ -1,0 +1,272 @@
+﻿@model IEnumerable<Negocios.DTOs.ClienteDto>
+
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = "Clientes";
+}
+
+<section class="axis-page">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-page-kicker">
+                CLIENTES Y VEHÍCULOS
+            </span>
+
+            <h1>
+                Clientes
+            </h1>
+
+            <p>
+                Gestiona los clientes registrados en el taller.
+            </p>
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Activos"
+               class="axis-button axis-button-secondary">
+
+                Activos
+
+            </a>
+
+            <a asp-action="Create"
+               class="axis-button axis-button-primary">
+
+                <span>+</span>
+                Nuevo cliente
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MENSAJES
+         ===================================================== -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="axis-alert axis-alert-error">
+            @TempData["Error"]
+        </div>
+    }
+
+
+    <!-- =====================================================
+         BUSCAR
+         ===================================================== -->
+
+    <div class="axis-toolbar">
+
+        <form asp-action="BuscarPorCedula"
+              method="get"
+              class="axis-table-search">
+
+            <span>⌕</span>
+
+            <input type="text"
+                   name="cedula"
+                   placeholder="Buscar por cédula..." />
+
+            <button type="submit">
+                Buscar
+            </button>
+
+        </form>
+
+        <span class="axis-record-count">
+
+            @Model.Count() clientes
+
+        </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         TABLA
+         ===================================================== -->
+
+    <div class="axis-table-card">
+
+        <div class="axis-table-wrapper">
+
+            <table class="axis-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Cédula
+                        </th>
+
+                        <th>
+                            Cliente
+                        </th>
+
+                        <th>
+                            Teléfono
+                        </th>
+
+                        <th>
+                            Correo
+                        </th>
+
+                        <th>
+                            Estado
+                        </th>
+
+                        <th class="axis-table-actions-column">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+
+                            <td colspan="6"
+                                class="axis-empty">
+
+                                No hay clientes registrados.
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var cliente in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <strong class="axis-primary-text">
+                                        @cliente.Cedula
+                                    </strong>
+                                </td>
+
+                                <td>
+
+                                    <div class="axis-client-cell">
+
+                                        <div class="axis-client-avatar">
+                                            @cliente.Nombre
+                                            .Substring(0, 1)
+                                            .ToUpper()
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                @cliente.Nombre
+                                                @cliente.Apellido1
+                                                @cliente.Apellido2
+                                            </strong>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+                                <td>
+                                    @cliente.Telefono
+                                </td>
+
+                                <td>
+                                    @cliente.Correo
+                                </td>
+
+                                <td>
+
+                                    @if (cliente.Activo)
+                                    {
+                                        <span class="axis-status axis-status-active">
+                                            Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-status axis-status-inactive">
+                                            Inactivo
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+
+                                    <div class="axis-row-actions">
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@cliente.IdCliente"
+                                           class="axis-row-action"
+                                           title="Ver detalles">
+                                            Ver
+                                        </a>
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@cliente.IdCliente"
+                                           class="axis-row-action"
+                                           title="Editar">
+                                            Editar
+                                        </a>
+
+                                        @if (cliente.Activo)
+                                        {
+                                            <form asp-action="Desactivar"
+                                                  asp-route-id="@cliente.IdCliente"
+                                                  method="post"
+                                                  style="display:inline">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="axis-row-action axis-row-danger">
+
+                                                    Desactivar
+
+                                                </button>
+
+                                            </form>
+                                        }
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

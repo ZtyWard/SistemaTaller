@@ -1,0 +1,240 @@
+﻿@model Negocios.DTOs.VehiculoGuardarDto
+
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = "Nuevo vehículo";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                CLIENTES Y VEHÍCULOS
+            </span>
+
+            <h1>
+                Nuevo vehículo
+            </h1>
+
+            <p>
+                Registra un vehículo en el sistema.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-form-card">
+
+        <form asp-action="Create"
+              method="post"
+              class="axis-form">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-form-validation">
+            </div>
+
+
+            <!-- =================================================
+                 RELACIONES
+                 ================================================= -->
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Clasificación
+                </div>
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdCliente">
+                            Cliente
+                        </label>
+
+                        <input asp-for="IdCliente"
+                               type="number"
+                               placeholder="ID del cliente" />
+
+                        <span asp-validation-for="IdCliente"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdMarca">
+                            Marca
+                        </label>
+
+                        <input asp-for="IdMarca"
+                               type="number"
+                               placeholder="ID de la marca" />
+
+                        <span asp-validation-for="IdMarca"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdModelo">
+                            Modelo
+                        </label>
+
+                        <input asp-for="IdModelo"
+                               type="number"
+                               placeholder="ID del modelo" />
+
+                        <span asp-validation-for="IdModelo"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdTipoVehiculo">
+                            Tipo de vehículo
+                        </label>
+
+                        <input asp-for="IdTipoVehiculo"
+                               type="number"
+                               placeholder="ID del tipo de vehículo" />
+
+                        <span asp-validation-for="IdTipoVehiculo"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdTipoCombustible">
+                            Combustible
+                        </label>
+
+                        <input asp-for="IdTipoCombustible"
+                               type="number"
+                               placeholder="ID del combustible" />
+
+                        <span asp-validation-for="IdTipoCombustible"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 DATOS DEL VEHÍCULO
+                 ================================================= -->
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Información del vehículo
+                </div>
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field">
+
+                        <label asp-for="Placa">
+                            Placa
+                        </label>
+
+                        <input asp-for="Placa"
+                               placeholder="Ej. ABC123" />
+
+                        <span asp-validation-for="Placa"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Anio">
+                            Año
+                        </label>
+
+                        <input asp-for="Anio"
+                               type="number"
+                               placeholder="Ej. 2022" />
+
+                        <span asp-validation-for="Anio"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Color">
+                            Color
+                        </label>
+
+                        <input asp-for="Color"
+                               placeholder="Color del vehículo" />
+
+                        <span asp-validation-for="Color"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Kilometraje">
+                            Kilometraje
+                        </label>
+
+                        <input asp-for="Kilometraje"
+                               type="number"
+                               placeholder="Ej. 85000" />
+
+                        <span asp-validation-for="Kilometraje"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-form-actions">
+
+                <a asp-action="Index"
+                   class="axis-button axis-button-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                        class="axis-button axis-button-primary">
+                    Guardar vehículo
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

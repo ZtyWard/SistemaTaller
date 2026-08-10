@@ -1,0 +1,334 @@
+﻿@model IEnumerable<Negocios.DTOs.VehiculoDto>
+
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = "Vehículos";
+}
+
+<section class="axis-page">
+
+    <!-- HEADER -->
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                CLIENTES Y VEHÍCULOS
+            </span>
+
+            <h1>
+                Vehículos
+            </h1>
+
+            <p>
+                Registro y control de los vehículos del taller.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Activos"
+               class="axis-button axis-button-secondary">
+                Activos
+            </a>
+
+            <a asp-action="Create"
+               class="axis-button axis-button-primary">
+                <span>+</span>
+                Nuevo vehículo
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- MENSAJES -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="axis-alert axis-alert-error">
+            @TempData["Error"]
+        </div>
+    }
+
+
+    <!-- BUSCADOR -->
+
+    <div class="axis-toolbar">
+
+        <form asp-action="BuscarPorPlaca"
+              method="get"
+              class="axis-table-search">
+
+            <span>⌕</span>
+
+            <input type="text"
+                   name="placa"
+                   placeholder="Buscar por placa..." />
+
+            <button type="submit">
+                Buscar
+            </button>
+
+        </form>
+
+        <span class="axis-record-count">
+            @Model.Count() vehículos
+        </span>
+
+    </div>
+
+
+    <!-- TABLA -->
+
+    <div class="axis-table-card">
+
+        <div class="axis-table-wrapper">
+
+            <table class="axis-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Placa
+                        </th>
+
+                        <th>
+                            Vehículo
+                        </th>
+
+                        <th>
+                            Cliente
+                        </th>
+
+                        <th>
+                            Tipo
+                        </th>
+
+                        <th>
+                            Año
+                        </th>
+
+                        <th>
+                            Kilometraje
+                        </th>
+
+                        <th>
+                            Estado
+                        </th>
+
+                        <th class="axis-table-actions-column">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+
+                            <td colspan="8"
+                                class="axis-empty">
+
+                                No hay vehículos registrados.
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var vehiculo in Model)
+                        {
+                            <tr>
+
+                                <!-- PLACA -->
+
+                                <td>
+
+                                    <strong class="axis-primary-text">
+                                        @vehiculo.Placa
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- VEHÍCULO -->
+
+                                <td>
+
+                                    <div class="axis-client-cell">
+
+                                        <div class="axis-client-avatar">
+
+                                            @(string.IsNullOrWhiteSpace(
+                                                                                vehiculo.MarcaNombre)
+                                                                                ? "V"
+                                                                                : vehiculo.MarcaNombre
+                                                                                .Substring(0, 1)
+                                                                                .ToUpper())
+
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                @vehiculo.MarcaNombre
+                                                @vehiculo.ModeloNombre
+                                            </strong>
+
+                                            <small class="axis-table-secondary-text">
+
+                                                @(string.IsNullOrWhiteSpace(
+                                                                                        vehiculo.Color)
+                                                                                        ? "Sin color registrado"
+                                                                                        : vehiculo.Color)
+
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- CLIENTE -->
+
+                                <td>
+
+                                    <span class="axis-primary-text">
+                                        @vehiculo.ClienteNombre
+                                    </span>
+
+                                </td>
+
+
+                                <!-- TIPO -->
+
+                                <td>
+
+                                    <span class="axis-table-secondary-text">
+                                        @vehiculo.TipoVehiculoNombre
+                                    </span>
+
+                                </td>
+
+
+                                <!-- AÑO -->
+
+                                <td>
+
+                                    @(vehiculo.Anio?.ToString() ?? "—")
+
+                                </td>
+
+
+                                <!-- KILOMETRAJE -->
+
+                                <td>
+
+                                    @(vehiculo.Kilometraje.HasValue
+                                                                ? vehiculo.Kilometraje.Value
+                                                                .ToString("N0") + " km"
+                                                                : "—")
+
+                        </td>
+
+
+                                <!-- ESTADO -->
+
+                                <td>
+
+                            @if (vehiculo.Activo)
+                                    {
+                                        <span class="axis-status axis-status-active">
+                                            Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-status axis-status-inactive">
+                                            Inactivo
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- ACCIONES -->
+
+                                <td>
+
+                                    <div class="axis-row-actions">
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@vehiculo.IdVehiculo"
+                                           class="axis-row-action">
+
+                                            Ver
+
+                                        </a>
+
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@vehiculo.IdVehiculo"
+                                           class="axis-row-action">
+
+                                            Editar
+
+                                        </a>
+
+
+                                        @if (vehiculo.Activo)
+                                        {
+                                            <form asp-action="Desactivar"
+                                                  asp-route-id="@vehiculo.IdVehiculo"
+                                                  method="post"
+                                                  style="display:inline">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="axis-row-action axis-row-danger">
+
+                                                    Desactivar
+
+                                                </button>
+
+                                            </form>
+                                        }
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

@@ -1,0 +1,266 @@
+﻿@model Negocios.DTOs.ClienteDto
+
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = "Detalle del cliente";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-page-kicker">
+                CLIENTES Y VEHÍCULOS
+            </span>
+
+            <h1>Cliente</h1>
+
+            <p>
+                Información detallada del cliente seleccionado.
+            </p>
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.IdCliente"
+               class="axis-button axis-button-primary">
+                Editar
+            </a>
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-detail-grid">
+
+        <div class="axis-detail-card">
+
+            <div class="axis-detail-card-header">
+
+                <div class="axis-detail-avatar">
+                    @Model.Nombre.Substring(0, 1).ToUpper()
+                </div>
+
+                <div>
+
+                    <span class="axis-detail-label">
+                        CLIENTE
+                    </span>
+
+                    <h2>
+                        @Model.Nombre
+                        @Model.Apellido1
+                        @Model.Apellido2
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-detail-status">
+
+                @if (Model.Activo)
+                {
+                    <span class="axis-status axis-status-active">
+                        Activo
+                    </span>
+                }
+                else
+                {
+                    <span class="axis-status axis-status-inactive">
+                        Inactivo
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                INFORMACIÓN PERSONAL
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Cédula
+                    </span>
+
+                    <strong>
+                        @Model.Cedula
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Nombre
+                    </span>
+
+                    <strong>
+                        @Model.Nombre
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Primer apellido
+                    </span>
+
+                    <strong>
+                        @Model.Apellido1
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Segundo apellido
+                    </span>
+
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Model.Apellido2)
+                                                ? "—"
+                                                : Model.Apellido2)
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                CONTACTO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Teléfono
+                    </span>
+
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Model.Telefono)
+                                                ? "—"
+                                                : Model.Telefono)
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Correo
+                    </span>
+
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Model.Correo)
+                                                ? "—"
+                                                : Model.Correo)
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Dirección
+                    </span>
+
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Model.Direccion)
+                                                ? "—"
+                                                : Model.Direccion)
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                REGISTRO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        ID cliente
+                    </span>
+
+                    <strong>
+                        #@Model.IdCliente
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Fecha de registro
+                    </span>
+
+                    <strong>
+                        @Model.FechaRegistro.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Estado
+                    </span>
+
+                    @if (Model.Activo)
+                    {
+                        <strong class="axis-detail-active-text">
+                            Activo
+                        </strong>
+                    }
+                    else
+                    {
+                        <strong>
+                            Inactivo
+                        </strong>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

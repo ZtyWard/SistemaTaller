@@ -1,0 +1,410 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        @ViewData["Title"] - AXIS
+    </title>
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    @await RenderSectionAsync(
+    "Styles",
+        required: false)
+
+</head>
+
+<body>
+
+    <div class="axis-internal-app">
+
+        <!-- =====================================================
+             SIDEBAR
+             ===================================================== -->
+
+        <aside class="axis-internal-sidebar">
+
+            <div class="axis-internal-brand">
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="axis-internal-logo">
+
+                    <span class="axis-internal-logo-name">
+                        ASPHALT
+                    </span>
+
+                    <span class="axis-internal-logo-subtitle">
+                        TALLER AUTOMOTRIZ
+                    </span>
+
+                </a>
+
+                <button type="button"
+                        class="axis-internal-collapse"
+                        id="axisInternalCollapse">
+
+                    ‹‹
+
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 NAVEGACIÓN
+                 ================================================= -->
+
+            <nav class="axis-internal-navigation">
+
+                <div class="axis-internal-section">
+
+                    <span class="axis-internal-section-title">
+                        TALLER
+                    </span>
+
+                    <a asp-controller="Recepcion"
+                       asp-action="Index"
+                       class="axis-internal-nav-item">
+
+                        <span class="axis-internal-nav-icon">
+                            ◫
+                        </span>
+
+                        <span>
+                            Recepciones
+                        </span>
+
+                    </a>
+
+                    <a asp-controller="Diagnostico"
+                       asp-action="Index"
+                       class="axis-internal-nav-item">
+
+                        <span class="axis-internal-nav-icon">
+                            ⌕
+                        </span>
+
+                        <span>
+                            Diagnósticos
+                        </span>
+
+                    </a>
+
+                    <a asp-controller="Cotizacion"
+                       asp-action="Index"
+                       class="axis-internal-nav-item">
+
+                        <span class="axis-internal-nav-icon">
+                            ▤
+                        </span>
+
+                        <span>
+                            Cotizaciones
+                        </span>
+
+                    </a>
+
+                    <a asp-controller="OrdenTrabajo"
+                       asp-action="Index"
+                       class="axis-internal-nav-item">
+
+                        <span class="axis-internal-nav-icon">
+                            ▣
+                        </span>
+
+                        <span>
+                            Órdenes de trabajo
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+                <div class="axis-internal-section">
+
+                    <span class="axis-internal-section-title">
+                        CLIENTES Y VEHÍCULOS
+                    </span>
+
+                    <a asp-controller="Cliente"
+                       asp-action="Index"
+                       class="axis-internal-nav-item">
+
+                        <span class="axis-internal-nav-icon">
+                            ♙
+                        </span>
+
+                        <span>
+                            Clientes
+                        </span>
+
+                    </a>
+
+                    <a asp-controller="Vehiculo"
+                       asp-action="Index"
+                       class="axis-internal-nav-item">
+
+                        <span class="axis-internal-nav-icon">
+                            ▱
+                        </span>
+
+                        <span>
+                            Vehículos
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+                <div class="axis-internal-section">
+
+                    <span class="axis-internal-section-title">
+                        EMPLEADOS Y SERVICIOS
+                    </span>
+
+                    <a asp-controller="Empleado"
+                       asp-action="Index"
+                       class="axis-internal-nav-item">
+
+                        <span class="axis-internal-nav-icon">
+                            ♙
+                        </span>
+
+                        <span>
+                            Empleados
+                        </span>
+
+                    </a>
+
+                    <a asp-controller="Servicio"
+                       asp-action="Index"
+                       class="axis-internal-nav-item">
+
+                        <span class="axis-internal-nav-icon">
+                            ⌁
+                        </span>
+
+                        <span>
+                            Servicios
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+                <div class="axis-internal-section">
+
+                    <span class="axis-internal-section-title">
+                        INVENTARIO
+                    </span>
+
+                    <a asp-controller="Producto"
+                       asp-action="Index"
+                       class="axis-internal-nav-item">
+
+                        <span class="axis-internal-nav-icon">
+                            ◇
+                        </span>
+
+                        <span>
+                            Productos
+                        </span>
+
+                    </a>
+
+                    <a asp-controller="MovimientoInventario"
+                       asp-action="Index"
+                       class="axis-internal-nav-item">
+
+                        <span class="axis-internal-nav-icon">
+                            ⇄
+                        </span>
+
+                        <span>
+                            Movimientos
+                        </span>
+
+                    </a>
+
+                    <a asp-controller="Proveedor"
+                       asp-action="Index"
+                       class="axis-internal-nav-item">
+
+                        <span class="axis-internal-nav-icon">
+                            ⌂
+                        </span>
+
+                        <span>
+                            Proveedores
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+                <div class="axis-internal-section">
+
+                    <span class="axis-internal-section-title">
+                        COMPRAS Y VENTAS
+                    </span>
+
+                    <a asp-controller="Compra"
+                       asp-action="Index"
+                       class="axis-internal-nav-item">
+
+                        <span class="axis-internal-nav-icon">
+                            ▢
+                        </span>
+
+                        <span>
+                            Compras
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+                <div class="axis-internal-section">
+
+                    <span class="axis-internal-section-title">
+                        CATÁLOGOS
+                    </span>
+
+                    <a asp-controller="CatalogoVehiculo"
+                       asp-action="Marcas"
+                       class="axis-internal-nav-item">
+
+                        <span class="axis-internal-nav-icon">
+                            ⌘
+                        </span>
+
+                        <span>
+                            Catálogos
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </nav>
+
+
+            <!-- =================================================
+                 USUARIO
+                 ================================================= -->
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="axis-internal-user">
+
+                    <div class="axis-internal-avatar">
+
+                        @(User.Identity.Name?
+                                            .Substring(0, 1)
+                                            .ToUpper() ?? "A")
+
+                </div>
+
+                    <div class="axis-internal-user-info">
+
+                        <strong>
+                            @User.Identity.Name
+                        </strong>
+
+                        <span>
+                            Administrador
+                        </span>
+
+                    </div>
+
+                </div>
+                        }
+
+        </aside>
+
+
+        <!-- =====================================================
+             CONTENIDO INTERNO
+             ===================================================== -->
+
+        <div class="axis-internal-content">
+
+            <header class="axis-internal-topbar">
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="axis-internal-back">
+
+                    ←
+                    <span>
+                        Menú principal
+                    </span>
+
+                </a>
+
+
+                <div class="axis-internal-page-title">
+
+                    @ViewData["Title"]
+
+                </div>
+
+
+                <div class="axis-internal-actions">
+
+                    <button type="button"
+                            class="axis-internal-action">
+
+                        ◐
+
+                    </button>
+
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <span class="axis-internal-user-name">
+
+                            @User.Identity.Name
+
+                        </span>
+                    }
+
+                </div>
+
+            </header>
+
+
+            <main class="axis-internal-main">
+
+                @RenderBody()
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <script src="~/js/site.js"
+            asp-append-version="true">
+    </script>
+
+    @await RenderSectionAsync(
+    "Scripts",
+        required: false)
+
+</body>
+
+</html>

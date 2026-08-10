@@ -1,0 +1,234 @@
+﻿@model Negocios.DTOs.VehiculoGuardarDto
+
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = "Editar vehículo";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                CLIENTES Y VEHÍCULOS
+            </span>
+
+            <h1>
+                Editar vehículo
+            </h1>
+
+            <p>
+                Actualiza la información del vehículo.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Details"
+               asp-route-id="@ViewBag.IdVehiculo"
+               class="axis-button axis-button-secondary">
+                Ver vehículo
+            </a>
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-form-card">
+
+        <form asp-action="Edit"
+              asp-route-id="@ViewBag.IdVehiculo"
+              method="post"
+              class="axis-form">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-form-validation">
+            </div>
+
+
+            <!-- CLASIFICACIÓN -->
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Clasificación
+                </div>
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdCliente">
+                            Cliente
+                        </label>
+
+                        <input asp-for="IdCliente"
+                               type="number" />
+
+                        <span asp-validation-for="IdCliente"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdMarca">
+                            Marca
+                        </label>
+
+                        <input asp-for="IdMarca"
+                               type="number" />
+
+                        <span asp-validation-for="IdMarca"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdModelo">
+                            Modelo
+                        </label>
+
+                        <input asp-for="IdModelo"
+                               type="number" />
+
+                        <span asp-validation-for="IdModelo"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdTipoVehiculo">
+                            Tipo de vehículo
+                        </label>
+
+                        <input asp-for="IdTipoVehiculo"
+                               type="number" />
+
+                        <span asp-validation-for="IdTipoVehiculo"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdTipoCombustible">
+                            Combustible
+                        </label>
+
+                        <input asp-for="IdTipoCombustible"
+                               type="number" />
+
+                        <span asp-validation-for="IdTipoCombustible"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- INFORMACIÓN -->
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Información del vehículo
+                </div>
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field">
+
+                        <label asp-for="Placa">
+                            Placa
+                        </label>
+
+                        <input asp-for="Placa" />
+
+                        <span asp-validation-for="Placa"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Anio">
+                            Año
+                        </label>
+
+                        <input asp-for="Anio"
+                               type="number" />
+
+                        <span asp-validation-for="Anio"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Color">
+                            Color
+                        </label>
+
+                        <input asp-for="Color" />
+
+                        <span asp-validation-for="Color"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Kilometraje">
+                            Kilometraje
+                        </label>
+
+                        <input asp-for="Kilometraje"
+                               type="number" />
+
+                        <span asp-validation-for="Kilometraje"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-form-actions">
+
+                <a asp-action="Index"
+                   class="axis-button axis-button-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                        class="axis-button axis-button-primary">
+                    Guardar cambios
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -2,59 +2,36 @@
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>@ViewData["Title"] - AXIS</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <title>
+        @ViewData["Title"] - AXIS
+    </title>
 
-    @await RenderSectionAsync("Styles", required: false)
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    @await RenderSectionAsync(
+    "Styles",
+        required: false)
 </head>
 
 <body>
-
-    <header class="axis-header">
-        <a class="axis-brand"
-           asp-controller="Home"
-           asp-action="Index">
-            <span class="axis-brand-mark">AX</span>
-            <span class="axis-brand-name">AXIS</span>
-        </a>
-
-        <div class="axis-header-right">
-
-            @if (User.Identity?.IsAuthenticated == true)
-            {
-                <span class="axis-user">
-                    <span class="axis-user-icon">◉</span>
-                    @User.Identity.Name
-                </span>
-
-                <form asp-controller="Account"
-                      asp-action="Logout"
-                      method="post"
-                      class="axis-logout-form">
-                    <button type="submit" class="axis-logout">
-                        Salir
-                    </button>
-                </form>
-            }
-
-        </div>
-    </header>
 
     <main class="axis-main">
         @RenderBody()
     </main>
 
-    <footer class="axis-footer">
-        <span>AXIS</span>
-        <span>© 2026 Sistema de Gestión de Taller</span>
-    </footer>
+    <script src="~/js/site.js"
+            asp-append-version="true">
+    </script>
 
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
-    @await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync(
+        "Scripts",
+        required: false)
 
 </body>
 </html>
