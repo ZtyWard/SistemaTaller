@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Negocios\Negocios.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\imagenes\modules\" />
+  </ItemGroup>
+
 </Project>

@@ -1,22 +1,453 @@
-html {
-  font-size: 14px;
+:root {
+    --axis-charcoal: #1e2023;
+    --axis-black: #1e1f22;
+    --axis-asphalt: #302f2c;
+    --axis-gray: #47484c;
+    --axis-gray-light: #4c4e51;
+    --axis-paper: #efede3;
+    --axis-muted: #a7a7a7;
+    --axis-transition: 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@media (min-width: 768px) {
-  html {
+* {
+    box-sizing: border-box;
+}
+
+html {
     font-size: 16px;
-  }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    background: var(--axis-charcoal);
+    color: var(--axis-paper);
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+/* =========================
+   HEADER
+   ========================= */
+
+.axis-header {
+    height: 76px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 42px;
+    background: var(--axis-black);
+    border-bottom: 1px solid rgba(239, 237, 227, 0.08);
+}
+
+.axis-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--axis-paper);
+    text-decoration: none;
+}
+
+.axis-brand-mark {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(239, 237, 227, 0.4);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.axis-brand-name {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 4px;
+}
+
+.axis-header-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.axis-user {
+    color: var(--axis-muted);
+    font-size: 14px;
+}
+
+.axis-user-icon {
+    margin-right: 7px;
+    color: var(--axis-paper);
+}
+
+.axis-logout-form {
+    margin: 0;
+}
+
+.axis-logout {
+    border: 0;
+    background: transparent;
+    color: var(--axis-paper);
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+    .axis-logout:hover {
+        opacity: 0.6;
+    }
+
+/* =========================
+   MAIN
+   ========================= */
+
+.axis-main {
+    min-height: calc(100vh - 126px);
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+
+.axis-footer {
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 42px;
+    background: var(--axis-black);
+    border-top: 1px solid rgba(239, 237, 227, 0.08);
+    color: var(--axis-muted);
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 700px) {
+
+    .axis-header {
+        padding: 0 20px;
+    }
+
+    .axis-user {
+        display: none;
+    }
+
+    .axis-footer {
+        padding: 0 20px;
+    }
+}
+
+
+/* =========================================================
+   AXIS HOME
+   ========================================================= */
+
+.axis-home {
+    min-height: calc(100vh - 126px);
+    padding: 42px;
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
+}
+
+/* =========================================================
+   INTRO
+   ========================================================= */
+
+.axis-intro {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.axis-kicker {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--axis-muted);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+}
+
+.axis-intro h1 {
+    margin: 0;
+    color: var(--axis-paper);
+    font-size: clamp(46px, 6vw, 82px);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -3px;
+}
+
+.axis-intro p {
+    max-width: 420px;
+    margin: 18px 0 0;
+    color: var(--axis-muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.axis-date {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    color: var(--axis-muted);
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+    .axis-date strong {
+        margin-top: 5px;
+        color: var(--axis-paper);
+        font-size: 18px;
+        letter-spacing: 1px;
+    }
+
+/* =========================================================
+   MODULE GALLERY
+   ========================================================= */
+
+.axis-module-gallery {
+    min-height: 430px;
+    height: min(58vh, 560px);
+    display: flex;
+    overflow: hidden;
+    border: 1px solid rgba(239, 237, 227, 0.1);
+}
+
+/* =========================================================
+   MODULE
+   ========================================================= */
+
+.axis-module {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    display: block;
+    color: var(--axis-paper);
+    text-decoration: none;
+    border-right: 1px solid rgba(239, 237, 227, 0.14);
+    transition: flex var(--axis-transition), filter var(--axis-transition);
+}
+
+    .axis-module:last-child {
+        border-right: 0;
+    }
+
+/* =========================================================
+   BACKGROUND IMAGE
+   ========================================================= */
+
+.axis-module-image {
+    position: absolute;
+    inset: 0;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    filter: grayscale(100%);
+    transform: scale(1.02);
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), filter 0.8s ease;
+}
+
+/* =========================================================
+   MODULE IMAGES
+   ========================================================= */
+
+.axis-image-clientes {
+    background-image: url('/imagenes/modules/clienteasesor.jpg');
+}
+
+.axis-image-vehiculos {
+    background-image: url('/imagenes/modules/vehiculo.jpg');
+}
+
+.axis-image-recepcion {
+    background-image: url('/imagenes/modules/recepcion.jpg');
+}
+
+.axis-image-diagnostico {
+    background-image: url('/imagenes/modules/diagnostico.jpg');
+}
+
+.axis-image-cotizacion {
+    background-image: url('/imagenes/modules/cotizacion.jpg');
+}
+
+.axis-image-ordenes {
+    background-image: url('/imagenes/modules/ordenes.jpg');
+}
+
+/* =========================================================
+   OVERLAY
+   ========================================================= */
+
+.axis-module-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient( 180deg, rgba(30, 32, 35, 0.25), rgba(30, 31, 34, 0.9) );
+    transition: background var(--axis-transition);
+}
+
+/* =========================================================
+   VERTICAL TITLE
+   ========================================================= */
+
+.axis-module-title {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 2;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    white-space: nowrap;
+    color: var(--axis-paper);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    transition: opacity 0.3s ease, transform var(--axis-transition);
+}
+
+/* =========================================================
+   MODULE INFORMATION
+   ========================================================= */
+
+.axis-module-info {
+    position: absolute;
+    left: 28px;
+    right: 28px;
+    bottom: 25px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.35s ease, transform var(--axis-transition);
+}
+
+    .axis-module-info span {
+        margin-bottom: 8px;
+        color: rgba(239, 237, 227, 0.55);
+        font-size: 10px;
+        letter-spacing: 2px;
+    }
+
+    .axis-module-info strong {
+        color: var(--axis-paper);
+        font-size: 24px;
+        font-weight: 500;
+    }
+
+    .axis-module-info small {
+        margin-top: 6px;
+        color: rgba(239, 237, 227, 0.65);
+        font-size: 11px;
+    }
+
+/* =========================================================
+   HOVER / ACTIVE EFFECT
+   ========================================================= */
+
+.axis-module-gallery:hover .axis-module {
+    flex: 0.7;
+}
+
+.axis-module-gallery .axis-module:hover {
+    flex: 2.8;
+}
+
+.axis-module:hover .axis-module-image {
+    filter: grayscale(0%);
+    transform: scale(1.08);
+}
+
+.axis-module:hover .axis-module-overlay {
+    background: linear-gradient( 180deg, rgba(30, 32, 35, 0.05), rgba(30, 31, 34, 0.82) );
+}
+
+.axis-module:hover .axis-module-title {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(0deg) scale(1.05);
+}
+
+.axis-module:hover .axis-module-info {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .axis-home {
+        padding: 30px;
+    }
+
+    .axis-module-gallery {
+        height: 500px;
+    }
+
+    .axis-module-gallery {
+        flex-wrap: wrap;
+    }
+
+        .axis-module-gallery:hover .axis-module {
+            flex: 1;
+        }
+
+        .axis-module-gallery .axis-module:hover {
+            flex: 1.8;
+        }
+}
+
+@media (max-width: 700px) {
+
+    .axis-home {
+        padding: 22px;
+    }
+
+    .axis-intro {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .axis-date {
+        align-items: flex-start;
+    }
+
+    .axis-module-gallery {
+        height: auto;
+        min-height: 0;
+        flex-direction: column;
+    }
+
+    .axis-module {
+        min-height: 130px;
+        flex: none;
+    }
+
+    .axis-module-gallery:hover .axis-module,
+    .axis-module-gallery .axis-module:hover {
+        flex: none;
+    }
+
+    .axis-module-title {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    .axis-module-info {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
