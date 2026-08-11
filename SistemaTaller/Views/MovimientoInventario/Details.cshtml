@@ -1,0 +1,312 @@
+﻿@model Negocios.DTOs.MovimientoInventarioDto
+
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = "Detalle del movimiento";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                INVENTARIO
+            </span>
+
+            <h1>
+                Movimiento
+            </h1>
+
+            <p>
+                Detalle del movimiento registrado en inventario.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="PorProducto"
+               asp-route-idProducto="@Model.IdProducto"
+               class="axis-button axis-button-secondary">
+                Ver producto
+            </a>
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-detail-grid">
+
+        <!-- RESUMEN -->
+
+        <div class="axis-detail-card">
+
+            <div class="axis-detail-card-header">
+
+                <div class="axis-detail-avatar">
+
+                    @(string.IsNullOrWhiteSpace(Model.Producto)
+                                        ? "P"
+                                        : Model.Producto
+                                        .Substring(0, 1)
+                                        .ToUpper())
+
+                </div>
+
+                <div>
+
+                    <span class="axis-detail-label">
+                        PRODUCTO
+                    </span>
+
+                    <h2>
+                        @Model.Producto
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-detail-status">
+
+                @switch (Model.TipoMovimiento)
+                {
+                    case "Entrada":
+
+                        <span class="axis-movement-badge axis-movement-entry">
+                            Entrada
+                        </span>
+
+                        break;
+
+                    case "Salida":
+
+                        <span class="axis-movement-badge axis-movement-exit">
+                            Salida
+                        </span>
+
+                        break;
+
+                    case "Ajuste":
+
+                        <span class="axis-movement-badge axis-movement-adjustment">
+                            Ajuste
+                        </span>
+
+                        break;
+
+                    default:
+
+                        <span class="axis-status axis-status-inactive">
+                            @Model.TipoMovimiento
+                        </span>
+
+                        break;
+                }
+
+            </div>
+
+        </div>
+
+
+        <!-- MOVIMIENTO -->
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                INFORMACIÓN DEL MOVIMIENTO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        ID movimiento
+                    </span>
+
+                    <strong>
+                        #@Model.IdMovimiento
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Producto
+                    </span>
+
+                    <strong>
+                        @Model.Producto
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        ID producto
+                    </span>
+
+                    <strong>
+                        #@Model.IdProducto
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Tipo
+                    </span>
+
+                    <strong>
+                        @Model.TipoMovimiento
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Cantidad
+                    </span>
+
+                    <strong>
+                        @Model.Cantidad.ToString("N0")
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FECHA / OBSERVACIÓN -->
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                REGISTRO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Fecha
+                    </span>
+
+                    <strong>
+                        @Model.FechaMovimiento
+                        .ToLocalTime()
+                        .ToString("dd/MM/yyyy")
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Hora
+                    </span>
+
+                    <strong>
+                        @Model.FechaMovimiento
+                        .ToLocalTime()
+                        .ToString("HH:mm")
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Observación
+                    </span>
+
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Model.Observacion)
+                                                ? "—"
+                                                : Model.Observacion)
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- IMPACTO -->
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                TIPO DE OPERACIÓN
+            </span>
+
+            <div class="axis-detail-list">
+
+                @if (Model.TipoMovimiento == "Entrada")
+                {
+                    <div class="axis-detail-row">
+
+                        <span>
+                            Efecto
+                        </span>
+
+                        <strong class="axis-detail-active-text">
+                            Incrementa el stock
+                        </strong>
+
+                    </div>
+                }
+                else if (Model.TipoMovimiento == "Salida")
+                {
+                    <div class="axis-detail-row">
+
+                        <span>
+                            Efecto
+                        </span>
+
+                        <strong>
+                            Reduce el stock
+                        </strong>
+
+                    </div>
+                }
+                else if (Model.TipoMovimiento == "Ajuste")
+                {
+                    <div class="axis-detail-row">
+
+                        <span>
+                            Efecto
+                        </span>
+
+                        <strong>
+                            Establece el stock
+                        </strong>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

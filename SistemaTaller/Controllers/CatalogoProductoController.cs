@@ -1,9 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// =====================================================
+// CatalogoProductoController
+// =====================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Negocios.DTOs;
 using Negocios.Interfaces;
+using Negocios.Seguridad;
 
-namespace SistemaTaller.Controllers;
+// =====================================================
 
+using Microsoft.AspNetCore.Authorization;
 public class CatalogoProductoController : Controller
 {
     private readonly ICategoriaProductoService _service;
@@ -42,6 +49,7 @@ public class CatalogoProductoController : Controller
     }
 
     // GET: CatalogoProducto/CrearCategoria
+    [Authorize(Policy = Permisos.ProductosCrear)]
     public IActionResult CrearCategoria()
     {
         return View();
@@ -50,6 +58,7 @@ public class CatalogoProductoController : Controller
     // POST: CatalogoProducto/CrearCategoria
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ProductosCrear)]
     public async Task<IActionResult> CrearCategoria(
         CategoriaProductoGuardarDto dto)
     {
@@ -76,6 +85,7 @@ public class CatalogoProductoController : Controller
     }
 
     // GET: CatalogoProducto/EditarCategoria/5
+    [Authorize(Policy = Permisos.ProductosEditar)]
     public async Task<IActionResult> EditarCategoria(int id)
     {
         var categoria = await _service.ObtenerPorIdAsync(id);
@@ -98,6 +108,7 @@ public class CatalogoProductoController : Controller
     // POST: CatalogoProducto/EditarCategoria/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ProductosEditar)]
     public async Task<IActionResult> EditarCategoria(
         int id,
         CategoriaProductoGuardarDto dto)
@@ -137,6 +148,7 @@ public class CatalogoProductoController : Controller
     // POST: CatalogoProducto/CambiarEstadoCategoria/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ProductosDesactivar)]
     public async Task<IActionResult> CambiarEstadoCategoria(
         int id,
         bool activo)

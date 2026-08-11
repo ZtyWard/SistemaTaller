@@ -1,0 +1,203 @@
+﻿@model IEnumerable<Negocios.DTOs.TipoCombustibleDto>
+
+@{
+    ViewData["Title"] = "Tipos de combustible";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-page-kicker">
+                CATÁLOGOS · VEHÍCULOS
+            </span>
+
+            <h1>Tipos de combustible</h1>
+
+            <p>
+                Administra los tipos de combustible disponibles para los vehículos.
+            </p>
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="TiposCombustibleActivos"
+               class="axis-button axis-button-secondary">
+                Activos
+            </a>
+
+            <a asp-action="CrearTipoCombustible"
+               class="axis-button axis-button-primary">
+                + Nuevo tipo
+            </a>
+
+        </div>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="axis-alert">
+            @TempData["Error"]
+        </div>
+    }
+
+
+    <div class="axis-toolbar">
+
+        <span class="axis-record-count">
+            @Model.Count() tipos registrados
+        </span>
+
+    </div>
+
+
+    <div class="axis-table-card">
+
+        <div class="axis-table-wrapper">
+
+            <table class="axis-table">
+
+                <thead>
+                    <tr>
+                        <th>Combustible</th>
+                        <th>Identificador</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="axis-empty">
+                                No hay tipos de combustible registrados.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var combustible in Model)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <div class="axis-client-cell">
+
+                                        <div class="axis-client-avatar">
+                                            @(
+                                                                                string.IsNullOrWhiteSpace(combustible.Nombre)
+                                                                                ? "C"
+                                                                                : combustible.Nombre
+                                                                                .Substring(0, 1)
+                                                                                .ToUpper()
+                                                                                )
+                                </div>
+
+                                        <div>
+
+                                            <strong>
+                                                @combustible.Nombre
+                                            </strong>
+
+                                            <small class="axis-table-secondary-text">
+                                                Tipo de combustible
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+                                    #@combustible.IdTipoCombustible
+                                </td>
+
+
+                                <td>
+
+                            @if (combustible.Activo)
+                                    {
+                                        <span class="axis-status axis-status-active">
+                                            Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-status">
+                                            Inactivo
+                                        </span>
+                                    }
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="axis-row-actions">
+
+                                <a asp-action="DetalleTipoCombustible"
+                                   asp-route-id="@combustible.IdTipoCombustible"
+                                   class="axis-row-action">
+                                    Ver
+                                </a>
+
+                                <a asp-action="EditarTipoCombustible"
+                                   asp-route-id="@combustible.IdTipoCombustible"
+                                   class="axis-row-action">
+                                    Editar
+                                </a>
+
+                                <form asp-action="CambiarEstadoTipoCombustible"
+                                      asp-route-id="@combustible.IdTipoCombustible"
+                                      method="post"
+                                      style="display:inline">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="activo"
+                                           value="@(!combustible.Activo).ToString().ToLower()" />
+
+                                    <button type="submit"
+                                            class="axis-row-action">
+
+                                        @(combustible.Activo
+                                                                                ? "Desactivar"
+                                                                                : "Activar")
+
+                                    </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

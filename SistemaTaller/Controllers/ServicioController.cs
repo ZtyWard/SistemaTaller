@@ -1,9 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// =====================================================
+// ServicioController
+// =====================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Negocios.DTOs;
 using Negocios.Interfaces;
+using Negocios.Seguridad;
 
-namespace SistemaTaller.Controllers;
+// =====================================================
 
+using Microsoft.AspNetCore.Authorization;
 public class ServicioController : Controller
 {
     private readonly IServicioService _service;
@@ -14,6 +21,7 @@ public class ServicioController : Controller
     }
 
     // GET: Servicio
+    [Authorize(Policy = Permisos.ServiciosVer)]
     public async Task<IActionResult> Index()
     {
         var servicios = await _service.ObtenerTodosAsync();
@@ -22,6 +30,7 @@ public class ServicioController : Controller
     }
 
     // GET: Servicio/Activos
+    [Authorize(Policy = Permisos.ServiciosVer)]
     public async Task<IActionResult> Activos()
     {
         var servicios = await _service.ObtenerActivosAsync();
@@ -30,6 +39,7 @@ public class ServicioController : Controller
     }
 
     // GET: Servicio/Details/5
+    [Authorize(Policy = Permisos.ServiciosVer)]
     public async Task<IActionResult> Details(int id)
     {
         var servicio = await _service.ObtenerPorIdAsync(id);
@@ -41,6 +51,7 @@ public class ServicioController : Controller
     }
 
     // GET: Servicio/Create
+    [Authorize(Policy = Permisos.ServiciosCrear)]
     public IActionResult Create()
     {
         return View();
@@ -49,6 +60,7 @@ public class ServicioController : Controller
     // POST: Servicio/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ServiciosCrear)]
     public async Task<IActionResult> Create(
         ServicioGuardarDto dto)
     {
@@ -75,6 +87,7 @@ public class ServicioController : Controller
     }
 
     // GET: Servicio/Edit/5
+    [Authorize(Policy = Permisos.ServiciosEditar)]
     public async Task<IActionResult> Edit(int id)
     {
         var servicio = await _service.ObtenerPorIdAsync(id);
@@ -99,6 +112,7 @@ public class ServicioController : Controller
     // POST: Servicio/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ServiciosEditar)]
     public async Task<IActionResult> Edit(
         int id,
         ServicioGuardarDto dto)
@@ -138,6 +152,7 @@ public class ServicioController : Controller
     // POST: Servicio/CambiarEstado/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ServiciosDesactivar)]
     public async Task<IActionResult> CambiarEstado(
         int id,
         bool activo)

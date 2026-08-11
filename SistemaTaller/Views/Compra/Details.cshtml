@@ -1,0 +1,217 @@
+﻿@model Negocios.DTOs.CompraDto
+
+@{
+    ViewData["Title"] = "Detalle de compra";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                INVENTARIO · COMPRAS
+            </span>
+
+            <h1>
+                Compra #@Model.IdCompra
+            </h1>
+
+            <p>
+                Información detallada de la compra seleccionada.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.IdCompra"
+               class="axis-button axis-button-primary">
+                Editar
+            </a>
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-detail-grid">
+
+
+        <div class="axis-detail-card">
+
+            <div class="axis-detail-card-header">
+
+                <div class="axis-detail-avatar">
+                    C
+                </div>
+
+                <div>
+
+                    <span class="axis-detail-label">
+                        COMPRA
+                    </span>
+
+                    <h2>
+                        #@Model.IdCompra
+                    </h2>
+
+                    <span class="axis-table-secondary-text">
+                        @Model.FechaCompra.ToString("dd/MM/yyyy")
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-detail-status">
+
+                @if (Model.Estado.Equals(
+                                "Pendiente",
+                                StringComparison.OrdinalIgnoreCase))
+                {
+                    <span class="axis-status axis-status-warning">
+                        @Model.Estado
+                    </span>
+                }
+                else if (Model.Estado.Equals(
+                "Completada",
+                StringComparison.OrdinalIgnoreCase))
+                {
+                    <span class="axis-status axis-status-active">
+                        @Model.Estado
+                    </span>
+                }
+                else
+                {
+                    <span class="axis-status axis-status-inactive">
+                        @Model.Estado
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                PROVEEDOR
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Proveedor
+                    </span>
+
+                    <strong>
+                        @Model.Proveedor
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        ID proveedor
+                    </span>
+
+                    <strong>
+                        #@Model.IdProveedor
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                INFORMACIÓN DE COMPRA
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Fecha
+                    </span>
+
+                    <strong>
+                        @Model.FechaCompra.ToString("dd/MM/yyyy")
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong>
+                        ₡@Model.Total.ToString("N2")
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Estado
+                    </span>
+
+                    <strong>
+                        @Model.Estado
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                RESUMEN
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Total de la compra
+                    </span>
+
+                    <strong>
+                        ₡@Model.Total.ToString("N2")
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

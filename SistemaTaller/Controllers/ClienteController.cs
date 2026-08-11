@@ -1,9 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// =====================================================
+// ClienteController
+// =====================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Negocios.DTOs;
 using Negocios.Interfaces;
+using Negocios.Seguridad;
 
-namespace SistemaTaller.Controllers;
+// =====================================================
 
+using Microsoft.AspNetCore.Authorization;
 public class ClienteController : Controller
 {
     private readonly IClienteService _service;
@@ -14,6 +21,7 @@ public class ClienteController : Controller
     }
 
     // GET: Cliente
+    [Authorize(Policy = Permisos.ClientesVer)]
     public async Task<IActionResult> Index()
     {
         var clientes = await _service.ObtenerTodosAsync();
@@ -22,6 +30,7 @@ public class ClienteController : Controller
     }
 
     // GET: Cliente/Activos
+    [Authorize(Policy = Permisos.ClientesVer)]
     public async Task<IActionResult> Activos()
     {
         var clientes = await _service.ObtenerActivosAsync();
@@ -30,6 +39,7 @@ public class ClienteController : Controller
     }
 
     // GET: Cliente/Details/5
+    [Authorize(Policy = Permisos.ClientesVer)]
     public async Task<IActionResult> Details(int id)
     {
         var cliente = await _service.ObtenerPorIdAsync(id);
@@ -41,6 +51,7 @@ public class ClienteController : Controller
     }
 
     // GET: Cliente/Create
+    [Authorize(Policy = Permisos.ClientesCrear)]
     public IActionResult Create()
     {
         return View();
@@ -49,6 +60,7 @@ public class ClienteController : Controller
     // POST: Cliente/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ClientesCrear)]
     public async Task<IActionResult> Create(ClienteGuardarDto dto)
     {
         if (!ModelState.IsValid)
@@ -71,6 +83,7 @@ public class ClienteController : Controller
     }
 
     // GET: Cliente/Edit/5
+    [Authorize(Policy = Permisos.ClientesEditar)]
     public async Task<IActionResult> Edit(int id)
     {
         var cliente = await _service.ObtenerPorIdAsync(id);
@@ -97,6 +110,7 @@ public class ClienteController : Controller
     // POST: Cliente/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ClientesEditar)]
     public async Task<IActionResult> Edit(
         int id,
         ClienteGuardarDto dto)
@@ -144,6 +158,7 @@ public class ClienteController : Controller
     }
 
     // GET: Cliente/BuscarPorCedula
+    [Authorize(Policy = Permisos.ClientesVer)]
     public async Task<IActionResult> BuscarPorCedula(string cedula)
     {
         if (string.IsNullOrWhiteSpace(cedula))

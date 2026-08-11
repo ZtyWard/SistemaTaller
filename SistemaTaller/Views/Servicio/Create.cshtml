@@ -1,0 +1,156 @@
+﻿@model Negocios.DTOs.ServicioGuardarDto
+
+@{
+    ViewData["Title"] = "Nuevo servicio";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-page-kicker">
+                TALLER · SERVICIOS
+            </span>
+
+            <h1>Nuevo servicio</h1>
+
+            <p>
+                Registra un nuevo servicio para el taller.
+            </p>
+        </div>
+
+        <a asp-action="Index"
+           class="axis-button axis-button-secondary">
+            ← Volver
+        </a>
+
+    </div>
+
+
+    <div class="axis-form-card">
+
+        <form asp-action="Create"
+              method="post"
+              class="axis-form">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-form-validation">
+            </div>
+
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Información del servicio
+                </div>
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field">
+
+                        <label asp-for="Nombre">
+                            Nombre del servicio
+                        </label>
+
+                        <input asp-for="Nombre"
+                               placeholder="Ej. Cambio de aceite" />
+
+                        <span asp-validation-for="Nombre"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Precio">
+                            Precio
+                        </label>
+
+                        <input asp-for="Precio"
+                               type="number"
+                               min="0"
+                               step="0.01"
+                               placeholder="0.00" />
+
+                        <span asp-validation-for="Precio"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="DuracionEstimada">
+                            Duración estimada
+                        </label>
+
+                        <input asp-for="DuracionEstimada"
+                               type="number"
+                               min="1"
+                               placeholder="Minutos" />
+
+                        <span asp-validation-for="DuracionEstimada"></span>
+
+                    </div>
+
+
+                    <div class="axis-field axis-checkbox-field">
+
+                        <label class="axis-checkbox">
+
+                            <input asp-for="Activo" />
+
+                            <span>
+                                Servicio activo
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="axis-field axis-field-full">
+
+                        <label asp-for="Descripcion">
+                            Descripción
+                        </label>
+
+                        <textarea asp-for="Descripcion"
+                                  rows="5"
+                                  placeholder="Describe brevemente el servicio...">
+                        </textarea>
+
+                        <span asp-validation-for="Descripcion"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-form-actions">
+
+                <a asp-action="Index"
+                   class="axis-button axis-button-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                        class="axis-button axis-button-primary">
+                    Registrar servicio
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

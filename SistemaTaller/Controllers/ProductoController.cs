@@ -1,9 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// =====================================================
+// ProductoController
+// =====================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Negocios.DTOs;
 using Negocios.Interfaces;
+using Negocios.Seguridad;
 
-namespace SistemaTaller.Controllers;
+// =====================================================
 
+using Microsoft.AspNetCore.Authorization;
 public class ProductoController : Controller
 {
     private readonly IProductoService _service;
@@ -14,6 +21,7 @@ public class ProductoController : Controller
     }
 
     // GET: Producto
+    [Authorize(Policy = Permisos.ProductosVer)]
     public async Task<IActionResult> Index()
     {
         var productos = await _service.ObtenerTodosAsync();
@@ -22,6 +30,7 @@ public class ProductoController : Controller
     }
 
     // GET: Producto/Activos
+    [Authorize(Policy = Permisos.ProductosVer)]
     public async Task<IActionResult> Activos()
     {
         var productos = await _service.ObtenerActivosAsync();
@@ -38,6 +47,7 @@ public class ProductoController : Controller
     }
 
     // GET: Producto/PorCategoria/5
+    [Authorize(Policy = Permisos.ProductosVer)]
     public async Task<IActionResult> PorCategoria(
         int idCategoriaProducto)
     {
@@ -49,6 +59,7 @@ public class ProductoController : Controller
     }
 
     // GET: Producto/Details/5
+    [Authorize(Policy = Permisos.ProductosVer)]
     public async Task<IActionResult> Details(int id)
     {
         var producto = await _service.ObtenerPorIdAsync(id);
@@ -60,6 +71,7 @@ public class ProductoController : Controller
     }
 
     // GET: Producto/BuscarPorCodigo
+    [Authorize(Policy = Permisos.ProductosVer)]
     public async Task<IActionResult> BuscarPorCodigo(
         string codigo)
     {
@@ -81,6 +93,7 @@ public class ProductoController : Controller
     }
 
     // GET: Producto/Create
+    [Authorize(Policy = Permisos.ProductosCrear)]
     public IActionResult Create()
     {
         return View();
@@ -89,6 +102,7 @@ public class ProductoController : Controller
     // POST: Producto/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ProductosCrear)]
     public async Task<IActionResult> Create(
         ProductoGuardarDto dto)
     {
@@ -115,6 +129,7 @@ public class ProductoController : Controller
     }
 
     // GET: Producto/Edit/5
+    [Authorize(Policy = Permisos.ProductosEditar)]
     public async Task<IActionResult> Edit(int id)
     {
         var producto = await _service.ObtenerPorIdAsync(id);
@@ -152,6 +167,7 @@ public class ProductoController : Controller
     // POST: Producto/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ProductosEditar)]
     public async Task<IActionResult> Edit(
         int id,
         ProductoGuardarDto dto)
@@ -191,6 +207,7 @@ public class ProductoController : Controller
     // POST: Producto/CambiarEstado/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ProductosDesactivar)]
     public async Task<IActionResult> CambiarEstado(
         int id,
         bool activo)

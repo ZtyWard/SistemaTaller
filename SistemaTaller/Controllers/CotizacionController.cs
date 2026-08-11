@@ -1,9 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// =====================================================
+// CotizacionController
+// =====================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Negocios.DTOs;
 using Negocios.Interfaces;
+using Negocios.Seguridad;
 
-namespace SistemaTaller.Controllers;
+// =====================================================
 
+using Microsoft.AspNetCore.Authorization;
 public class CotizacionController : Controller
 {
     private readonly ICotizacionService _service;
@@ -14,6 +21,7 @@ public class CotizacionController : Controller
     }
 
     // GET: Cotizacion
+    [Authorize(Policy = Permisos.CotizacionesVer)]
     public async Task<IActionResult> Index()
     {
         var cotizaciones = await _service.ObtenerTodasAsync();
@@ -22,6 +30,7 @@ public class CotizacionController : Controller
     }
 
     // GET: Cotizacion/Pendientes
+    [Authorize(Policy = Permisos.CotizacionesVer)]
     public async Task<IActionResult> Pendientes()
     {
         var cotizaciones = await _service.ObtenerPendientesAsync();
@@ -30,6 +39,7 @@ public class CotizacionController : Controller
     }
 
     // GET: Cotizacion/PorDiagnostico/5
+    [Authorize(Policy = Permisos.CotizacionesVer)]
     public async Task<IActionResult> PorDiagnostico(int idDiagnostico)
     {
         var cotizaciones =
@@ -39,6 +49,7 @@ public class CotizacionController : Controller
     }
 
     // GET: Cotizacion/Details/5
+    [Authorize(Policy = Permisos.CotizacionesVer)]
     public async Task<IActionResult> Details(int id)
     {
         var cotizacion = await _service.ObtenerPorIdAsync(id);
@@ -50,6 +61,7 @@ public class CotizacionController : Controller
     }
 
     // GET: Cotizacion/Create
+    [Authorize(Policy = Permisos.CotizacionesCrear)]
     public IActionResult Create()
     {
         return View();
@@ -58,6 +70,7 @@ public class CotizacionController : Controller
     // POST: Cotizacion/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.CotizacionesCrear)]
     public async Task<IActionResult> Create(
         CotizacionGuardarDto dto)
     {
@@ -84,6 +97,7 @@ public class CotizacionController : Controller
     }
 
     // GET: Cotizacion/Edit/5
+    [Authorize(Policy = Permisos.CotizacionesEditar)]
     public async Task<IActionResult> Edit(int id)
     {
         var cotizacion = await _service.ObtenerPorIdAsync(id);
@@ -106,6 +120,7 @@ public class CotizacionController : Controller
     // POST: Cotizacion/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.CotizacionesEditar)]
     public async Task<IActionResult> Edit(
         int id,
         CotizacionGuardarDto dto)
@@ -145,6 +160,7 @@ public class CotizacionController : Controller
     // POST: Cotizacion/CambiarEstado/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.CotizacionesAprobar)]
     public async Task<IActionResult> CambiarEstado(
         int id,
         string estado)

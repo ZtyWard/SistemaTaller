@@ -1,0 +1,109 @@
+﻿@model Negocios.DTOs.MarcaGuardarDto
+
+@{
+    ViewData["Title"] = "Editar marca";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                CATÁLOGOS · VEHÍCULOS
+            </span>
+
+            <h1>Editar marca</h1>
+
+            <p>
+                Actualiza la información de la marca.
+            </p>
+
+        </div>
+
+        <a asp-action="Marcas"
+           class="axis-button axis-button-secondary">
+            ← Volver
+        </a>
+
+    </div>
+
+
+    <div class="axis-form-card">
+
+        <form asp-action="EditarMarca"
+              asp-route-id="@ViewBag.IdMarca"
+              method="post"
+              class="axis-form">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-form-validation">
+            </div>
+
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Información de la marca
+                </div>
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field">
+
+                        <label asp-for="Nombre">
+                            Nombre
+                        </label>
+
+                        <input asp-for="Nombre" />
+
+                        <span asp-validation-for="Nombre"></span>
+
+                    </div>
+
+
+                    <div class="axis-field axis-checkbox-field">
+
+                        <label class="axis-checkbox">
+
+                            <input asp-for="Activo" />
+
+                            <span>
+                                Marca activa
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-form-actions">
+
+                <a asp-action="Marcas"
+                   class="axis-button axis-button-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                        class="axis-button axis-button-primary">
+                    Guardar cambios
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

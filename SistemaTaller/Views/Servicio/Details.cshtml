@@ -1,0 +1,144 @@
+﻿@model Negocios.DTOs.ServicioDto
+
+@{
+    ViewData["Title"] = "Detalle del servicio";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-page-kicker">
+                TALLER · SERVICIOS
+            </span>
+
+            <h1>@Model.Nombre</h1>
+
+            <p>
+                Información detallada del servicio.
+            </p>
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.IdServicio"
+               class="axis-button axis-button-primary">
+                Editar
+            </a>
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-detail-grid">
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                SERVICIO
+            </span>
+
+            <div class="axis-detail-card-header">
+
+                <div class="axis-detail-avatar">
+                    @(
+                                        string.IsNullOrWhiteSpace(Model.Nombre)
+                                        ? "S"
+                                        : Model.Nombre.Substring(0, 1).ToUpper()
+                                        )
+                </div>
+
+                <div>
+                    <h2>@Model.Nombre</h2>
+
+                    <span class="axis-table-secondary-text">
+                        #@Model.IdServicio
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="axis-detail-status">
+
+                @if (Model.Activo)
+                {
+                    <span class="axis-status axis-status-active">
+                        Activo
+                    </span>
+                }
+                else
+                {
+                    <span class="axis-status axis-status-inactive">
+                        Inactivo
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                INFORMACIÓN DEL SERVICIO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+                    <span>Nombre</span>
+                    <strong>@Model.Nombre</strong>
+                </div>
+
+                <div class="axis-detail-row">
+                    <span>Precio</span>
+                    <strong>@Model.Precio.ToString("C2")</strong>
+                </div>
+
+                <div class="axis-detail-row">
+                    <span>Duración estimada</span>
+                    <strong>
+                        @(Model.DuracionEstimada.HasValue
+                                                ? $"{Model.DuracionEstimada.Value} minutos"
+                                                : "No indicada")
+                    </strong>
+                </div>
+
+                <div class="axis-detail-row">
+                    <span>Estado</span>
+                    <strong>
+                        @(Model.Activo ? "Activo" : "Inactivo")
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card axis-detail-card-wide">
+
+            <span class="axis-detail-label">
+                DESCRIPCIÓN
+            </span>
+
+            <p class="axis-detail-description">
+                @(string.IsNullOrWhiteSpace(Model.Descripcion)
+                                ? "Este servicio no tiene una descripción registrada."
+                                : Model.Descripcion)
+            </p>
+
+        </div>
+
+    </div>
+
+</section>

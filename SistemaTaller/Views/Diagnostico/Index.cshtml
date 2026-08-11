@@ -1,0 +1,222 @@
+﻿@model IEnumerable<Negocios.DTOs.DiagnosticoDto>
+
+@{
+    ViewData["Title"] = "Diagnósticos";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-page-kicker">
+                SERVICIO · DIAGNÓSTICO
+            </span>
+
+            <h1>
+                Diagnósticos
+            </h1>
+
+            <p>
+                Consulta y gestiona las evaluaciones técnicas realizadas a los vehículos.
+            </p>
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Create"
+               class="axis-button axis-button-primary">
+                + Nuevo diagnóstico
+            </a>
+
+        </div>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="axis-alert axis-alert-error">
+            @TempData["Error"]
+        </div>
+    }
+
+
+    <div class="axis-toolbar">
+
+        <span class="axis-record-count">
+            @Model.Count() diagnósticos registrados
+        </span>
+
+    </div>
+
+
+    <div class="axis-table-card">
+
+        <div class="axis-table-wrapper">
+
+            <table class="axis-table">
+
+                <thead>
+                    <tr>
+
+                        <th>
+                            Diagnóstico
+                        </th>
+
+                        <th>
+                            Vehículo
+                        </th>
+
+                        <th>
+                            Empleado
+                        </th>
+
+                        <th>
+                            Fecha
+                        </th>
+
+                        <th>
+                            Estado recepción
+                        </th>
+
+                        <th class="axis-table-actions-column">
+                            Acciones
+                        </th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+
+                            <td colspan="6"
+                                class="axis-empty">
+
+                                No hay diagnósticos registrados.
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var diagnostico in Model)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <div class="axis-client-cell">
+
+                                        <div class="axis-client-avatar">
+                                            D
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                #@diagnostico.IdDiagnostico
+                                            </strong>
+
+                                            <small class="axis-table-secondary-text">
+                                                Recepción #@diagnostico.IdRecepcion
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        @diagnostico.Placa
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        @diagnostico.EmpleadoNombre
+                                    </strong>
+
+                                    <small class="axis-table-secondary-text">
+                                        Empleado #@diagnostico.IdEmpleado
+                                    </small>
+
+                                </td>
+
+
+                                <td>
+                                    @diagnostico.FechaDiagnostico.ToString("dd/MM/yyyy")
+                                </td>
+
+
+                                <td>
+
+                                    @if (diagnostico.EstadoRecepcion.Equals(
+                                                                "Abierta",
+                                                                StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <span class="axis-status axis-status-warning">
+                                            @diagnostico.EstadoRecepcion
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-status axis-status-active">
+                                            @diagnostico.EstadoRecepcion
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="axis-row-actions">
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@diagnostico.IdDiagnostico"
+                                           class="axis-row-action">
+                                            Ver
+                                        </a>
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@diagnostico.IdDiagnostico"
+                                           class="axis-row-action">
+                                            Editar
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

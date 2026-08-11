@@ -1,0 +1,144 @@
+﻿@model Negocios.DTOs.PuestoDto
+
+@{
+    ViewData["Title"] = "Detalle del puesto";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                CATÁLOGOS · PERSONAL
+            </span>
+
+            <h1>
+                @Model.Nombre
+            </h1>
+
+            <p>
+                Información del puesto seleccionado.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="EditarPuesto"
+               asp-route-id="@Model.IdPuesto"
+               class="axis-button axis-button-primary">
+                Editar
+            </a>
+
+            <a asp-action="Puestos"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-detail-grid">
+
+        <div class="axis-detail-card">
+
+            <div class="axis-detail-card-header">
+
+                <div class="axis-detail-avatar">
+                    P
+                </div>
+
+                <div>
+
+                    <span class="axis-detail-label">
+                        PUESTO
+                    </span>
+
+                    <h2>
+                        @Model.Nombre
+                    </h2>
+
+                    <span class="axis-table-secondary-text">
+                        #@Model.IdPuesto
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-detail-status">
+
+                @if (Model.Activo)
+                {
+                    <span class="axis-status axis-status-active">
+                        Activo
+                    </span>
+                }
+                else
+                {
+                    <span class="axis-status">
+                        Inactivo
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                INFORMACIÓN
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Identificador
+                    </span>
+
+                    <strong>
+                        #@Model.IdPuesto
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Nombre
+                    </span>
+
+                    <strong>
+                        @Model.Nombre
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Estado
+                    </span>
+
+                    <strong>
+                        @(Model.Activo ? "Activo" : "Inactivo")
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

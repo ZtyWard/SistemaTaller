@@ -1,0 +1,280 @@
+﻿@model Negocios.DTOs.OrdenTrabajoDto
+
+@{
+    ViewData["Title"] = "Detalle de orden de trabajo";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                OPERACIONES · ÓRDENES DE TRABAJO
+            </span>
+
+            <h1>
+                Orden #@Model.IdOrdenTrabajo
+            </h1>
+
+            <p>
+                Información detallada del trabajo realizado al vehículo.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.IdOrdenTrabajo"
+               class="axis-button axis-button-primary">
+                Editar
+            </a>
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-detail-grid">
+
+
+        <div class="axis-detail-card">
+
+            <div class="axis-detail-card-header">
+
+                <div class="axis-detail-avatar">
+                    OT
+                </div>
+
+                <div>
+
+                    <span class="axis-detail-label">
+                        ORDEN DE TRABAJO
+                    </span>
+
+                    <h2>
+                        #@Model.IdOrdenTrabajo
+                    </h2>
+
+                    <span class="axis-table-secondary-text">
+                        Cotización #@Model.IdCotizacion
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-detail-status">
+
+                <span class="axis-status
+                    @(Model.Estado.Equals(
+                                              "Finalizada",
+                                              StringComparison.OrdinalIgnoreCase)
+                                              ? "axis-status-active"
+                                              : "axis-status-warning")">
+
+                    @Model.Estado
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                CLIENTE
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Cliente
+                    </span>
+
+                    <strong>
+                        @Model.ClienteNombre
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                VEHÍCULO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Placa
+                    </span>
+
+                    <strong>
+                        @Model.Placa
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                CRONOLOGÍA
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Fecha de inicio
+                    </span>
+
+                    <strong>
+                        @Model.FechaInicio.ToString("dd/MM/yyyy")
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Fecha de finalización
+                    </span>
+
+                    <strong>
+
+                        @if (Model.FechaFin.HasValue)
+                        {
+                            @Model.FechaFin.Value.ToString("dd/MM/yyyy")
+                        }
+                        else
+                        {
+                            <span class="axis-table-secondary-text">
+                                En proceso
+                            </span>
+                        }
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                COTIZACIÓN
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Cotización
+                    </span>
+
+                    <strong>
+                        #@Model.IdCotizacion
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Total cotizado
+                    </span>
+
+                    <strong>
+                        ₡@Model.TotalCotizacion.ToString("N2")
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card axis-detail-card-wide">
+
+            <span class="axis-detail-label">
+                OBSERVACIONES
+            </span>
+
+            <div class="axis-detail-description">
+
+                @if (string.IsNullOrWhiteSpace(Model.Observaciones))
+                {
+                    <span class="axis-table-secondary-text">
+                        Sin observaciones registradas.
+                    </span>
+                }
+                else
+                {
+                    <p>
+                        @Model.Observaciones
+                    </p>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                ESTADO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Estado actual
+                    </span>
+
+                    <strong>
+                        @Model.Estado
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

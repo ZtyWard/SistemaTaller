@@ -1,0 +1,223 @@
+﻿@model Negocios.DTOs.DiagnosticoDto
+
+@{
+    ViewData["Title"] = "Detalle de diagnóstico";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                SERVICIO · DIAGNÓSTICO
+            </span>
+
+            <h1>
+                Diagnóstico #@Model.IdDiagnostico
+            </h1>
+
+            <p>
+                Información detallada de la evaluación técnica.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.IdDiagnostico"
+               class="axis-button axis-button-primary">
+                Editar
+            </a>
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-detail-grid">
+
+
+        <div class="axis-detail-card">
+
+            <div class="axis-detail-card-header">
+
+                <div class="axis-detail-avatar">
+                    D
+                </div>
+
+                <div>
+
+                    <span class="axis-detail-label">
+                        DIAGNÓSTICO
+                    </span>
+
+                    <h2>
+                        #@Model.IdDiagnostico
+                    </h2>
+
+                    <span class="axis-table-secondary-text">
+                        @Model.FechaDiagnostico.ToString("dd/MM/yyyy")
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-detail-status">
+
+                @if (Model.EstadoRecepcion.Equals(
+                                "Abierta",
+                                StringComparison.OrdinalIgnoreCase))
+                {
+                    <span class="axis-status axis-status-warning">
+                        @Model.EstadoRecepcion
+                    </span>
+                }
+                else
+                {
+                    <span class="axis-status axis-status-active">
+                        @Model.EstadoRecepcion
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                VEHÍCULO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Placa
+                    </span>
+
+                    <strong>
+                        @Model.Placa
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Recepción
+                    </span>
+
+                    <strong>
+                        #@Model.IdRecepcion
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                TÉCNICO RESPONSABLE
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Empleado
+                    </span>
+
+                    <strong>
+                        @Model.EmpleadoNombre
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        ID empleado
+                    </span>
+
+                    <strong>
+                        #@Model.IdEmpleado
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card axis-detail-card-wide">
+
+            <span class="axis-detail-label">
+                DESCRIPCIÓN DEL DIAGNÓSTICO
+            </span>
+
+            <div class="axis-detail-description">
+
+                @if (string.IsNullOrWhiteSpace(Model.Descripcion))
+                {
+                    <span class="axis-table-secondary-text">
+                        Sin descripción registrada.
+                    </span>
+                }
+                else
+                {
+                    <p>
+                        @Model.Descripcion
+                    </p>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                FECHA
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Fecha de diagnóstico
+                    </span>
+
+                    <strong>
+                        @Model.FechaDiagnostico.ToString("dd/MM/yyyy")
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

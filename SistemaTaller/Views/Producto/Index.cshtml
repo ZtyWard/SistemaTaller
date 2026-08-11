@@ -1,0 +1,322 @@
+﻿@model IEnumerable<Negocios.DTOs.ProductoDto>
+
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = "Productos";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                INVENTARIO
+            </span>
+
+            <h1>
+                Productos
+            </h1>
+
+            <p>
+                Control de productos, existencias y precios del taller.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Activos"
+               class="axis-button axis-button-secondary">
+                Activos
+            </a>
+
+            <a asp-action="StockBajo"
+               class="axis-button axis-button-secondary">
+                Stock bajo
+            </a>
+
+            <a asp-action="Create"
+               class="axis-button axis-button-primary">
+                <span>+</span>
+                Nuevo producto
+            </a>
+
+        </div>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="axis-alert axis-alert-error">
+            @TempData["Error"]
+        </div>
+    }
+
+
+    <div class="axis-toolbar">
+
+        <form asp-action="BuscarPorCodigo"
+              method="get"
+              class="axis-table-search">
+
+            <span>⌕</span>
+
+            <input type="text"
+                   name="codigo"
+                   placeholder="Buscar por código..." />
+
+            <button type="submit">
+                Buscar
+            </button>
+
+        </form>
+
+
+        <span class="axis-record-count">
+            @Model.Count() productos
+        </span>
+
+    </div>
+
+
+    <div class="axis-table-card">
+
+        <div class="axis-table-wrapper">
+
+            <table class="axis-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Código
+                        </th>
+
+                        <th>
+                            Producto
+                        </th>
+
+                        <th>
+                            Categoría
+                        </th>
+
+                        <th>
+                            Precio venta
+                        </th>
+
+                        <th>
+                            Stock
+                        </th>
+
+                        <th>
+                            Estado
+                        </th>
+
+                        <th class="axis-table-actions-column">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+
+                            <td colspan="7"
+                                class="axis-empty">
+
+                                No hay productos registrados.
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var producto in Model)
+                        {
+                            var stockBajo =
+                            producto.Stock <= producto.StockMinimo;
+
+                            <tr>
+
+                                <td>
+
+                                    <strong class="axis-primary-text">
+                                        @producto.Codigo
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="axis-client-cell">
+
+                                        <div class="axis-client-avatar">
+
+                                            @(string.IsNullOrWhiteSpace(producto.Nombre)
+                                                                                ? "P"
+                                                                                : producto.Nombre
+                                                                                .Substring(0, 1)
+                                                                                .ToUpper())
+
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                @producto.Nombre
+                                            </strong>
+
+                                            <small class="axis-table-secondary-text">
+
+                                                @(string.IsNullOrWhiteSpace(producto.Descripcion)
+                                                                                        ? "Sin descripción"
+                                                                                        : producto.Descripcion)
+
+                                    </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="axis-table-secondary-text">
+
+                                        @producto.Categoria
+
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong class="axis-primary-text">
+
+                                        ₡@producto.PrecioVenta.ToString("N2")
+
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                            @if (stockBajo)
+                                    {
+                                        <span class="axis-movement-badge axis-movement-exit">
+                                            @producto.Stock
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <strong class="axis-primary-text">
+                                            @producto.Stock
+                                        </strong>
+                                    }
+
+                                    <small class="axis-table-secondary-text">
+
+                                        Mín. @producto.StockMinimo
+
+                                    </small>
+
+                                </td>
+
+
+                                <td>
+
+                                    @if (producto.Activo)
+                                    {
+                                        <span class="axis-status axis-status-active">
+                                            Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-status axis-status-inactive">
+                                            Inactivo
+                                        </span>
+                                    }
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="axis-row-actions">
+
+                                <a asp-action="Details"
+                                   asp-route-id="@producto.IdProducto"
+                                   class="axis-row-action">
+                                    Ver
+                                </a>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@producto.IdProducto"
+                                   class="axis-row-action">
+                                    Editar
+                                </a>
+
+
+                                <form asp-action="CambiarEstado"
+                                      asp-route-id="@producto.IdProducto"
+                                      method="post"
+                                      style="display:inline">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="activo"
+                                           value="@(!producto.Activo)" />
+
+                                    <button type="submit"
+                                            class="axis-row-action">
+
+                                        @(producto.Activo
+                                                                                ? "Desactivar"
+                                                                                : "Activar")
+
+                                    </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

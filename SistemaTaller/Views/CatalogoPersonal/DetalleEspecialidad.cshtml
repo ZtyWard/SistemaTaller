@@ -1,0 +1,144 @@
+﻿@model Negocios.DTOs.EspecialidadDto
+
+@{
+    ViewData["Title"] = "Detalle de especialidad";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                CATÁLOGOS · PERSONAL
+            </span>
+
+            <h1>
+                @Model.Nombre
+            </h1>
+
+            <p>
+                Información de la especialidad seleccionada.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="EditarEspecialidad"
+               asp-route-id="@Model.IdEspecialidad"
+               class="axis-button axis-button-primary">
+                Editar
+            </a>
+
+            <a asp-action="Especialidades"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-detail-grid">
+
+        <div class="axis-detail-card">
+
+            <div class="axis-detail-card-header">
+
+                <div class="axis-detail-avatar">
+                    E
+                </div>
+
+                <div>
+
+                    <span class="axis-detail-label">
+                        ESPECIALIDAD
+                    </span>
+
+                    <h2>
+                        @Model.Nombre
+                    </h2>
+
+                    <span class="axis-table-secondary-text">
+                        #@Model.IdEspecialidad
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-detail-status">
+
+                @if (Model.Activo)
+                {
+                    <span class="axis-status axis-status-active">
+                        Activa
+                    </span>
+                }
+                else
+                {
+                    <span class="axis-status">
+                        Inactiva
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                INFORMACIÓN
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Identificador
+                    </span>
+
+                    <strong>
+                        #@Model.IdEspecialidad
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Nombre
+                    </span>
+
+                    <strong>
+                        @Model.Nombre
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Estado
+                    </span>
+
+                    <strong>
+                        @(Model.Activo ? "Activa" : "Inactiva")
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

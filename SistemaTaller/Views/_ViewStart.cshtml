@@ -1,3 +1,14 @@
 ﻿@{
-    Layout = "_Layout";
+    var controller =
+        ViewContext.RouteData.Values["controller"]?.ToString();
+
+    if (controller == "Home" ||
+        controller == "Account")
+    {
+        Layout = "_Layout";
+    }
+    else
+    {
+        Layout = "_InternalLayout";
+    }
 }

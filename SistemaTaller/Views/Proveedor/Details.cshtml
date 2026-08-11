@@ -1,0 +1,239 @@
+﻿@model Negocios.DTOs.ProveedorDto
+
+@{
+    ViewData["Title"] = "Detalle del proveedor";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                INVENTARIO · PROVEEDORES
+            </span>
+
+            <h1>
+                Proveedor
+            </h1>
+
+            <p>
+                Información detallada del proveedor seleccionado.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.IdProveedor"
+               class="axis-button axis-button-primary">
+                Editar
+            </a>
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-detail-grid">
+
+
+        <div class="axis-detail-card">
+
+            <div class="axis-detail-card-header">
+
+                <div class="axis-detail-avatar">
+
+                    @(string.IsNullOrWhiteSpace(Model.Nombre)
+                                        ? "P"
+                                        : Model.Nombre
+                                        .Substring(0, 1)
+                                        .ToUpper())
+
+                </div>
+
+                <div>
+
+                    <span class="axis-detail-label">
+                        PROVEEDOR
+                    </span>
+
+                    <h2>
+                        @Model.Nombre
+                    </h2>
+
+                    <span class="axis-table-secondary-text">
+                        #@Model.IdProveedor
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-detail-status">
+
+                @if (Model.Activo)
+                {
+                    <span class="axis-status axis-status-active">
+                        Activo
+                    </span>
+                }
+                else
+                {
+                    <span class="axis-status axis-status-inactive">
+                        Inactivo
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                IDENTIFICACIÓN
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        ID proveedor
+                    </span>
+
+                    <strong>
+                        #@Model.IdProveedor
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Nombre
+                    </span>
+
+                    <strong>
+                        @Model.Nombre
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Cédula jurídica
+                    </span>
+
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Model.CedulaJuridica)
+                                                ? "—"
+                                                : Model.CedulaJuridica)
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                CONTACTO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Teléfono
+                    </span>
+
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Model.Telefono)
+                                                ? "—"
+                                                : Model.Telefono)
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Correo
+                    </span>
+
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Model.Correo)
+                                                ? "—"
+                                                : Model.Correo)
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Dirección
+                    </span>
+
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Model.Direccion)
+                                                ? "—"
+                                                : Model.Direccion)
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                ESTADO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Estado actual
+                    </span>
+
+                    <strong class="@(Model.Activo
+                                                    ? "axis-detail-active-text"
+                                                    : "")">
+
+                        @(Model.Activo
+                                                ? "Proveedor activo"
+                                                : "Proveedor inactivo")
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

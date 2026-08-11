@@ -1,9 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// =====================================================
+// EmpleadoController
+// =====================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Negocios.DTOs;
 using Negocios.Interfaces;
+using Negocios.Seguridad;
 
-namespace SistemaTaller.Controllers;
+// =====================================================
 
+using Microsoft.AspNetCore.Authorization;
 public class EmpleadoController : Controller
 {
     private readonly IEmpleadoService _service;
@@ -14,6 +21,7 @@ public class EmpleadoController : Controller
     }
 
     // GET: Empleado
+    [Authorize(Policy = Permisos.EmpleadosVer)]
     public async Task<IActionResult> Index()
     {
         var empleados = await _service.ObtenerTodosAsync();
@@ -22,6 +30,7 @@ public class EmpleadoController : Controller
     }
 
     // GET: Empleado/Activos
+    [Authorize(Policy = Permisos.EmpleadosVer)]
     public async Task<IActionResult> Activos()
     {
         var empleados = await _service.ObtenerActivosAsync();
@@ -50,6 +59,7 @@ public class EmpleadoController : Controller
     }
 
     // GET: Empleado/Details/5
+    [Authorize(Policy = Permisos.EmpleadosVer)]
     public async Task<IActionResult> Details(int id)
     {
         var empleado = await _service.ObtenerPorIdAsync(id);
@@ -61,6 +71,7 @@ public class EmpleadoController : Controller
     }
 
     // GET: Empleado/Create
+    [Authorize(Policy = Permisos.EmpleadosCrear)]
     public IActionResult Create()
     {
         return View();
@@ -69,6 +80,7 @@ public class EmpleadoController : Controller
     // POST: Empleado/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.EmpleadosCrear)]
     public async Task<IActionResult> Create(
         EmpleadoGuardarDto dto)
     {
@@ -95,6 +107,7 @@ public class EmpleadoController : Controller
     }
 
     // GET: Empleado/Edit/5
+    [Authorize(Policy = Permisos.EmpleadosEditar)]
     public async Task<IActionResult> Edit(int id)
     {
         var empleado = await _service.ObtenerPorIdAsync(id);
@@ -137,6 +150,7 @@ public class EmpleadoController : Controller
     // POST: Empleado/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.EmpleadosEditar)]
     public async Task<IActionResult> Edit(
         int id,
         EmpleadoGuardarDto dto)
@@ -176,6 +190,7 @@ public class EmpleadoController : Controller
     // POST: Empleado/CambiarEstado/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.EmpleadosDesactivar)]
     public async Task<IActionResult> CambiarEstado(
         int id,
         bool activo)
@@ -196,3 +211,4 @@ public class EmpleadoController : Controller
         return RedirectToAction(nameof(Index));
     }
 }
+

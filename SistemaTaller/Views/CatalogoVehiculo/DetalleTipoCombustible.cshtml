@@ -1,0 +1,148 @@
+﻿@model Negocios.DTOs.TipoCombustibleDto
+
+@{
+    ViewData["Title"] = "Detalle del tipo de combustible";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                CATÁLOGOS · VEHÍCULOS
+            </span>
+
+            <h1>@Model.Nombre</h1>
+
+            <p>
+                Información del tipo de combustible seleccionado.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="EditarTipoCombustible"
+               asp-route-id="@Model.IdTipoCombustible"
+               class="axis-button axis-button-primary">
+                Editar
+            </a>
+
+            <a asp-action="TiposCombustible"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-detail-grid">
+
+        <div class="axis-detail-card">
+
+            <div class="axis-detail-card-header">
+
+                <div class="axis-detail-avatar">
+                    @(
+                                        string.IsNullOrWhiteSpace(Model.Nombre)
+                                        ? "C"
+                                        : Model.Nombre.Substring(0, 1).ToUpper()
+                                        )
+                </div>
+
+                <div>
+
+                    <span class="axis-detail-label">
+                        COMBUSTIBLE
+                    </span>
+
+                    <h2>
+                        @Model.Nombre
+                    </h2>
+
+                    <span class="axis-table-secondary-text">
+                        #@Model.IdTipoCombustible
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-detail-status">
+
+                @if (Model.Activo)
+                {
+                    <span class="axis-status axis-status-active">
+                        Activo
+                    </span>
+                }
+                else
+                {
+                    <span class="axis-status">
+                        Inactivo
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                INFORMACIÓN
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Identificador
+                    </span>
+
+                    <strong>
+                        #@Model.IdTipoCombustible
+                    </strong>
+
+                </div>
+
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Nombre
+                    </span>
+
+                    <strong>
+                        @Model.Nombre
+                    </strong>
+
+                </div>
+
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Estado
+                    </span>
+
+                    <strong>
+                        @(Model.Activo ? "Activo" : "Inactivo")
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

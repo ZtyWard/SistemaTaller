@@ -1,0 +1,569 @@
+﻿@model Negocios.DTOs.LoginDto
+
+@{
+    ViewData["Title"] = "Iniciar sesión";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>AXIS · Iniciar sesión</title>
+
+    <style>
+        :root {
+            --axis-black: #1e1f22;
+            --axis-charcoal: #242527;
+            --axis-asphalt: #302f2c;
+            --axis-paper: #efede3;
+            --axis-muted: #a7a7a7;
+            --axis-border: rgba(239, 237, 227, 0.14);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background: radial-gradient( circle at 75% 30%, rgba(239, 237, 227, 0.055), transparent 32% ), linear-gradient( 135deg, #18191b 0%, #202123 48%, #292a2c 100% );
+            color: var(--axis-paper);
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        /* =====================================================
+                   CONTENEDOR PRINCIPAL
+                   ===================================================== */
+
+        .axis-login-page {
+            min-height: 100vh;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            position: relative;
+        }
+
+        /* =====================================================
+                   PANEL IZQUIERDO
+                   ===================================================== */
+
+        .axis-login-brand {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 58px 70px;
+            overflow: hidden;
+        }
+
+            .axis-login-brand::before {
+                content: "";
+                position: absolute;
+                width: 520px;
+                height: 520px;
+                left: -180px;
+                bottom: -240px;
+                border: 1px solid rgba(239, 237, 227, 0.08);
+                border-radius: 50%;
+                box-shadow: 0 0 80px rgba(239, 237, 227, 0.025);
+            }
+
+            .axis-login-brand::after {
+                content: "";
+                position: absolute;
+                width: 700px;
+                height: 700px;
+                right: -500px;
+                top: -420px;
+                border: 1px solid rgba(239, 237, 227, 0.055);
+                border-radius: 50%;
+            }
+
+        /* =====================================================
+                   LOGO
+                   ===================================================== */
+
+        .axis-login-logo {
+            position: relative;
+            z-index: 2;
+            display: inline-flex;
+            flex-direction: column;
+            width: fit-content;
+            text-decoration: none;
+            color: var(--axis-paper);
+        }
+
+        .axis-login-logo-name {
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: 7px;
+            line-height: 1;
+        }
+
+        .axis-login-logo-subtitle {
+            margin-top: 8px;
+            color: rgba(239, 237, 227, 0.42);
+            font-size: 8px;
+            font-weight: 600;
+            letter-spacing: 3px;
+        }
+
+        /* =====================================================
+                   INTRO
+                   ===================================================== */
+
+        .axis-login-intro {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+        }
+
+        .axis-login-kicker {
+            display: block;
+            margin-bottom: 18px;
+            color: rgba(239, 237, 227, 0.45);
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 4px;
+        }
+
+        .axis-login-intro h1 {
+            margin: 0;
+            font-size: clamp(48px, 6vw, 88px);
+            font-weight: 700;
+            letter-spacing: -4px;
+            line-height: 0.9;
+        }
+
+        .axis-login-intro p {
+            max-width: 470px;
+            margin: 24px 0 0;
+            color: var(--axis-muted);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* =====================================================
+                   FOOTER
+                   ===================================================== */
+
+        .axis-login-footer {
+            position: relative;
+            z-index: 2;
+            color: rgba(239, 237, 227, 0.32);
+            font-size: 9px;
+            letter-spacing: 2px;
+        }
+
+        /* =====================================================
+                   PANEL DERECHO
+                   ===================================================== */
+
+        .axis-login-panel {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px;
+            background: rgba(239, 237, 227, 0.035);
+            border-left: 1px solid var(--axis-border);
+            backdrop-filter: blur(18px);
+        }
+
+        .axis-login-card {
+            width: min(100%, 420px);
+        }
+
+        /* =====================================================
+                   ENCABEZADO
+                   ===================================================== */
+
+        .axis-login-heading {
+            margin-bottom: 38px;
+        }
+
+            .axis-login-heading span {
+                display: block;
+                margin-bottom: 10px;
+                color: #777872;
+                font-size: 9px;
+                font-weight: 700;
+                letter-spacing: 3px;
+            }
+
+            .axis-login-heading h2 {
+                margin: 0;
+                color: #292a2c;
+                font-size: 38px;
+                font-weight: 700;
+                letter-spacing: -1.5px;
+            }
+
+            .axis-login-heading p {
+                margin: 12px 0 0;
+                color: #777872;
+                font-size: 13px;
+                line-height: 1.5;
+            }
+
+        /* =====================================================
+                   VALIDACIONES
+                   ===================================================== */
+
+        .axis-validation-summary {
+            margin-bottom: 20px;
+            padding: 12px 14px;
+            border: 1px solid rgba(130, 60, 60, 0.22);
+            border-radius: 10px;
+            background: rgba(130, 60, 60, 0.06);
+            color: #7d4444;
+            font-size: 12px;
+        }
+
+            .axis-validation-summary:empty {
+                display: none;
+            }
+
+        /* =====================================================
+                   CAMPOS
+                   ===================================================== */
+
+        .axis-field {
+            margin-bottom: 22px;
+        }
+
+            .axis-field label {
+                display: block;
+                margin-bottom: 8px;
+                color: #55565a;
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+            }
+
+        .axis-input-wrapper {
+            position: relative;
+        }
+
+        .axis-input {
+            width: 100%;
+            height: 54px;
+            padding: 0 17px;
+            border: 1px solid rgba(48, 47, 44, 0.14);
+            border-radius: 12px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.58);
+            color: #292a2c;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+
+            .axis-input::placeholder {
+                color: #aaa9a4;
+            }
+
+            .axis-input:focus {
+                background: #fff;
+                border-color: rgba(48, 47, 44, 0.42);
+                box-shadow: 0 0 0 4px rgba(48, 47, 44, 0.055);
+            }
+
+        .axis-field .text-danger {
+            display: block;
+            margin-top: 7px;
+            color: #914d4d;
+            font-size: 11px;
+        }
+
+        /* =====================================================
+                   RECORDAR
+                   ===================================================== */
+
+        .axis-login-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 4px 0 28px;
+        }
+
+        .axis-remember {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: #777872;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+            .axis-remember input {
+                width: 15px;
+                height: 15px;
+                accent-color: #302f2c;
+            }
+
+        /* =====================================================
+                   BOTÓN
+                   ===================================================== */
+
+        .axis-login-button {
+            width: 100%;
+            height: 54px;
+            border: 1px solid rgba(239, 237, 227, 0.18);
+            border-radius: 12px;
+            background: linear-gradient( 135deg, #242527, #353638 );
+            color: var(--axis-paper);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            cursor: pointer;
+            box-shadow: 0 12px 28px rgba(30, 31, 34, 0.18);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+        }
+
+            .axis-login-button:hover {
+                transform: translateY(-2px);
+                filter: brightness(1.12);
+                box-shadow: 0 16px 34px rgba(30, 31, 34, 0.25), 0 0 22px rgba(239, 237, 227, 0.08);
+            }
+
+            .axis-login-button:active {
+                transform: translateY(0);
+            }
+
+        /* =====================================================
+                   RESPONSIVE
+                   IMPORTANTE:
+                   En Razor se utiliza @@media
+                   ===================================================== */
+
+        @@media (max-width: 900px) {
+
+            body {
+                overflow: auto;
+            }
+
+            .axis-login-page {
+                min-height: 100vh;
+                display: block;
+            }
+
+            .axis-login-brand {
+                min-height: 42vh;
+                padding: 38px 32px;
+            }
+
+            .axis-login-intro h1 {
+                font-size: 58px;
+            }
+
+            .axis-login-panel {
+                min-height: 58vh;
+                padding: 40px 28px;
+                border-left: 0;
+                border-top: 1px solid var(--axis-border);
+            }
+        }
+
+        @@media (max-width: 500px) {
+
+            .axis-login-brand {
+                padding: 30px 24px;
+            }
+
+            .axis-login-logo-name {
+                font-size: 24px;
+            }
+
+            .axis-login-intro h1 {
+                font-size: 48px;
+            }
+
+            .axis-login-intro p {
+                font-size: 13px;
+            }
+
+            .axis-login-panel {
+                padding: 35px 20px;
+            }
+
+            .axis-login-heading h2 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="axis-login-page">
+
+        <!-- =================================================
+             IDENTIDAD AXIS
+             ================================================= -->
+
+        <section class="axis-login-brand">
+
+            <a class="axis-login-logo"
+               asp-controller="Home"
+               asp-action="Index">
+
+                <span class="axis-login-logo-name">
+                    AXIS
+                </span>
+
+                <span class="axis-login-logo-subtitle">
+                    TALLER AUTOMOTRIZ
+                </span>
+
+            </a>
+
+            <div class="axis-login-intro">
+
+                <span class="axis-login-kicker">
+                    SISTEMA DE GESTIÓN
+                </span>
+
+                <h1>
+                    Todo el taller.
+                    <br />
+                    En un solo lugar.
+                </h1>
+
+                <p>
+                    Administra clientes, vehículos, servicios,
+                    inventario y operaciones desde AXIS.
+                </p>
+
+            </div>
+
+            <div class="axis-login-footer">
+                AXIS · SISTEMA DE GESTIÓN DE TALLER · 2026
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             FORMULARIO DE LOGIN
+             ================================================= -->
+
+        <section class="axis-login-panel">
+
+            <div class="axis-login-card">
+
+                <div class="axis-login-heading">
+
+                    <span>
+                        ACCESO AL SISTEMA
+                    </span>
+
+                    <h2>
+                        Bienvenido
+                    </h2>
+
+                    <p>
+                        Ingresa tus credenciales para continuar.
+                    </p>
+
+                </div>
+
+                <form asp-controller="Account"
+                      asp-action="Login"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="returnUrl"
+                           value="@ViewBag.ReturnUrl" />
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="axis-validation-summary">
+                    </div>
+
+                    <div class="axis-field">
+
+                        <label asp-for="Usuario">
+                            Usuario o correo
+                        </label>
+
+                        <div class="axis-input-wrapper">
+
+                            <input asp-for="Usuario"
+                                   class="axis-input"
+                                   placeholder="Ingresa tu usuario o correo"
+                                   autocomplete="username" />
+
+                        </div>
+
+                        <span asp-validation-for="Usuario"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="axis-field">
+
+                        <label asp-for="Password">
+                            Contraseña
+                        </label>
+
+                        <div class="axis-input-wrapper">
+
+                            <input asp-for="Password"
+                                   class="axis-input"
+                                   placeholder="Ingresa tu contraseña"
+                                   autocomplete="current-password" />
+
+                        </div>
+
+                        <span asp-validation-for="Password"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="axis-login-options">
+
+                        <label class="axis-remember">
+
+                            <input asp-for="Recordarme" />
+
+                            <span>
+                                Recordarme
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                    <button type="submit"
+                            class="axis-login-button">
+
+                        INGRESAR AL SISTEMA
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

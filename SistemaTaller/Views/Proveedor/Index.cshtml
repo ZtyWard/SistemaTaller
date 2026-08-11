@@ -1,0 +1,272 @@
+﻿@model IEnumerable<Negocios.DTOs.ProveedorDto>
+
+@{
+    ViewData["Title"] = "Proveedores";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-page-kicker">
+                INVENTARIO · PROVEEDORES
+            </span>
+
+            <h1>
+                Proveedores
+            </h1>
+
+            <p>
+                Administra los proveedores asociados al taller.
+            </p>
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Activos"
+               class="axis-button axis-button-secondary">
+                Activos
+            </a>
+
+            <a asp-action="Create"
+               class="axis-button axis-button-primary">
+                + Nuevo proveedor
+            </a>
+
+        </div>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="axis-alert axis-alert-error">
+            @TempData["Error"]
+        </div>
+    }
+
+
+    <div class="axis-toolbar">
+
+        <div>
+            <span class="axis-record-count">
+                @Model.Count() proveedores registrados
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="axis-table-card">
+
+        <div class="axis-table-wrapper">
+
+            <table class="axis-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Proveedor
+                        </th>
+
+                        <th>
+                            Cédula jurídica
+                        </th>
+
+                        <th>
+                            Contacto
+                        </th>
+
+                        <th>
+                            Ubicación
+                        </th>
+
+                        <th>
+                            Estado
+                        </th>
+
+                        <th class="axis-table-actions-column">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+
+                            <td colspan="6"
+                                class="axis-empty">
+
+                                No hay proveedores registrados.
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var proveedor in Model)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <div class="axis-client-cell">
+
+                                        <div class="axis-client-avatar">
+
+                                            @(string.IsNullOrWhiteSpace(proveedor.Nombre)
+                                                                                ? "P"
+                                                                                : proveedor.Nombre
+                                                                                .Substring(0, 1)
+                                                                                .ToUpper())
+
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                @proveedor.Nombre
+                                            </strong>
+
+                                            <small class="axis-table-secondary-text">
+                                                Proveedor #@proveedor.IdProveedor
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    @(string.IsNullOrWhiteSpace(
+                                                                proveedor.CedulaJuridica)
+                                                                ? "—"
+                                                                : proveedor.CedulaJuridica)
+
+                                </td>
+
+
+                                <td>
+
+                                    <div>
+
+                                        <strong>
+                                            @(string.IsNullOrWhiteSpace(proveedor.Telefono)
+                                                                                ? "Sin teléfono"
+                                                                                : proveedor.Telefono)
+                                                                                                 </strong>
+
+                                        <small class="axis-table-secondary-text">
+
+                                            @(string.IsNullOrWhiteSpace(proveedor.Correo)
+                                                                                ? "Sin correo"
+                                                                                : proveedor.Correo)
+
+                                        </small>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    @(string.IsNullOrWhiteSpace(proveedor.Direccion)
+                                                                ? "—"
+                                                                : proveedor.Direccion)
+
+                        </td>
+
+
+                                <td>
+
+                            @if (proveedor.Activo)
+                                    {
+                                        <span class="axis-status axis-status-active">
+                                            Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-status axis-status-inactive">
+                                            Inactivo
+                                        </span>
+                                    }
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="axis-row-actions">
+
+                                <a asp-action="Details"
+                                   asp-route-id="@proveedor.IdProveedor"
+                                   class="axis-row-action">
+                                    Ver
+                                </a>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@proveedor.IdProveedor"
+                                   class="axis-row-action">
+                                    Editar
+                                </a>
+
+                                <form asp-action="CambiarEstado"
+                                      asp-route-id="@proveedor.IdProveedor"
+                                      method="post"
+                                      style="display:inline">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="activo"
+                                           value="@(!proveedor.Activo)" />
+
+                                    <button type="submit"
+                                            class="axis-row-action">
+
+                                        @(proveedor.Activo
+                                                                                ? "Desactivar"
+                                                                                : "Activar")
+
+                                    </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

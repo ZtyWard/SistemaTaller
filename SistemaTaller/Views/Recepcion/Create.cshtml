@@ -1,0 +1,185 @@
+﻿@model Negocios.DTOs.RecepcionGuardarDto
+
+@{
+    ViewData["Title"] = "Nueva recepción";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                TALLER · RECEPCIONES
+            </span>
+
+            <h1>
+                Nueva recepción
+            </h1>
+
+            <p>
+                Registra el ingreso de un vehículo al taller.
+            </p>
+
+        </div>
+
+        <a asp-action="Index"
+           class="axis-button axis-button-secondary">
+            ← Volver
+        </a>
+
+    </div>
+
+
+    <div class="axis-form-card">
+
+        <form asp-action="Create"
+              method="post"
+              class="axis-form">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-form-validation">
+            </div>
+
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Información de ingreso
+                </div>
+
+                <div class="axis-form-grid">
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdVehiculo">
+                            Vehículo
+                        </label>
+
+                        <input asp-for="IdVehiculo"
+                               type="number"
+                               min="1"
+                               placeholder="ID del vehículo" />
+
+                        <span asp-validation-for="IdVehiculo"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdEmpleado">
+                            Empleado responsable
+                        </label>
+
+                        <input asp-for="IdEmpleado"
+                               type="number"
+                               min="1"
+                               placeholder="ID del empleado" />
+
+                        <span asp-validation-for="IdEmpleado"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Kilometraje">
+                            Kilometraje
+                        </label>
+
+                        <input asp-for="Kilometraje"
+                               type="number"
+                               min="0"
+                               placeholder="Kilometraje actual" />
+
+                        <span asp-validation-for="Kilometraje"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="NivelCombustible">
+                            Nivel de combustible
+                        </label>
+
+                        <select asp-for="NivelCombustible">
+
+                            <option value="">
+                                No indicado
+                            </option>
+
+                            <option value="Vacío">
+                                Vacío
+                            </option>
+
+                            <option value="1/4">
+                                1/4
+                            </option>
+
+                            <option value="1/2">
+                                1/2
+                            </option>
+
+                            <option value="3/4">
+                                3/4
+                            </option>
+
+                            <option value="Lleno">
+                                Lleno
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="NivelCombustible"></span>
+
+                    </div>
+
+
+                    <div class="axis-field axis-field-full">
+
+                        <label asp-for="Observaciones">
+                            Observaciones
+                        </label>
+
+                        <textarea asp-for="Observaciones"
+                                  rows="6"
+                                  placeholder="Observaciones sobre el ingreso del vehículo..."></textarea>
+
+                        <span asp-validation-for="Observaciones"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-form-actions">
+
+                <a asp-action="Index"
+                   class="axis-button axis-button-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                        class="axis-button axis-button-primary">
+                    Registrar recepción
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

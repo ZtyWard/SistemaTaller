@@ -1,9 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// =====================================================
+// OrdenTrabajoController
+// =====================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Negocios.DTOs;
 using Negocios.Interfaces;
+using Negocios.Seguridad;
 
-namespace SistemaTaller.Controllers;
+// =====================================================
 
+using Microsoft.AspNetCore.Authorization;
 public class OrdenTrabajoController : Controller
 {
     private readonly IOrdenTrabajoService _service;
@@ -14,6 +21,7 @@ public class OrdenTrabajoController : Controller
     }
 
     // GET: OrdenTrabajo
+    [Authorize(Policy = Permisos.OrdenesVer)]
     public async Task<IActionResult> Index()
     {
         var ordenes = await _service.ObtenerTodasAsync();
@@ -22,6 +30,7 @@ public class OrdenTrabajoController : Controller
     }
 
     // GET: OrdenTrabajo/Abiertas
+    [Authorize(Policy = Permisos.OrdenesVer)]
     public async Task<IActionResult> Abiertas()
     {
         var ordenes = await _service.ObtenerAbiertasAsync();
@@ -30,6 +39,7 @@ public class OrdenTrabajoController : Controller
     }
 
     // GET: OrdenTrabajo/PorEstado?estado=Pendiente
+    [Authorize(Policy = Permisos.OrdenesVer)]
     public async Task<IActionResult> PorEstado(string estado)
     {
         if (string.IsNullOrWhiteSpace(estado))
@@ -42,6 +52,7 @@ public class OrdenTrabajoController : Controller
     }
 
     // GET: OrdenTrabajo/Details/5
+    [Authorize(Policy = Permisos.OrdenesVer)]
     public async Task<IActionResult> Details(int id)
     {
         var orden = await _service.ObtenerPorIdAsync(id);
@@ -53,6 +64,7 @@ public class OrdenTrabajoController : Controller
     }
 
     // GET: OrdenTrabajo/Create
+    [Authorize(Policy = Permisos.OrdenesCrear)]
     public IActionResult Create()
     {
         return View();
@@ -61,6 +73,7 @@ public class OrdenTrabajoController : Controller
     // POST: OrdenTrabajo/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.OrdenesCrear)]
     public async Task<IActionResult> Create(
         OrdenTrabajoGuardarDto dto)
     {
@@ -87,6 +100,7 @@ public class OrdenTrabajoController : Controller
     }
 
     // GET: OrdenTrabajo/Edit/5
+    [Authorize(Policy = Permisos.OrdenesEditar)]
     public async Task<IActionResult> Edit(int id)
     {
         var orden = await _service.ObtenerPorIdAsync(id);
@@ -108,6 +122,7 @@ public class OrdenTrabajoController : Controller
     // POST: OrdenTrabajo/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.OrdenesEditar)]
     public async Task<IActionResult> Edit(
         int id,
         OrdenTrabajoGuardarDto dto)
@@ -147,6 +162,7 @@ public class OrdenTrabajoController : Controller
     // POST: OrdenTrabajo/CambiarEstado/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.OrdenesAprobar)]
     public async Task<IActionResult> CambiarEstado(
         int id,
         string estado)
@@ -174,6 +190,7 @@ public class OrdenTrabajoController : Controller
     // POST: OrdenTrabajo/Finalizar/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.OrdenesAprobar)]
     public async Task<IActionResult> Finalizar(int id)
     {
         var finalizada =

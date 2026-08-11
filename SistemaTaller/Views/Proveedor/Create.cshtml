@@ -1,0 +1,179 @@
+﻿@model Negocios.DTOs.ProveedorGuardarDto
+
+@{
+    ViewData["Title"] = "Nuevo proveedor";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                INVENTARIO · PROVEEDORES
+            </span>
+
+            <h1>
+                Nuevo proveedor
+            </h1>
+
+            <p>
+                Registra un proveedor para las operaciones del taller.
+            </p>
+
+        </div>
+
+        <a asp-action="Index"
+           class="axis-button axis-button-secondary">
+            ← Volver
+        </a>
+
+    </div>
+
+
+    <div class="axis-form-card">
+
+        <form asp-action="Create"
+              method="post"
+              class="axis-form">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-form-validation">
+            </div>
+
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Información general
+                </div>
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field axis-field-full">
+
+                        <label asp-for="Nombre">
+                            Nombre del proveedor
+                        </label>
+
+                        <input asp-for="Nombre"
+                               placeholder="Nombre o razón social" />
+
+                        <span asp-validation-for="Nombre"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="CedulaJuridica">
+                            Cédula jurídica
+                        </label>
+
+                        <input asp-for="CedulaJuridica"
+                               placeholder="Ej. 3-101-123456" />
+
+                        <span asp-validation-for="CedulaJuridica"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Telefono">
+                            Teléfono
+                        </label>
+
+                        <input asp-for="Telefono"
+                               type="tel"
+                               placeholder="Ej. 8888-8888" />
+
+                        <span asp-validation-for="Telefono"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Correo">
+                            Correo electrónico
+                        </label>
+
+                        <input asp-for="Correo"
+                               type="email"
+                               placeholder="proveedor@empresa.com" />
+
+                        <span asp-validation-for="Correo"></span>
+
+                    </div>
+
+
+                    <div class="axis-field axis-field-full">
+
+                        <label asp-for="Direccion">
+                            Dirección
+                        </label>
+
+                        <textarea asp-for="Direccion"
+                                  rows="4"
+                                  placeholder="Dirección del proveedor...">
+                        </textarea>
+
+                        <span asp-validation-for="Direccion"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Activo">
+                            Estado
+                        </label>
+
+                        <select asp-for="Activo">
+
+                            <option value="true">
+                                Activo
+                            </option>
+
+                            <option value="false">
+                                Inactivo
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="Activo"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-form-actions">
+
+                <a asp-action="Index"
+                   class="axis-button axis-button-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                        class="axis-button axis-button-primary">
+                    Guardar proveedor
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

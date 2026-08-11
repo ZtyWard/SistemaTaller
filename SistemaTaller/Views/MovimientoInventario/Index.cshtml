@@ -1,0 +1,282 @@
+﻿@model IEnumerable<Negocios.DTOs.MovimientoInventarioDto>
+
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = "Movimientos de inventario";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-page-kicker">
+                INVENTARIO
+            </span>
+
+            <h1>
+                Movimientos
+            </h1>
+
+            <p>
+                Control de entradas, salidas y ajustes de inventario.
+            </p>
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Recientes"
+               class="axis-button axis-button-secondary">
+                Recientes
+            </a>
+
+            <a asp-action="Create"
+               class="axis-button axis-button-primary">
+                <span>+</span>
+                Nuevo movimiento
+            </a>
+
+        </div>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="axis-alert axis-alert-error">
+            @TempData["Error"]
+        </div>
+    }
+
+
+    <div class="axis-toolbar">
+
+        <div class="axis-movement-filters">
+
+            <a asp-action="Index"
+               class="axis-filter-button">
+                Todos
+            </a>
+
+            <a asp-action="PorTipo"
+               asp-route-tipoMovimiento="Entrada"
+               class="axis-filter-button">
+                Entradas
+            </a>
+
+            <a asp-action="PorTipo"
+               asp-route-tipoMovimiento="Salida"
+               class="axis-filter-button">
+                Salidas
+            </a>
+
+            <a asp-action="PorTipo"
+               asp-route-tipoMovimiento="Ajuste"
+               class="axis-filter-button">
+                Ajustes
+            </a>
+
+        </div>
+
+        <span class="axis-record-count">
+            @Model.Count() movimientos
+        </span>
+
+    </div>
+
+
+    <div class="axis-table-card">
+
+        <div class="axis-table-wrapper">
+
+            <table class="axis-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Producto
+                        </th>
+
+                        <th>
+                            Movimiento
+                        </th>
+
+                        <th>
+                            Cantidad
+                        </th>
+
+                        <th>
+                            Fecha
+                        </th>
+
+                        <th>
+                            Observación
+                        </th>
+
+                        <th class="axis-table-actions-column">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+
+                            <td colspan="6"
+                                class="axis-empty">
+
+                                No hay movimientos registrados.
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var movimiento in Model)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <div class="axis-client-cell">
+
+                                        <div class="axis-client-avatar">
+
+                                            @(string.IsNullOrWhiteSpace(
+                                                                                movimiento.Producto)
+                                                                                ? "P"
+                                                                                : movimiento.Producto
+                                                                                .Substring(0, 1)
+                                                                                .ToUpper())
+
+                                </div>
+
+                                        <div>
+
+                                            <strong>
+                                                @movimiento.Producto
+                                            </strong>
+
+                                            <small class="axis-table-secondary-text">
+                                                Producto #@movimiento.IdProducto
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                            @switch (movimiento.TipoMovimiento)
+                                    {
+                                        case "Entrada":
+
+                                            <span class="axis-movement-badge axis-movement-entry">
+                                                Entrada
+                                            </span>
+
+                                            break;
+
+                                        case "Salida":
+
+                                            <span class="axis-movement-badge axis-movement-exit">
+                                                Salida
+                                            </span>
+
+                                            break;
+
+                                        case "Ajuste":
+
+                                            <span class="axis-movement-badge axis-movement-adjustment">
+                                                Ajuste
+                                            </span>
+
+                                            break;
+
+                                        default:
+
+                                            <span class="axis-status axis-status-inactive">
+                                                @movimiento.TipoMovimiento
+                                            </span>
+
+                                            break;
+                                    }
+
+                        </td>
+
+
+                        <td>
+
+                            <strong class="axis-primary-text">
+                                @movimiento.Cantidad.ToString("N0")
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            @movimiento.FechaMovimiento
+                            .ToLocalTime()
+                            .ToString("dd/MM/yyyy HH:mm")
+
+                        </td>
+
+
+                        <td>
+
+                            @(string.IsNullOrWhiteSpace(
+                                                        movimiento.Observacion)
+                                                        ? "—"
+                                                        : movimiento.Observacion)
+
+                        </td>
+
+
+                                <td>
+
+                                    <div class="axis-row-actions">
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@movimiento.IdMovimiento"
+                                           class="axis-row-action">
+
+                                            Ver
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

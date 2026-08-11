@@ -1,0 +1,276 @@
+﻿@model IEnumerable<Negocios.DTOs.OrdenTrabajoDto>
+
+@{
+    ViewData["Title"] = "Órdenes de trabajo";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                OPERACIONES · ÓRDENES DE TRABAJO
+            </span>
+
+            <h1>
+                Órdenes de trabajo
+            </h1>
+
+            <p>
+                Controla los trabajos activos y el estado de servicio de cada vehículo.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Abiertas"
+               class="axis-button axis-button-secondary">
+                Abiertas
+            </a>
+
+            <a asp-action="Create"
+               class="axis-button axis-button-primary">
+                + Nueva orden
+            </a>
+
+        </div>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="axis-alert axis-alert-error">
+            @TempData["Error"]
+        </div>
+    }
+
+
+    <div class="axis-toolbar">
+
+        <span class="axis-record-count">
+            @Model.Count() órdenes registradas
+        </span>
+
+    </div>
+
+
+    <div class="axis-table-card">
+
+        <div class="axis-table-wrapper">
+
+            <table class="axis-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Orden
+                        </th>
+
+                        <th>
+                            Cliente
+                        </th>
+
+                        <th>
+                            Vehículo
+                        </th>
+
+                        <th>
+                            Inicio
+                        </th>
+
+                        <th>
+                            Finalización
+                        </th>
+
+                        <th>
+                            Estado
+                        </th>
+
+                        <th>
+                            Total
+                        </th>
+
+                        <th class="axis-table-actions-column">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+
+                            <td colspan="8"
+                                class="axis-empty">
+
+                                No hay órdenes de trabajo registradas.
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var orden in Model)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <div class="axis-client-cell">
+
+                                        <div class="axis-client-avatar">
+                                            OT
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                #@orden.IdOrdenTrabajo
+                                            </strong>
+
+                                            <small class="axis-table-secondary-text">
+                                                Cotización #@orden.IdCotizacion
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        @orden.ClienteNombre
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        @orden.Placa
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+                                    @orden.FechaInicio.ToString("dd/MM/yyyy")
+                                </td>
+
+
+                                <td>
+
+                                    @if (orden.FechaFin.HasValue)
+                                    {
+                                        @orden.FechaFin.Value.ToString("dd/MM/yyyy")
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-table-secondary-text">
+                                            En proceso
+                                        </span>
+                                    }
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="axis-status
+                                        @(orden.Estado.Equals(
+                                                                              "Finalizada",
+                                                                              StringComparison.OrdinalIgnoreCase)
+                                                                              ? "axis-status-active"
+                                                                              : "axis-status-warning")">
+
+                                @orden.Estado
+
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        ₡@orden.TotalCotizacion.ToString("N2")
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="axis-row-actions">
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@orden.IdOrdenTrabajo"
+                                           class="axis-row-action">
+                                            Ver
+                                        </a>
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@orden.IdOrdenTrabajo"
+                                           class="axis-row-action">
+                                            Editar
+                                        </a>
+
+
+                                @if (!orden.Estado.Equals(
+                                                                "Finalizada",
+                                                                StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <form asp-action="Finalizar"
+                                                  asp-route-id="@orden.IdOrdenTrabajo"
+                                                  method="post"
+                                                  style="display:inline">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="axis-row-action">
+                                                    Finalizar
+                                                </button>
+
+                                            </form>
+                                        }
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

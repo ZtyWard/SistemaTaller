@@ -1,0 +1,241 @@
+﻿@model Negocios.DTOs.EmpleadoGuardarDto
+
+@{
+    ViewData["Title"] = "Nuevo empleado";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-page-kicker">
+                PERSONAL · EMPLEADOS
+            </span>
+
+            <h1>Nuevo empleado</h1>
+
+            <p>
+                Registra un nuevo integrante del personal del taller.
+            </p>
+        </div>
+
+        <a asp-action="Index"
+           class="axis-button axis-button-secondary">
+            ← Volver
+        </a>
+
+    </div>
+
+
+    <div class="axis-form-card">
+
+        <form asp-action="Create"
+              method="post"
+              class="axis-form">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-form-validation">
+            </div>
+
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Información personal
+                </div>
+
+                <div class="axis-form-grid">
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Cedula">
+                            Cédula
+                        </label>
+
+                        <input asp-for="Cedula"
+                               placeholder="Número de identificación" />
+
+                        <span asp-validation-for="Cedula"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Nombre">
+                            Nombre
+                        </label>
+
+                        <input asp-for="Nombre"
+                               placeholder="Nombre" />
+
+                        <span asp-validation-for="Nombre"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Apellido1">
+                            Primer apellido
+                        </label>
+
+                        <input asp-for="Apellido1"
+                               placeholder="Primer apellido" />
+
+                        <span asp-validation-for="Apellido1"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Apellido2">
+                            Segundo apellido
+                        </label>
+
+                        <input asp-for="Apellido2"
+                               placeholder="Segundo apellido" />
+
+                        <span asp-validation-for="Apellido2"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Telefono">
+                            Teléfono
+                        </label>
+
+                        <input asp-for="Telefono"
+                               placeholder="Número telefónico" />
+
+                        <span asp-validation-for="Telefono"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Correo">
+                            Correo electrónico
+                        </label>
+
+                        <input asp-for="Correo"
+                               type="email"
+                               placeholder="correo@ejemplo.com" />
+
+                        <span asp-validation-for="Correo"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Información laboral
+                </div>
+
+                <div class="axis-form-grid">
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdPuesto">
+                            Puesto
+                        </label>
+
+                        <input asp-for="IdPuesto"
+                               type="number"
+                               min="1"
+                               placeholder="ID del puesto" />
+
+                        <span asp-validation-for="IdPuesto"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdEspecialidad">
+                            Especialidad
+                        </label>
+
+                        <input asp-for="IdEspecialidad"
+                               type="number"
+                               min="1"
+                               placeholder="ID de especialidad" />
+
+                        <span asp-validation-for="IdEspecialidad"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Salario">
+                            Salario
+                        </label>
+
+                        <input asp-for="Salario"
+                               type="number"
+                               min="0"
+                               step="0.01"
+                               placeholder="0.00" />
+
+                        <span asp-validation-for="Salario"></span>
+
+                    </div>
+
+
+                    <div class="axis-field axis-checkbox-field">
+
+                        <label class="axis-checkbox">
+
+                            <input asp-for="Activo" />
+
+                            <span>
+                                Empleado activo
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-form-actions">
+
+                <a asp-action="Index"
+                   class="axis-button axis-button-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                        class="axis-button axis-button-primary">
+                    Registrar empleado
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

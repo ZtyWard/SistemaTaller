@@ -1,0 +1,188 @@
+﻿@model IEnumerable<Negocios.DTOs.MarcaDto>
+
+@{
+    ViewData["Title"] = "Marcas";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-page-kicker">
+                CATÁLOGOS · VEHÍCULOS
+            </span>
+
+            <h1>Marcas</h1>
+
+            <p>
+                Administra las marcas de vehículos disponibles en el taller.
+            </p>
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="MarcasActivas"
+               class="axis-button axis-button-secondary">
+                Activas
+            </a>
+
+            <a asp-action="CrearMarca"
+               class="axis-button axis-button-primary">
+                + Nueva marca
+            </a>
+
+        </div>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+
+    <div class="axis-toolbar">
+
+        <span class="axis-record-count">
+            @Model.Count() marcas registradas
+        </span>
+
+    </div>
+
+
+    <div class="axis-table-card">
+
+        <div class="axis-table-wrapper">
+
+            <table class="axis-table">
+
+                <thead>
+                    <tr>
+                        <th>Marca</th>
+                        <th>Identificador</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4"
+                                class="axis-empty">
+                                No hay marcas registradas.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var marca in Model)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <div class="axis-client-cell">
+
+                                        <div class="axis-client-avatar">
+                                            @marca.Nombre.Substring(0, 1).ToUpper()
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                @marca.Nombre
+                                            </strong>
+
+                                            <small class="axis-table-secondary-text">
+                                                Marca de vehículo
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+                                <td>
+                                    #@marca.IdMarca
+                                </td>
+
+                                <td>
+
+                                    @if (marca.Activo)
+                                    {
+                                        <span class="axis-status axis-status-active">
+                                            Activa
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-status">
+                                            Inactiva
+                                        </span>
+                                    }
+
+                        </td>
+
+                        <td>
+
+                            <div class="axis-row-actions">
+
+                                <a asp-action="DetalleMarca"
+                                   asp-route-id="@marca.IdMarca"
+                                   class="axis-row-action">
+                                    Ver
+                                </a>
+
+                                <a asp-action="EditarMarca"
+                                   asp-route-id="@marca.IdMarca"
+                                   class="axis-row-action">
+                                    Editar
+                                </a>
+
+                                <form asp-action="CambiarEstadoMarca"
+                                      asp-route-id="@marca.IdMarca"
+                                      method="post"
+                                      style="display:inline">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="activo"
+                                           value="@(!marca.Activo).ToString().ToLower()" />
+
+                                    <button type="submit"
+                                            class="axis-row-action">
+
+                                        @(marca.Activo
+                                                                                ? "Desactivar"
+                                                                                : "Activar")
+
+                                    </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

@@ -1,0 +1,157 @@
+﻿@model Negocios.DTOs.CompraGuardarDto
+
+@{
+    ViewData["Title"] = "Nueva compra";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                INVENTARIO · COMPRAS
+            </span>
+
+            <h1>
+                Nueva compra
+            </h1>
+
+            <p>
+                Registra una nueva compra realizada a un proveedor.
+            </p>
+
+        </div>
+
+        <a asp-action="Index"
+           class="axis-button axis-button-secondary">
+            ← Volver
+        </a>
+
+    </div>
+
+
+    <div class="axis-form-card">
+
+        <form asp-action="Create"
+              method="post"
+              class="axis-form">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-form-validation">
+            </div>
+
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Información de la compra
+                </div>
+
+                <div class="axis-form-grid">
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdProveedor">
+                            Proveedor
+                        </label>
+
+                        <input asp-for="IdProveedor"
+                               type="number"
+                               min="1"
+                               placeholder="ID del proveedor" />
+
+                        <span asp-validation-for="IdProveedor"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="FechaCompra">
+                            Fecha de compra
+                        </label>
+
+                        <input asp-for="FechaCompra"
+                               type="date" />
+
+                        <span asp-validation-for="FechaCompra"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Total">
+                            Total
+                        </label>
+
+                        <input asp-for="Total"
+                               type="number"
+                               step="0.01"
+                               min="0"
+                               placeholder="0.00" />
+
+                        <span asp-validation-for="Total"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Estado">
+                            Estado
+                        </label>
+
+                        <select asp-for="Estado">
+
+                            <option value="Pendiente">
+                                Pendiente
+                            </option>
+
+                            <option value="Completada">
+                                Completada
+                            </option>
+
+                            <option value="Cancelada">
+                                Cancelada
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="Estado"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-form-actions">
+
+                <a asp-action="Index"
+                   class="axis-button axis-button-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                        class="axis-button axis-button-primary">
+                    Registrar compra
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

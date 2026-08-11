@@ -1,0 +1,221 @@
+﻿@model Negocios.DTOs.EmpleadoDto
+
+@{
+    ViewData["Title"] = "Detalle del empleado";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-page-kicker">
+                PERSONAL · EMPLEADOS
+            </span>
+
+            <h1>
+                @Model.NombreCompleto
+            </h1>
+
+            <p>
+                Información detallada del empleado.
+            </p>
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.IdEmpleado"
+               class="axis-button axis-button-primary">
+                Editar
+            </a>
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-detail-grid">
+
+
+        <div class="axis-detail-card">
+
+            <div class="axis-detail-card-header">
+
+                <div class="axis-detail-avatar">
+                    @(
+                                        string.IsNullOrWhiteSpace(Model.NombreCompleto)
+                                        ? "E"
+                                        : Model.NombreCompleto
+                                        .Substring(0, 1)
+                                        .ToUpper()
+                                        )
+                </div>
+
+                <div>
+
+                    <span class="axis-detail-label">
+                        EMPLEADO
+                    </span>
+
+                    <h2>
+                        @Model.NombreCompleto
+                    </h2>
+
+                    <span class="axis-table-secondary-text">
+                        #@Model.IdEmpleado
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-detail-status">
+
+                @if (Model.Activo)
+                {
+                    <span class="axis-status axis-status-active">
+                        Activo
+                    </span>
+                }
+                else
+                {
+                    <span class="axis-status axis-status-inactive">
+                        Inactivo
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                INFORMACIÓN PERSONAL
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+                    <span>Cédula</span>
+                    <strong>@Model.Cedula</strong>
+                </div>
+
+                <div class="axis-detail-row">
+                    <span>Teléfono</span>
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Model.Telefono)
+                                                ? "No indicado"
+                                                : Model.Telefono)
+                    </strong>
+                </div>
+
+                <div class="axis-detail-row">
+                    <span>Correo</span>
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Model.Correo)
+                                                ? "No indicado"
+                                                : Model.Correo)
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                PUESTO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+                    <span>Puesto</span>
+                    <strong>@Model.Puesto</strong>
+                </div>
+
+                <div class="axis-detail-row">
+                    <span>ID puesto</span>
+                    <strong>#@Model.IdPuesto</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                ESPECIALIDAD
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+                    <span>Especialidad</span>
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Model.Especialidad)
+                                                ? "Sin especialidad"
+                                                : Model.Especialidad)
+                    </strong>
+                </div>
+
+                <div class="axis-detail-row">
+                    <span>ID especialidad</span>
+                    <strong>#@Model.IdEspecialidad</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card axis-detail-card-wide">
+
+            <span class="axis-detail-label">
+                INFORMACIÓN LABORAL
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>Salario</span>
+
+                    <strong>
+                        @(Model.Salario.HasValue
+                                                ? Model.Salario.Value.ToString("C2")
+                                                : "No indicado")
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>Estado</span>
+
+                    <strong>
+                        @(Model.Activo ? "Activo" : "Inactivo")
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

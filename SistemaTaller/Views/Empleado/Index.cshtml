@@ -1,0 +1,227 @@
+﻿@model IEnumerable<Negocios.DTOs.EmpleadoDto>
+
+@{
+    ViewData["Title"] = "Empleados";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-page-kicker">
+                PERSONAL · TALLER
+            </span>
+
+            <h1>Empleados</h1>
+
+            <p>
+                Gestiona el personal, puestos y especialidades del taller.
+            </p>
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Activos"
+               class="axis-button axis-button-secondary">
+                Activos
+            </a>
+
+            <a asp-action="Create"
+               class="axis-button axis-button-primary">
+                + Nuevo empleado
+            </a>
+
+        </div>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="axis-alert axis-alert-error">
+            @TempData["Error"]
+        </div>
+    }
+
+
+    <div class="axis-toolbar">
+
+        <span class="axis-record-count">
+            @Model.Count() empleados registrados
+        </span>
+
+    </div>
+
+
+    <div class="axis-table-card">
+
+        <div class="axis-table-wrapper">
+
+            <table class="axis-table">
+
+                <thead>
+                    <tr>
+
+                        <th>Empleado</th>
+                        <th>Cédula</th>
+                        <th>Puesto</th>
+                        <th>Especialidad</th>
+                        <th>Teléfono</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="axis-empty">
+                                No hay empleados registrados.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var empleado in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <div class="axis-client-cell">
+
+                                        <div class="axis-client-avatar">
+                                            @(
+                                                                                string.IsNullOrWhiteSpace(empleado.NombreCompleto)
+                                                                                ? "E"
+                                                                                : empleado.NombreCompleto
+                                                                                .Substring(0, 1)
+                                                                                .ToUpper()
+                                                                                )
+                                        </div>
+
+                                        <div>
+                                            <strong>
+                                                @empleado.NombreCompleto
+                                            </strong>
+
+                                            <small class="axis-table-secondary-text">
+                                                #@empleado.IdEmpleado
+                                            </small>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+
+                                <td>
+                                    @empleado.Cedula
+                                </td>
+
+
+                                <td>
+                                    @empleado.Puesto
+                                </td>
+
+
+                                <td>
+                                    @(
+                                                                string.IsNullOrWhiteSpace(empleado.Especialidad)
+                                                                ? "Sin especialidad"
+                                                                : empleado.Especialidad
+                                                                )
+                                </td>
+
+
+                                <td>
+                                    @(
+                                                                string.IsNullOrWhiteSpace(empleado.Telefono)
+                                                                ? "—"
+                                                                : empleado.Telefono
+                                                                )
+                        </td>
+
+
+                                <td>
+
+                            @if (empleado.Activo)
+                                    {
+                                        <span class="axis-status axis-status-active">
+                                            Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-status axis-status-inactive">
+                                            Inactivo
+                                        </span>
+                                    }
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="axis-row-actions">
+
+                                <a asp-action="Details"
+                                   asp-route-id="@empleado.IdEmpleado"
+                                   class="axis-row-action">
+                                    Ver
+                                </a>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@empleado.IdEmpleado"
+                                   class="axis-row-action">
+                                    Editar
+                                </a>
+
+                                <form asp-action="CambiarEstado"
+                                      asp-route-id="@empleado.IdEmpleado"
+                                      method="post"
+                                      style="display:inline">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="activo"
+                                           value="@(!empleado.Activo).ToString().ToLower()" />
+
+                                    <button type="submit"
+                                            class="axis-row-action">
+
+                                        @(empleado.Activo
+                                                                                ? "Desactivar"
+                                                                                : "Activar")
+
+                                    </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

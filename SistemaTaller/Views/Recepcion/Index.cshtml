@@ -1,0 +1,257 @@
+﻿@model IEnumerable<Negocios.DTOs.RecepcionDto>
+
+@{
+    ViewData["Title"] = "Recepciones";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                TALLER · RECEPCIONES
+            </span>
+
+            <h1>
+                Recepciones
+            </h1>
+
+            <p>
+                Controla el ingreso de vehículos y el estado de atención en el taller.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Abiertas"
+               class="axis-button axis-button-secondary">
+                Abiertas
+            </a>
+
+            <a asp-action="Create"
+               class="axis-button axis-button-primary">
+                + Nueva recepción
+            </a>
+
+        </div>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="axis-alert axis-alert-error">
+            @TempData["Error"]
+        </div>
+    }
+
+
+    <div class="axis-toolbar">
+
+        <span class="axis-record-count">
+            @Model.Count() recepciones registradas
+        </span>
+
+    </div>
+
+
+    <div class="axis-table-card">
+
+        <div class="axis-table-wrapper">
+
+            <table class="axis-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Recepción
+                        </th>
+
+                        <th>
+                            Vehículo
+                        </th>
+
+                        <th>
+                            Empleado
+                        </th>
+
+                        <th>
+                            Fecha
+                        </th>
+
+                        <th>
+                            Kilometraje
+                        </th>
+
+                        <th>
+                            Estado
+                        </th>
+
+                        <th class="axis-table-actions-column">
+                            Acciones
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+
+                            <td colspan="7"
+                                class="axis-empty">
+
+                                No hay recepciones registradas.
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var recepcion in Model)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <div class="axis-client-cell">
+
+                                        <div class="axis-client-avatar">
+                                            R
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                #@recepcion.IdRecepcion
+                                            </strong>
+
+                                            <small class="axis-table-secondary-text">
+                                                Recepción
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        @recepcion.Placa
+                                    </strong>
+
+                                    <small class="axis-table-secondary-text">
+                                        @recepcion.VehiculoDescripcion
+                                    </small>
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        @recepcion.EmpleadoNombre
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+                                    @recepcion.FechaRecepcion.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+
+
+                                <td>
+                                    @recepcion.Kilometraje.ToString("N0") km
+                                </td>
+
+
+                                <td>
+
+                                    @if (recepcion.Estado.Equals(
+                                                                "Abierta",
+                                                                StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <span class="axis-status axis-status-warning">
+                                            @recepcion.Estado
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-status axis-status-active">
+                                            @recepcion.Estado
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="axis-row-actions">
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@recepcion.IdRecepcion"
+                                           class="axis-row-action">
+                                            Ver
+                                        </a>
+
+                                        @if (!recepcion.Estado.Equals(
+                                                                        "Cerrada",
+                                                                        StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <form asp-action="ActualizarEstado"
+                                                  asp-route-id="@recepcion.IdRecepcion"
+                                                  method="post"
+                                                  style="display:inline">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <input type="hidden"
+                                                       name="estado"
+                                                       value="Cerrada" />
+
+                                                <button type="submit"
+                                                        class="axis-row-action">
+                                                    Cerrar
+                                                </button>
+
+                                            </form>
+                                        }
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

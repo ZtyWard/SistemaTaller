@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Negocios.DTOs;
 using Negocios.Interfaces;
+using Negocios.Seguridad;
 
-namespace SistemaTaller.Controllers;
+// =====================================================
 
+using Microsoft.AspNetCore.Authorization;
 public class CatalogoPersonalController : Controller
 {
     private readonly IPuestoService _puestoService;
@@ -22,6 +25,7 @@ public class CatalogoPersonalController : Controller
     // =====================================================
 
     // GET: CatalogoPersonal/Puestos
+    [Authorize(Policy = Permisos.EmpleadosVer)]
     public async Task<IActionResult> Puestos()
     {
         var puestos = await _puestoService.ObtenerTodosAsync();
@@ -30,6 +34,7 @@ public class CatalogoPersonalController : Controller
     }
 
     // GET: CatalogoPersonal/PuestosActivos
+    [Authorize(Policy = Permisos.EmpleadosVer)]
     public async Task<IActionResult> PuestosActivos()
     {
         var puestos = await _puestoService.ObtenerActivosAsync();
@@ -38,6 +43,7 @@ public class CatalogoPersonalController : Controller
     }
 
     // GET: CatalogoPersonal/DetallePuesto/5
+    [Authorize(Policy = Permisos.EmpleadosVer)]
     public async Task<IActionResult> DetallePuesto(int id)
     {
         var puesto = await _puestoService.ObtenerPorIdAsync(id);
@@ -49,6 +55,7 @@ public class CatalogoPersonalController : Controller
     }
 
     // GET: CatalogoPersonal/CrearPuesto
+    [Authorize(Policy = Permisos.EmpleadosCrear)]
     public IActionResult CrearPuesto()
     {
         return View();
@@ -57,6 +64,7 @@ public class CatalogoPersonalController : Controller
     // POST: CatalogoPersonal/CrearPuesto
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.EmpleadosCrear)]
     public async Task<IActionResult> CrearPuesto(
         PuestoGuardarDto dto)
     {
@@ -83,6 +91,7 @@ public class CatalogoPersonalController : Controller
     }
 
     // GET: CatalogoPersonal/EditarPuesto/5
+    [Authorize(Policy = Permisos.EmpleadosEditar)]
     public async Task<IActionResult> EditarPuesto(int id)
     {
         var puesto = await _puestoService.ObtenerPorIdAsync(id);
@@ -104,6 +113,7 @@ public class CatalogoPersonalController : Controller
     // POST: CatalogoPersonal/EditarPuesto/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.EmpleadosEditar)]
     public async Task<IActionResult> EditarPuesto(
         int id,
         PuestoGuardarDto dto)
@@ -143,6 +153,7 @@ public class CatalogoPersonalController : Controller
     // POST: CatalogoPersonal/CambiarEstadoPuesto/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.EmpleadosDesactivar)]
     public async Task<IActionResult> CambiarEstadoPuesto(
         int id,
         bool activo)
@@ -166,6 +177,7 @@ public class CatalogoPersonalController : Controller
     // =====================================================
 
     // GET: CatalogoPersonal/Especialidades
+    [Authorize(Policy = Permisos.EmpleadosVer)]
     public async Task<IActionResult> Especialidades()
     {
         var especialidades =
@@ -175,6 +187,7 @@ public class CatalogoPersonalController : Controller
     }
 
     // GET: CatalogoPersonal/EspecialidadesActivas
+    [Authorize(Policy = Permisos.EmpleadosVer)]
     public async Task<IActionResult> EspecialidadesActivas()
     {
         var especialidades =
@@ -184,6 +197,7 @@ public class CatalogoPersonalController : Controller
     }
 
     // GET: CatalogoPersonal/DetalleEspecialidad/5
+    [Authorize(Policy = Permisos.EmpleadosVer)]
     public async Task<IActionResult> DetalleEspecialidad(int id)
     {
         var especialidad =
@@ -196,6 +210,7 @@ public class CatalogoPersonalController : Controller
     }
 
     // GET: CatalogoPersonal/CrearEspecialidad
+    [Authorize(Policy = Permisos.EmpleadosCrear)]
     public IActionResult CrearEspecialidad()
     {
         return View();
@@ -204,6 +219,7 @@ public class CatalogoPersonalController : Controller
     // POST: CatalogoPersonal/CrearEspecialidad
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.EmpleadosCrear)]
     public async Task<IActionResult> CrearEspecialidad(
         EspecialidadGuardarDto dto)
     {
@@ -230,6 +246,7 @@ public class CatalogoPersonalController : Controller
     }
 
     // GET: CatalogoPersonal/EditarEspecialidad/5
+    [Authorize(Policy = Permisos.EmpleadosEditar)]
     public async Task<IActionResult> EditarEspecialidad(int id)
     {
         var especialidad =
@@ -252,6 +269,7 @@ public class CatalogoPersonalController : Controller
     // POST: CatalogoPersonal/EditarEspecialidad/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.EmpleadosEditar)]
     public async Task<IActionResult> EditarEspecialidad(
         int id,
         EspecialidadGuardarDto dto)
@@ -291,6 +309,7 @@ public class CatalogoPersonalController : Controller
     // POST: CatalogoPersonal/CambiarEstadoEspecialidad/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.EmpleadosDesactivar)]
     public async Task<IActionResult> CambiarEstadoEspecialidad(
         int id,
         bool activo)

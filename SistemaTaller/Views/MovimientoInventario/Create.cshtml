@@ -1,0 +1,228 @@
+﻿@model Negocios.DTOs.MovimientoInventarioGuardarDto
+
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = "Nuevo movimiento";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                INVENTARIO
+            </span>
+
+            <h1>
+                Nuevo movimiento
+            </h1>
+
+            <p>
+                Registra una entrada, salida o ajuste de inventario.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-form-card">
+
+        <form asp-action="Create"
+              method="post"
+              class="axis-form">
+
+            @Html.AntiForgeryToken()
+
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-form-validation">
+            </div>
+
+
+            <!-- PRODUCTO -->
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Producto
+                </div>
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdProducto">
+                            ID del producto
+                        </label>
+
+                        <input asp-for="IdProducto"
+                               type="number"
+                               min="1"
+                               placeholder="Ej. 15" />
+
+                        <span asp-validation-for="IdProducto"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MOVIMIENTO -->
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Operación
+                </div>
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field">
+
+                        <label asp-for="TipoMovimiento">
+                            Tipo de movimiento
+                        </label>
+
+                        <select asp-for="TipoMovimiento">
+
+                            <option value="">
+                                Seleccionar movimiento
+                            </option>
+
+                            <option value="Entrada">
+                                Entrada
+                            </option>
+
+                            <option value="Salida">
+                                Salida
+                            </option>
+
+                            <option value="Ajuste">
+                                Ajuste
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="TipoMovimiento"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Cantidad">
+                            Cantidad
+                        </label>
+
+                        <input asp-for="Cantidad"
+                               type="number"
+                               min="1"
+                               placeholder="Ej. 10" />
+
+                        <span asp-validation-for="Cantidad"></span>
+
+                    </div>
+
+
+                    <div class="axis-field axis-field-full">
+
+                        <label asp-for="Observacion">
+                            Observación
+                        </label>
+
+                        <textarea asp-for="Observacion"
+                                  rows="4"
+                                  placeholder="Describe el motivo del movimiento...">
+                        </textarea>
+
+                        <span asp-validation-for="Observacion"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- AYUDA -->
+
+            <div class="axis-movement-help">
+
+                <div class="axis-movement-help-item">
+
+                    <span class="axis-movement-badge axis-movement-entry">
+                        Entrada
+                    </span>
+
+                    <small>
+                        Aumenta el stock disponible.
+                    </small>
+
+                </div>
+
+
+                <div class="axis-movement-help-item">
+
+                    <span class="axis-movement-badge axis-movement-exit">
+                        Salida
+                    </span>
+
+                    <small>
+                        Reduce el stock disponible.
+                    </small>
+
+                </div>
+
+
+                <div class="axis-movement-help-item">
+
+                    <span class="axis-movement-badge axis-movement-adjustment">
+                        Ajuste
+                    </span>
+
+                    <small>
+                        Establece una nueva cantidad de stock.
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-form-actions">
+
+                <a asp-action="Index"
+                   class="axis-button axis-button-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                        class="axis-button axis-button-primary">
+                    Registrar movimiento
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,9 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// =====================================================
+// DiagnosticoController
+// =====================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Negocios.DTOs;
 using Negocios.Interfaces;
+using Negocios.Seguridad;
 
-namespace SistemaTaller.Controllers;
+// =====================================================
 
+using Microsoft.AspNetCore.Authorization;
 public class DiagnosticoController : Controller
 {
     private readonly IDiagnosticoService _service;
@@ -14,6 +21,7 @@ public class DiagnosticoController : Controller
     }
 
     // GET: Diagnostico
+    [Authorize(Policy = Permisos.DiagnosticosVer)]
     public async Task<IActionResult> Index()
     {
         var diagnosticos = await _service.ObtenerTodosAsync();
@@ -22,6 +30,7 @@ public class DiagnosticoController : Controller
     }
 
     // GET: Diagnostico/Details/5
+    [Authorize(Policy = Permisos.DiagnosticosVer)]
     public async Task<IActionResult> Details(int id)
     {
         var diagnostico = await _service.ObtenerPorIdAsync(id);
@@ -33,6 +42,7 @@ public class DiagnosticoController : Controller
     }
 
     // GET: Diagnostico/PorRecepcion/5
+    [Authorize(Policy = Permisos.DiagnosticosVer)]
     public async Task<IActionResult> PorRecepcion(int idRecepcion)
     {
         var diagnosticos =
@@ -42,6 +52,7 @@ public class DiagnosticoController : Controller
     }
 
     // GET: Diagnostico/Create
+    [Authorize(Policy = Permisos.DiagnosticosCrear)]
     public IActionResult Create()
     {
         return View();
@@ -50,6 +61,7 @@ public class DiagnosticoController : Controller
     // POST: Diagnostico/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.DiagnosticosCrear)]
     public async Task<IActionResult> Create(
         DiagnosticoGuardarDto dto)
     {
@@ -76,6 +88,7 @@ public class DiagnosticoController : Controller
     }
 
     // GET: Diagnostico/Edit/5
+    [Authorize(Policy = Permisos.DiagnosticosEditar)]
     public async Task<IActionResult> Edit(int id)
     {
         var diagnostico = await _service.ObtenerPorIdAsync(id);
@@ -98,6 +111,7 @@ public class DiagnosticoController : Controller
     // POST: Diagnostico/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.DiagnosticosEditar)]
     public async Task<IActionResult> Edit(
         int id,
         DiagnosticoGuardarDto dto)

@@ -1,0 +1,124 @@
+﻿@model Negocios.DTOs.OrdenTrabajoGuardarDto
+
+@{
+    ViewData["Title"] = "Editar orden de trabajo";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                OPERACIONES · ÓRDENES DE TRABAJO
+            </span>
+
+            <h1>
+                Editar orden de trabajo
+            </h1>
+
+            <p>
+                Actualiza la información de la orden seleccionada.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Details"
+               asp-route-id="@ViewBag.IdOrdenTrabajo"
+               class="axis-button axis-button-secondary">
+                Ver orden
+            </a>
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-form-card">
+
+        <form asp-action="Edit"
+              asp-route-id="@ViewBag.IdOrdenTrabajo"
+              method="post"
+              class="axis-form">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-form-validation">
+            </div>
+
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Información de la orden
+                </div>
+
+                <div class="axis-form-grid">
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdCotizacion">
+                            Cotización
+                        </label>
+
+                        <input asp-for="IdCotizacion"
+                               type="number"
+                               min="1" />
+
+                        <span asp-validation-for="IdCotizacion"></span>
+
+                    </div>
+
+
+                    <div class="axis-field axis-field-full">
+
+                        <label asp-for="Observaciones">
+                            Observaciones
+                        </label>
+
+                        <textarea asp-for="Observaciones"
+                                  rows="6"
+                                  placeholder="Observaciones de la orden de trabajo..."></textarea>
+
+                        <span asp-validation-for="Observaciones"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-form-actions">
+
+                <a asp-action="Index"
+                   class="axis-button axis-button-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                        class="axis-button axis-button-primary">
+                    Guardar cambios
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

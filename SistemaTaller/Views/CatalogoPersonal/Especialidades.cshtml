@@ -1,0 +1,196 @@
+﻿@model IEnumerable<Negocios.DTOs.EspecialidadDto>
+
+@{
+    ViewData["Title"] = "Especialidades";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                CATÁLOGOS · PERSONAL
+            </span>
+
+            <h1>Especialidades</h1>
+
+            <p>
+                Administra las especialidades técnicas disponibles.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="EspecialidadesActivas"
+               class="axis-button axis-button-secondary">
+                Activas
+            </a>
+
+            <a asp-action="CrearEspecialidad"
+               class="axis-button axis-button-primary">
+                + Nueva especialidad
+            </a>
+
+        </div>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+
+    <div class="axis-toolbar">
+
+        <span class="axis-record-count">
+            @Model.Count() especialidades registradas
+        </span>
+
+    </div>
+
+
+    <div class="axis-table-card">
+
+        <div class="axis-table-wrapper">
+
+            <table class="axis-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Especialidad</th>
+                        <th>Identificador</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+
+                            <td colspan="4"
+                                class="axis-empty">
+
+                                No hay especialidades registradas.
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var especialidad in Model)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <div class="axis-client-cell">
+
+                                        <div class="axis-client-avatar">
+                                            E
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                @especialidad.Nombre
+                                            </strong>
+
+                                            <small class="axis-table-secondary-text">
+                                                Especialidad técnica
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+                                <td>
+                                    #@especialidad.IdEspecialidad
+                                </td>
+
+                                <td>
+
+                                    @if (especialidad.Activo)
+                                    {
+                                        <span class="axis-status axis-status-active">
+                                            Activa
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-status">
+                                            Inactiva
+                                        </span>
+                                    }
+
+                        </td>
+
+                        <td>
+
+                            <div class="axis-row-actions">
+
+                                <a asp-action="DetalleEspecialidad"
+                                   asp-route-id="@especialidad.IdEspecialidad"
+                                   class="axis-row-action">
+                                    Ver
+                                </a>
+
+                                <a asp-action="EditarEspecialidad"
+                                   asp-route-id="@especialidad.IdEspecialidad"
+                                   class="axis-row-action">
+                                    Editar
+                                </a>
+
+                                <form asp-action="CambiarEstadoEspecialidad"
+                                      asp-route-id="@especialidad.IdEspecialidad"
+                                      method="post"
+                                      style="display:inline">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="activo"
+                                           value="@(!especialidad.Activo).ToString().ToLower()" />
+
+                                    <button type="submit"
+                                            class="axis-row-action">
+
+                                        @(especialidad.Activo
+                                                                                ? "Desactivar"
+                                                                                : "Activar")
+
+                                    </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

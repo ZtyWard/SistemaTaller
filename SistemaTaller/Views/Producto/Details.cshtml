@@ -1,0 +1,321 @@
+﻿@model Negocios.DTOs.ProductoDto
+
+@{
+    Layout = "_LayoutInterno";
+    ViewData["Title"] = "Detalle del producto";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                INVENTARIO
+            </span>
+
+            <h1>
+                Producto
+            </h1>
+
+            <p>
+                Información detallada del producto seleccionado.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.IdProducto"
+               class="axis-button axis-button-primary">
+                Editar
+            </a>
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-detail-grid">
+
+
+        <!-- RESUMEN -->
+
+        <div class="axis-detail-card">
+
+            <div class="axis-detail-card-header">
+
+                <div class="axis-detail-avatar">
+
+                    @(string.IsNullOrWhiteSpace(Model.Nombre)
+                                        ? "P"
+                                        : Model.Nombre
+                                        .Substring(0, 1)
+                                        .ToUpper())
+
+                </div>
+
+                <div>
+
+                    <span class="axis-detail-label">
+                        PRODUCTO
+                    </span>
+
+                    <h2>
+                        @Model.Nombre
+                    </h2>
+
+                    <span class="axis-table-secondary-text">
+                        @Model.Codigo
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-detail-status">
+
+                @if (Model.Activo)
+                {
+                    <span class="axis-status axis-status-active">
+                        Activo
+                    </span>
+                }
+                else
+                {
+                    <span class="axis-status axis-status-inactive">
+                        Inactivo
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+
+        <!-- INFORMACIÓN -->
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                INFORMACIÓN DEL PRODUCTO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Código
+                    </span>
+
+                    <strong>
+                        @Model.Codigo
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Categoría
+                    </span>
+
+                    <strong>
+                        @Model.Categoria
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        ID categoría
+                    </span>
+
+                    <strong>
+                        #@Model.IdCategoriaProducto
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Descripción
+                    </span>
+
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Model.Descripcion)
+                                                ? "—"
+                                                : Model.Descripcion)
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PRECIOS -->
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                PRECIOS
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Precio de compra
+                    </span>
+
+                    <strong>
+                        ₡@Model.PrecioCompra.ToString("N2")
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Precio de venta
+                    </span>
+
+                    <strong>
+                        ₡@Model.PrecioVenta.ToString("N2")
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Margen
+                    </span>
+
+                    <strong>
+                        ₡@((Model.PrecioVenta - Model.PrecioCompra)
+                                                .ToString("N2"))
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- INVENTARIO -->
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                INVENTARIO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Stock actual
+                    </span>
+
+                    <strong>
+                        @Model.Stock
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Stock mínimo
+                    </span>
+
+                    <strong>
+                        @Model.StockMinimo
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Estado del stock
+                    </span>
+
+                    @if (Model.Stock <= Model.StockMinimo)
+                    {
+                        <strong>
+                            Stock bajo
+                        </strong>
+                    }
+                    else
+                    {
+                        <strong class="axis-detail-active-text">
+                            Disponible
+                        </strong>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- REGISTRO -->
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                REGISTRO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        ID producto
+                    </span>
+
+                    <strong>
+                        #@Model.IdProducto
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Estado
+                    </span>
+
+                    <strong>
+                        @(Model.Activo ? "Activo" : "Inactivo")
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

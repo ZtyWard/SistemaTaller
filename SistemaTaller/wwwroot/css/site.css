@@ -1107,13 +1107,442 @@ body {
 
 /* =========================================================
    AXIS INTERNAL LAYOUT
+   SIDEBAR FLOTANTE
    ========================================================= */
 
 .axis-internal-app {
     min-height: 100vh;
-    display: flex;
     background: var(--axis-paper);
     color: #252525;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.axis-internal-sidebar {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    bottom: 18px;
+    width: 72px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient( 180deg, rgba(28, 29, 31, .98) 0%, rgba(37, 38, 40, .98) 100% );
+    border: 1px solid rgba(239, 237, 227, .14);
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .30), 0 0 25px rgba(239, 237, 227, .035);
+    z-index: 1000;
+    overflow: hidden;
+    transition: width .45s cubic-bezier(.22, 1, .36, 1), box-shadow .35s ease;
+}
+
+
+    /* =========================================================
+   HOVER
+   ========================================================= */
+
+    .axis-internal-sidebar:hover {
+        width: 278px;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, .38), 0 0 35px rgba(239, 237, 227, .06);
+    }
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.axis-internal-brand {
+    position: relative;
+    min-height: 92px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    flex-shrink: 0;
+}
+
+
+.axis-internal-logo {
+    display: flex;
+    flex-direction: column;
+    color: var(--axis-paper);
+    text-decoration: none;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+
+.axis-internal-logo-name {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    transition: font-size .35s ease, letter-spacing .35s ease;
+}
+
+
+.axis-internal-logo-subtitle {
+    margin-top: 6px;
+    color: rgba(241, 239, 230, .48);
+    font-size: 7px;
+    letter-spacing: 2px;
+    opacity: 0;
+    transition: opacity .25s ease .05s;
+}
+
+
+/* LOGO CUANDO ESTÁ CERRADO */
+
+.axis-internal-sidebar:not(:hover)
+.axis-internal-logo {
+    align-items: center;
+}
+
+.axis-internal-sidebar:not(:hover)
+.axis-internal-logo-name {
+    font-size: 15px;
+    letter-spacing: 2px;
+}
+
+.axis-internal-sidebar:hover
+.axis-internal-logo-subtitle {
+    opacity: 1;
+}
+
+
+/* =========================================================
+   OCULTAR TEXTOS AL ESTAR CERRADO
+   ========================================================= */
+
+.axis-internal-sidebar:not(:hover)
+.axis-internal-section-title,
+.axis-internal-sidebar:not(:hover)
+.axis-internal-nav-item > span:not(.axis-internal-nav-icon),
+.axis-internal-sidebar:not(:hover)
+.axis-internal-user-info,
+.axis-internal-sidebar:not(:hover)
+.axis-internal-user-action {
+    opacity: 0;
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.axis-internal-navigation {
+    flex: 1;
+    padding: 8px 10px 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.15) transparent;
+}
+
+
+.axis-internal-section {
+    margin-bottom: 18px;
+}
+
+
+.axis-internal-section-title {
+    display: block;
+    margin: 0 10px 10px;
+    color: rgba(241,239,230,.35);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    white-space: nowrap;
+    transition: opacity .2s ease;
+}
+
+
+/* =========================================================
+   NAV ITEM
+   ========================================================= */
+
+.axis-internal-nav-item {
+    position: relative;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 0 12px;
+    margin-bottom: 4px;
+    border-radius: 11px;
+    color: rgba(241,239,230,.68);
+    text-decoration: none;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: background .25s ease, color .25s ease, box-shadow .25s ease;
+}
+
+
+    .axis-internal-nav-item:hover {
+        color: var(--axis-paper);
+        background: rgba(239,237,227,.07);
+    }
+
+
+/* =========================================================
+   ICONOS
+   ========================================================= */
+
+.axis-internal-nav-icon {
+    width: 24px;
+    min-width: 24px;
+    display: grid;
+    place-items: center;
+    color: rgba(239,237,227,.58);
+    font-size: 15px;
+    transition: color .25s ease, transform .25s ease;
+}
+
+
+.axis-internal-nav-item:hover
+.axis-internal-nav-icon {
+    color: var(--axis-paper);
+    transform: scale(1.05);
+}
+
+
+/* =========================================================
+   ACTIVE
+   ========================================================= */
+
+.axis-internal-nav-item.active {
+    color: var(--axis-paper);
+    background: linear-gradient( 90deg, rgba(239,237,227,.13), rgba(239,237,227,.045) );
+    box-shadow: inset 0 0 0 1px rgba(239,237,227,.16), 0 0 14px rgba(239,237,227,.035);
+}
+
+
+    .axis-internal-nav-item.active::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 8px;
+        bottom: 8px;
+        width: 2px;
+        border-radius: 4px;
+        background: var(--axis-paper);
+        box-shadow: 0 0 8px rgba(239,237,227,.75);
+    }
+
+
+    .axis-internal-nav-item.active
+    .axis-internal-nav-icon {
+        color: var(--axis-paper);
+    }
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.axis-internal-content {
+    width: 100%;
+    min-height: 100vh;
+    margin-left: 0;
+}
+
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.axis-internal-topbar {
+    height: 78px;
+    display: flex;
+    align-items: center;
+    padding: 0 38px 0 112px;
+    background: rgba(239,237,227,.90);
+    border-bottom: 1px solid rgba(0,0,0,.07);
+    backdrop-filter: blur(16px);
+}
+
+
+.axis-internal-back {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #6f6d66;
+    text-decoration: none;
+    font-size: 12px;
+    transition: color .2s ease;
+}
+
+
+    .axis-internal-back:hover {
+        color: #222;
+    }
+
+
+.axis-internal-page-title {
+    margin-left: 35px;
+    color: #272622;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.axis-internal-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+
+.axis-internal-action {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(0,0,0,.07);
+    border-radius: 50%;
+    background: rgba(255,255,255,.45);
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease;
+}
+
+
+    .axis-internal-action:hover {
+        transform: translateY(-1px);
+        background: rgba(255,255,255,.75);
+    }
+
+
+.axis-internal-user-name {
+    color: #65635d;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   USER
+   ========================================================= */
+
+.axis-internal-user {
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 12px 14px;
+    border-top: 1px solid rgba(255,255,255,.07);
+    flex-shrink: 0;
+}
+
+
+.axis-user-avatar {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.45);
+    background: #353638;
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+.axis-internal-user-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    transition: opacity .2s ease;
+}
+
+
+    .axis-internal-user-info strong {
+        color: var(--axis-paper);
+        font-size: 11px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    .axis-internal-user-info span {
+        margin-top: 3px;
+        color: rgba(241,239,230,.45);
+        font-size: 9px;
+        white-space: nowrap;
+    }
+
+
+/* =========================================================
+   INTERNAL MAIN
+   ========================================================= */
+
+.axis-internal-main {
+    min-height: calc(100vh - 78px);
+    padding: 34px 42px 50px 112px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .axis-internal-sidebar {
+        left: 12px;
+        top: 12px;
+        bottom: 12px;
+    }
+
+        .axis-internal-sidebar:hover {
+            width: 260px;
+        }
+
+    .axis-internal-topbar {
+        padding-left: 100px;
+    }
+
+    .axis-internal-main {
+        padding-left: 100px;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .axis-internal-sidebar {
+        top: 10px;
+        left: 10px;
+        bottom: 10px;
+        width: 64px;
+    }
+
+        .axis-internal-sidebar:hover {
+            width: 250px;
+        }
+
+    .axis-internal-topbar {
+        padding: 0 18px 0 88px;
+    }
+
+    .axis-internal-page-title {
+        display: none;
+    }
+
+    .axis-internal-main {
+        padding: 25px 20px 40px 88px;
+    }
+
+    .axis-internal-actions {
+        gap: 8px;
+    }
+
+    .axis-internal-user-name {
+        display: none;
+    }
 }
 
 
@@ -1990,5 +2419,566 @@ body {
 
     .axis-detail-card {
         padding: 20px;
+    }
+}
+
+
+/* =========================================================
+   AXIS INVENTORY MOVEMENTS
+   ========================================================= */
+
+.axis-movement-filters {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.axis-filter-button {
+    padding: 7px 11px;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 8px;
+    background: rgba(255,255,255,.38);
+    color: #77746d;
+    text-decoration: none;
+    font-size: 10px;
+    transition: .2s ease;
+}
+
+    .axis-filter-button:hover {
+        background: rgba(255,255,255,.72);
+        border-color: rgba(0,0,0,.17);
+        color: #292824;
+    }
+
+.axis-table-secondary-text {
+    display: block;
+    margin-top: 3px;
+    color: #96938b;
+    font-size: 10px;
+}
+
+.axis-movement-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 9px;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: 650;
+}
+
+.axis-movement-entry {
+    background: rgba(70,120,75,.11);
+    color: #527254;
+}
+
+.axis-movement-exit {
+    background: rgba(150,70,70,.10);
+    color: #8b5555;
+}
+
+.axis-movement-adjustment {
+    background: rgba(130,110,60,.12);
+    color: #806f43;
+}
+
+.axis-movement-help {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.axis-movement-help-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid rgba(0,0,0,.06);
+    border-radius: 10px;
+    background: rgba(0,0,0,.018);
+}
+
+    .axis-movement-help-item small {
+        color: #85827a;
+        font-size: 10px;
+        line-height: 1.4;
+    }
+
+@media (max-width: 700px) {
+
+    .axis-movement-help {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   AXIS INTERNAL SIDEBAR FLOTANTE - DEFINITIVO
+   ========================================================= */
+
+/* La barra es una tarjeta flotante: no empuja el contenido. */
+.axis-internal-sidebar {
+    position: fixed !important;
+    top: 18px !important;
+    left: 18px !important;
+    bottom: 18px !important;
+    width: 72px !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(239,237,227,.14) !important;
+    border-radius: 20px !important;
+    background: linear-gradient(180deg, #1c1d1f 0%, #252628 100%) !important;
+    box-shadow: 0 20px 50px rgba(0,0,0,.30), 0 0 25px rgba(239,237,227,.035) !important;
+    z-index: 1000 !important;
+    transition: width .45s cubic-bezier(.22,1,.36,1), box-shadow .35s ease !important;
+}
+
+    .axis-internal-sidebar:hover {
+        width: 278px !important;
+        box-shadow: 0 25px 60px rgba(0,0,0,.38), 0 0 35px rgba(239,237,227,.06) !important;
+    }
+
+/* El contenido ocupa toda la pantalla. El sidebar flota encima. */
+.axis-internal-content {
+    width: 100% !important;
+    min-height: 100vh !important;
+    margin-left: 0 !important;
+}
+
+/* El espacio izquierdo evita que el contenido quede debajo de la barra cerrada,
+   pero no crea el enorme hueco de los 276px del diseño anterior. */
+.axis-internal-topbar {
+    padding-left: 112px !important;
+}
+
+.axis-internal-main {
+    padding-left: 112px !important;
+}
+
+/* Estado cerrado */
+.axis-internal-sidebar:not(:hover) .axis-internal-section-title,
+.axis-internal-sidebar:not(:hover) .axis-internal-nav-item > span:not(.axis-internal-nav-icon),
+.axis-internal-sidebar:not(:hover) .axis-internal-user-info {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+.axis-internal-sidebar:not(:hover) .axis-internal-nav-item {
+    justify-content: center !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    gap: 0 !important;
+}
+
+.axis-internal-sidebar:not(:hover) .axis-internal-nav-icon {
+    margin: 0 !important;
+}
+
+.axis-internal-sidebar:not(:hover) .axis-internal-brand {
+    justify-content: center !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.axis-internal-sidebar:not(:hover) .axis-internal-logo {
+    align-items: center !important;
+}
+
+.axis-internal-sidebar:not(:hover) .axis-internal-logo-name {
+    font-size: 15px !important;
+    letter-spacing: 2px !important;
+}
+
+.axis-internal-sidebar:not(:hover) .axis-internal-logo-subtitle {
+    opacity: 0 !important;
+}
+
+.axis-internal-sidebar:not(:hover) .axis-internal-user {
+    justify-content: center !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+
+/* =========================================================
+   RESPONSIVE - SIDEBAR FLOTANTE
+   ========================================================= */
+
+@media (max-width: 900px) {
+    .axis-internal-sidebar {
+        top: 12px !important;
+        left: 12px !important;
+        bottom: 12px !important;
+        width: 68px !important;
+    }
+
+        .axis-internal-sidebar:hover {
+            width: 260px !important;
+        }
+
+    .axis-internal-topbar {
+        padding-left: 100px !important;
+    }
+
+    .axis-internal-main {
+        padding-left: 100px !important;
+    }
+}
+
+@media (max-width: 700px) {
+    .axis-internal-sidebar {
+        top: 10px !important;
+        left: 10px !important;
+        bottom: 10px !important;
+        width: 64px !important;
+    }
+
+        .axis-internal-sidebar:hover {
+            width: 250px !important;
+        }
+
+    .axis-internal-topbar {
+        padding: 0 18px 0 88px !important;
+    }
+
+    .axis-internal-main {
+        padding: 25px 20px 40px 88px !important;
+    }
+}
+
+
+/* =========================================================
+   AXIS — SIDEBAR INTERNO FLOTANTE DEFINITIVO
+   ========================================================= */
+
+.axis-internal-sidebar {
+    position: fixed !important;
+    top: 16px !important;
+    left: 18px !important;
+    bottom: 16px !important;
+    width: 90px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: linear-gradient( 180deg, #1c1d1f 0%, #242527 100% ) !important;
+    border: 1px solid rgba(239, 237, 227, 0.12) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.30), 0 0 25px rgba(239, 237, 227, 0.035) !important;
+    overflow: hidden !important;
+    z-index: 2000 !important;
+    transition: width 0.42s cubic-bezier(.22, 1, .36, 1), box-shadow 0.35s ease !important;
+}
+
+
+    /* =========================================================
+   ABRIR AL PASAR EL MOUSE
+   ========================================================= */
+
+    .axis-internal-sidebar:hover {
+        width: 278px !important;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42), 0 0 35px rgba(239, 237, 227, 0.06) !important;
+    }
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.axis-internal-brand {
+    min-height: 105px !important;
+    height: 105px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 20px !important;
+    flex-shrink: 0 !important;
+}
+
+
+.axis-internal-logo {
+    display: flex !important;
+    flex-direction: column !important;
+    color: var(--axis-paper) !important;
+    text-decoration: none !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+}
+
+
+.axis-internal-logo-name {
+    font-size: 21px !important;
+    font-weight: 800 !important;
+    letter-spacing: 4px !important;
+    transition: font-size .35s ease, letter-spacing .35s ease !important;
+}
+
+
+.axis-internal-logo-subtitle {
+    margin-top: 6px !important;
+    color: rgba(241,239,230,.48) !important;
+    font-size: 7px !important;
+    letter-spacing: 2px !important;
+    opacity: 0 !important;
+    transition: opacity .25s ease !important;
+}
+
+
+/* LOGO CERRADO */
+
+.axis-internal-sidebar:not(:hover)
+.axis-internal-logo {
+    align-items: center !important;
+}
+
+.axis-internal-sidebar:not(:hover)
+.axis-internal-logo-name {
+    font-size: 15px !important;
+    letter-spacing: 2px !important;
+}
+
+
+/* LOGO ABIERTO */
+
+.axis-internal-sidebar:hover
+.axis-internal-logo-subtitle {
+    opacity: 1 !important;
+}
+
+
+/* =========================================================
+   NAVEGACIÓN
+   ========================================================= */
+
+.axis-internal-navigation {
+    flex: 1 !important;
+    padding: 8px 10px 20px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(255,255,255,.16) transparent !important;
+}
+
+
+/* =========================================================
+   SECCIONES
+   ========================================================= */
+
+.axis-internal-section {
+    margin-bottom: 18px !important;
+}
+
+
+.axis-internal-section-title {
+    display: block !important;
+    margin: 0 10px 8px !important;
+    color: rgba(241,239,230,.35) !important;
+    font-size: 8px !important;
+    font-weight: 600 !important;
+    letter-spacing: 2px !important;
+    white-space: nowrap !important;
+    opacity: 1 !important;
+    transition: opacity .2s ease !important;
+}
+
+
+/* =========================================================
+   ITEMS
+   ========================================================= */
+
+.axis-internal-nav-item {
+    position: relative !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 13px !important;
+    padding: 0 12px !important;
+    margin-bottom: 3px !important;
+    border-radius: 11px !important;
+    color: rgba(241,239,230,.70) !important;
+    border: 1px solid transparent !important;
+    text-decoration: none !important;
+    font-size: 12px !important;
+    white-space: nowrap !important;
+    transition: background .25s ease, color .25s ease, border .25s ease !important;
+}
+
+
+    .axis-internal-nav-item:hover {
+        color: white !important;
+        background: rgba(255,255,255,.055) !important;
+        border-color: rgba(255,255,255,.14) !important;
+    }
+
+
+/* =========================================================
+   ICONOS
+   ========================================================= */
+
+.axis-internal-nav-icon {
+    width: 24px !important;
+    min-width: 24px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: rgba(239,237,227,.62) !important;
+    font-size: 15px !important;
+}
+
+
+/* =========================================================
+   OCULTAR TEXTOS CUANDO ESTÁ CERRADO
+   ========================================================= */
+
+.axis-internal-sidebar:not(:hover)
+.axis-internal-section-title,
+.axis-internal-sidebar:not(:hover)
+.axis-internal-nav-item > span:not(.axis-internal-nav-icon),
+.axis-internal-sidebar:not(:hover)
+.axis-internal-user-info,
+.axis-internal-sidebar:not(:hover)
+.axis-internal-user-action {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+
+/* =========================================================
+   CENTRAR ICONOS CUANDO ESTÁ CERRADO
+   ========================================================= */
+
+.axis-internal-sidebar:not(:hover)
+.axis-internal-nav-item {
+    justify-content: center !important;
+    gap: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+
+/* =========================================================
+   USUARIO
+   ========================================================= */
+
+.axis-internal-user {
+    min-height: 70px !important;
+    margin: 0 14px 16px !important;
+    padding: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    border: 1px solid rgba(255,255,255,.15) !important;
+    border-radius: 14px !important;
+    background: rgba(255,255,255,.035) !important;
+    flex-shrink: 0 !important;
+}
+
+
+.axis-internal-avatar {
+    width: 38px !important;
+    height: 38px !important;
+    flex-shrink: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: 50% !important;
+    border: 1px solid rgba(255,255,255,.45) !important;
+    background: #353638 !important;
+    color: white !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+}
+
+
+/* =========================================================
+   CONTENIDO
+   ========================================================= */
+
+/*
+   IMPORTANTE:
+   El sidebar es flotante.
+   NO debe ocupar espacio dentro del layout.
+*/
+
+.axis-internal-content {
+    width: 100% !important;
+    min-height: 100vh !important;
+    margin-left: 0 !important;
+}
+
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.axis-internal-topbar {
+    height: 78px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 38px 0 135px !important;
+    background: rgba(239,237,227,.90) !important;
+    border-bottom: 1px solid rgba(0,0,0,.07) !important;
+    backdrop-filter: blur(16px) !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 900 !important;
+}
+
+
+/* =========================================================
+   CONTENIDO PRINCIPAL
+   ========================================================= */
+
+.axis-internal-main {
+    min-height: calc(100vh - 78px) !important;
+    padding: 34px 42px 50px 135px !important;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .axis-internal-sidebar {
+        top: 12px !important;
+        left: 12px !important;
+        bottom: 12px !important;
+        width: 72px !important;
+    }
+
+        .axis-internal-sidebar:hover {
+            width: 260px !important;
+        }
+
+    .axis-internal-topbar {
+        padding-left: 110px !important;
+    }
+
+    .axis-internal-main {
+        padding-left: 110px !important;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .axis-internal-sidebar {
+        top: 10px !important;
+        left: 10px !important;
+        bottom: 10px !important;
+        width: 64px !important;
+    }
+
+        .axis-internal-sidebar:hover {
+            width: 245px !important;
+        }
+
+    .axis-internal-topbar {
+        padding: 0 18px 0 90px !important;
+    }
+
+    .axis-internal-main {
+        padding: 25px 20px 40px 90px !important;
     }
 }

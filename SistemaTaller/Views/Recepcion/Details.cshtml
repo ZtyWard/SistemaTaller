@@ -1,0 +1,280 @@
+﻿@model Negocios.DTOs.RecepcionDto
+
+@{
+    ViewData["Title"] = "Detalle de recepción";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                TALLER · RECEPCIONES
+            </span>
+
+            <h1>
+                Recepción #@Model.IdRecepcion
+            </h1>
+
+            <p>
+                Información del ingreso del vehículo al taller.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-detail-grid">
+
+
+        <div class="axis-detail-card">
+
+            <div class="axis-detail-card-header">
+
+                <div class="axis-detail-avatar">
+                    R
+                </div>
+
+                <div>
+
+                    <span class="axis-detail-label">
+                        RECEPCIÓN
+                    </span>
+
+                    <h2>
+                        #@Model.IdRecepcion
+                    </h2>
+
+                    <span class="axis-table-secondary-text">
+                        @Model.FechaRecepcion.ToString("dd/MM/yyyy HH:mm")
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-detail-status">
+
+                @if (Model.Estado.Equals(
+                                "Abierta",
+                                StringComparison.OrdinalIgnoreCase))
+                {
+                    <span class="axis-status axis-status-warning">
+                        @Model.Estado
+                    </span>
+                }
+                else
+                {
+                    <span class="axis-status axis-status-active">
+                        @Model.Estado
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                VEHÍCULO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Placa
+                    </span>
+
+                    <strong>
+                        @Model.Placa
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Vehículo
+                    </span>
+
+                    <strong>
+                        @Model.VehiculoDescripcion
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        ID vehículo
+                    </span>
+
+                    <strong>
+                        #@Model.IdVehiculo
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                RECEPCIÓN
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Fecha y hora
+                    </span>
+
+                    <strong>
+                        @Model.FechaRecepcion.ToString("dd/MM/yyyy HH:mm")
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Kilometraje
+                    </span>
+
+                    <strong>
+                        @Model.Kilometraje.ToString("N0") km
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Combustible
+                    </span>
+
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Model.NivelCombustible)
+                                                ? "No indicado"
+                                                : Model.NivelCombustible)
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                RESPONSABLE
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Empleado
+                    </span>
+
+                    <strong>
+                        @Model.EmpleadoNombre
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        ID empleado
+                    </span>
+
+                    <strong>
+                        #@Model.IdEmpleado
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card axis-detail-card-wide">
+
+            <span class="axis-detail-label">
+                OBSERVACIONES
+            </span>
+
+            <div class="axis-detail-description">
+
+                @if (string.IsNullOrWhiteSpace(Model.Observaciones))
+                {
+                    <span class="axis-table-secondary-text">
+                        Sin observaciones registradas.
+                    </span>
+                }
+                else
+                {
+                    <p>
+                        @Model.Observaciones
+                    </p>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                ESTADO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Estado actual
+                    </span>
+
+                    <strong>
+                        @Model.Estado
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

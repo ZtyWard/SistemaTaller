@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Negocios.Interfaces;
 using Negocios.Services;
+using Negocios.Seguridad;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,14 +25,40 @@ builder.Services.AddDbContext<SistemaTallerDbContext>(options =>
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
+        // Contraseñas
         options.Password.RequireDigit = false;
         options.Password.RequireLowercase = false;
         options.Password.RequireUppercase = false;
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequiredLength = 6;
+
+        // Bloqueo de cuenta
+        options.Lockout.DefaultLockoutTimeSpan =
+            TimeSpan.FromMinutes(10);
+
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.AllowedForNewUsers = true;
+
+        // Usuario
+        options.User.RequireUniqueEmail = true;
     })
     .AddEntityFrameworkStores<SistemaTallerDbContext>()
     .AddDefaultTokenProviders();
+
+// =====================================================
+// COOKIE DE AUTENTICACIÓN
+// =====================================================
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+
+    options.ExpireTimeSpan =
+        TimeSpan.FromHours(8);
+
+    options.SlidingExpiration = true;
+});
 
 // =====================================================
 // REPOSITORIES - DATOS
@@ -92,12 +119,183 @@ builder.Services.AddScoped<IPuestoService, PuestoService>();
 builder.Services.AddScoped<IEspecialidadService, EspecialidadService>();
 
 // =====================================================
+// AUTENTICACIÓN - NEGOCIOS
+// =====================================================
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<PermisoClaimsFactory>();
+
+// =====================================================
+// AUTORIZACIÓN POR PERMISOS
+// =====================================================
+
+builder.Services.AddAuthorization(options =>
+{
+    foreach (var permiso in PermisosCatalogo.Todos)
+    {
+        options.AddPolicy(
+            permiso,
+            policy =>
+            {
+                policy.RequireClaim(
+                    "Permiso",
+                    permiso);
+            });
+    }
+});
+
+// =====================================================
 // MVC
 // =====================================================
 
 builder.Services.AddControllersWithViews();
 
+// =====================================================
+// CONSTRUIR APLICACIÓN
+// =====================================================
+
 var app = builder.Build();
+
+// =====================================================
+// ROLES Y USUARIO ADMINISTRADOR
+// =====================================================
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager =
+        scope.ServiceProvider
+            .GetRequiredService<RoleManager<IdentityRole>>();
+
+    var userManager =
+        scope.ServiceProvider
+            .GetRequiredService<UserManager<ApplicationUser>>();
+
+    // =================================================
+    // ROLES DEL SISTEMA
+    // =================================================
+
+    string[] roles =
+    {
+        "Administrador",
+        "Recepcionista",
+        "Mecanico",
+        "EncargadoInventario",
+        "Vendedor",
+        "Cajero",
+        "Supervisor"
+    };
+
+    foreach (var nombreRol in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(nombreRol))
+        {
+            var resultadoRol =
+                await roleManager.CreateAsync(
+                    new IdentityRole(nombreRol));
+
+            if (!resultadoRol.Succeeded)
+            {
+                foreach (var error in resultadoRol.Errors)
+                {
+                    Console.WriteLine(
+                        $"ERROR CREANDO ROL {nombreRol}: {error.Description}");
+                }
+            }
+        }
+    }
+
+    // =================================================
+    // USUARIO ADMINISTRADOR
+    // =================================================
+
+    var usuario =
+        await userManager.FindByNameAsync("admin");
+
+    if (usuario == null)
+    {
+        usuario = new ApplicationUser
+        {
+            UserName = "admin",
+            Email = "admin@axis.local",
+            NombreCompleto = "Administrador AXIS",
+            Activo = true,
+            EmailConfirmed = true
+        };
+
+        var resultadoCrear =
+            await userManager.CreateAsync(
+                usuario,
+                "Admin123");
+
+        if (!resultadoCrear.Succeeded)
+        {
+            foreach (var error in resultadoCrear.Errors)
+            {
+                Console.WriteLine(
+                    $"ERROR CREANDO ADMIN: {error.Description}");
+            }
+        }
+        else
+        {
+            Console.WriteLine(
+                "USUARIO ADMIN CREADO CORRECTAMENTE.");
+        }
+    }
+    else
+    {
+        // Asegurar que esté activo
+        usuario.Activo = true;
+        usuario.EmailConfirmed = true;
+
+        await userManager.UpdateAsync(usuario);
+
+        // Restablecer contraseña de desarrollo
+        var token =
+            await userManager.GeneratePasswordResetTokenAsync(
+                usuario);
+
+        var resultadoPassword =
+            await userManager.ResetPasswordAsync(
+                usuario,
+                token,
+                "Admin123");
+
+        if (!resultadoPassword.Succeeded)
+        {
+            foreach (var error in resultadoPassword.Errors)
+            {
+                Console.WriteLine(
+                    $"ERROR CAMBIANDO PASSWORD: {error.Description}");
+            }
+        }
+    }
+
+    // =================================================
+    // ASIGNAR ROL ADMINISTRADOR
+    // =================================================
+
+    if (!await userManager.IsInRoleAsync(
+            usuario,
+            "Administrador"))
+    {
+        var resultadoRolUsuario =
+            await userManager.AddToRoleAsync(
+                usuario,
+                "Administrador");
+
+        if (!resultadoRolUsuario.Succeeded)
+        {
+            foreach (var error in resultadoRolUsuario.Errors)
+            {
+                Console.WriteLine(
+                    $"ERROR ASIGNANDO ROL: {error.Description}");
+            }
+        }
+    }
+
+    Console.WriteLine(
+        "ROLES Y USUARIO ADMINISTRADOR VERIFICADOS.");
+}
 
 // =====================================================
 // PIPELINE HTTP
@@ -116,6 +314,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 // =====================================================

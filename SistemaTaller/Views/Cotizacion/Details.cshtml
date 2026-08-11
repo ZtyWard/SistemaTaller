@@ -1,0 +1,253 @@
+﻿@model Negocios.DTOs.CotizacionDto
+
+@{
+    ViewData["Title"] = "Detalle de cotización";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                SERVICIO · COTIZACIONES
+            </span>
+
+            <h1>
+                Cotización #@Model.IdCotizacion
+            </h1>
+
+            <p>
+                Información detallada del presupuesto seleccionado.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.IdCotizacion"
+               class="axis-button axis-button-primary">
+                Editar
+            </a>
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-detail-grid">
+
+
+        <div class="axis-detail-card">
+
+            <div class="axis-detail-card-header">
+
+                <div class="axis-detail-avatar">
+                    C
+                </div>
+
+                <div>
+
+                    <span class="axis-detail-label">
+                        COTIZACIÓN
+                    </span>
+
+                    <h2>
+                        #@Model.IdCotizacion
+                    </h2>
+
+                    <span class="axis-table-secondary-text">
+                        @Model.Fecha.ToString("dd/MM/yyyy")
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-detail-status">
+
+                @if (Model.Estado.Equals(
+                                "Pendiente",
+                                StringComparison.OrdinalIgnoreCase))
+                {
+                    <span class="axis-status axis-status-inactive">
+                        @Model.Estado
+                    </span>
+                }
+                else
+                {
+                    <span class="axis-status axis-status-active">
+                        @Model.Estado
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                VEHÍCULO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Placa
+                    </span>
+
+                    <strong>
+                        @Model.Placa
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                DIAGNÓSTICO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        ID diagnóstico
+                    </span>
+
+                    <strong>
+                        #@Model.IdDiagnostico
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                INFORMACIÓN DE LA COTIZACIÓN
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Fecha
+                    </span>
+
+                    <strong>
+                        @Model.Fecha.ToString("dd/MM/yyyy")
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong>
+                        ₡@Model.Total.ToString("N2")
+                    </strong>
+
+                </div>
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Estado
+                    </span>
+
+                    <strong>
+                        @Model.Estado
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                ORDEN DE TRABAJO
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Estado
+                    </span>
+
+                    <strong class="@(Model.TieneOrdenTrabajo
+                                                    ? "axis-detail-active-text"
+                                                    : "")">
+
+                        @(Model.TieneOrdenTrabajo
+                                                ? "Orden de trabajo generada"
+                                                : "Sin orden de trabajo")
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                TOTAL
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+
+                    <span>
+                        Total cotizado
+                    </span>
+
+                    <strong>
+                        ₡@Model.Total.ToString("N2")
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

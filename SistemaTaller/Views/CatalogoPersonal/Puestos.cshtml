@@ -1,0 +1,190 @@
+﻿@model IEnumerable<Negocios.DTOs.PuestoDto>
+
+@{
+    ViewData["Title"] = "Puestos";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-page-kicker">
+                CATÁLOGOS · PERSONAL
+            </span>
+
+            <h1>Puestos</h1>
+
+            <p>
+                Administra los puestos disponibles dentro del taller.
+            </p>
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="PuestosActivos"
+               class="axis-button axis-button-secondary">
+                Activos
+            </a>
+
+            <a asp-action="CrearPuesto"
+               class="axis-button axis-button-primary">
+                + Nuevo puesto
+            </a>
+
+        </div>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+
+    <div class="axis-toolbar">
+
+        <span class="axis-record-count">
+            @Model.Count() puestos registrados
+        </span>
+
+    </div>
+
+
+    <div class="axis-table-card">
+
+        <div class="axis-table-wrapper">
+
+            <table class="axis-table">
+
+                <thead>
+                    <tr>
+
+                        <th>Puesto</th>
+                        <th>Identificador</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4"
+                                class="axis-empty">
+                                No hay puestos registrados.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var puesto in Model)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <div class="axis-client-cell">
+
+                                        <div class="axis-client-avatar">
+                                            P
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                @puesto.Nombre
+                                            </strong>
+
+                                            <small class="axis-table-secondary-text">
+                                                Puesto del personal
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+                                <td>
+                                    #@puesto.IdPuesto
+                                </td>
+
+                                <td>
+
+                                    @if (puesto.Activo)
+                                    {
+                                        <span class="axis-status axis-status-active">
+                                            Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-status">
+                                            Inactivo
+                                        </span>
+                                    }
+
+                        </td>
+
+                        <td>
+
+                            <div class="axis-row-actions">
+
+                                <a asp-action="DetallePuesto"
+                                   asp-route-id="@puesto.IdPuesto"
+                                   class="axis-row-action">
+                                    Ver
+                                </a>
+
+                                <a asp-action="EditarPuesto"
+                                   asp-route-id="@puesto.IdPuesto"
+                                   class="axis-row-action">
+                                    Editar
+                                </a>
+
+                                <form asp-action="CambiarEstadoPuesto"
+                                      asp-route-id="@puesto.IdPuesto"
+                                      method="post"
+                                      style="display:inline">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="activo"
+                                           value="@(!puesto.Activo).ToString().ToLower()" />
+
+                                    <button type="submit"
+                                            class="axis-row-action">
+
+                                        @(puesto.Activo
+                                                                                ? "Desactivar"
+                                                                                : "Activar")
+
+                                    </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

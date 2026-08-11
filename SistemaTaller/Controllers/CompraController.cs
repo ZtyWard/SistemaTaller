@@ -1,9 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// =====================================================
+// CompraController
+// =====================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Negocios.DTOs;
 using Negocios.Interfaces;
+using Negocios.Seguridad;
 
-namespace SistemaTaller.Controllers;
+// =====================================================
 
+using Microsoft.AspNetCore.Authorization;
 public class CompraController : Controller
 {
     private readonly ICompraService _service;
@@ -14,6 +21,7 @@ public class CompraController : Controller
     }
 
     // GET: Compra
+    [Authorize(Policy = Permisos.ComprasVer)]
     public async Task<IActionResult> Index()
     {
         var compras = await _service.ObtenerTodosAsync();
@@ -22,6 +30,7 @@ public class CompraController : Controller
     }
 
     // GET: Compra/PorProveedor/5
+    [Authorize(Policy = Permisos.ComprasVer)]
     public async Task<IActionResult> PorProveedor(int idProveedor)
     {
         var compras =
@@ -31,6 +40,7 @@ public class CompraController : Controller
     }
 
     // GET: Compra/PorEstado?estado=Pendiente
+    [Authorize(Policy = Permisos.ComprasVer)]
     public async Task<IActionResult> PorEstado(string estado)
     {
         if (string.IsNullOrWhiteSpace(estado))
@@ -43,6 +53,7 @@ public class CompraController : Controller
     }
 
     // GET: Compra/Recientes
+    [Authorize(Policy = Permisos.ComprasVer)]
     public async Task<IActionResult> Recientes(int cantidad = 10)
     {
         if (cantidad <= 0)
@@ -55,6 +66,7 @@ public class CompraController : Controller
     }
 
     // GET: Compra/Details/5
+    [Authorize(Policy = Permisos.ComprasVer)]
     public async Task<IActionResult> Details(int id)
     {
         var compra = await _service.ObtenerPorIdAsync(id);
@@ -66,6 +78,7 @@ public class CompraController : Controller
     }
 
     // GET: Compra/Create
+    [Authorize(Policy = Permisos.ComprasCrear)]
     public IActionResult Create()
     {
         return View();
@@ -74,6 +87,7 @@ public class CompraController : Controller
     // POST: Compra/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ComprasCrear)]
     public async Task<IActionResult> Create(CompraGuardarDto dto)
     {
         if (!ModelState.IsValid)
@@ -99,6 +113,7 @@ public class CompraController : Controller
     }
 
     // GET: Compra/Edit/5
+    [Authorize(Policy = Permisos.ComprasEditar)]
     public async Task<IActionResult> Edit(int id)
     {
         var compra = await _service.ObtenerPorIdAsync(id);
@@ -122,6 +137,7 @@ public class CompraController : Controller
     // POST: Compra/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ComprasEditar)]
     public async Task<IActionResult> Edit(
         int id,
         CompraGuardarDto dto)
@@ -161,6 +177,7 @@ public class CompraController : Controller
     // POST: Compra/CambiarEstado/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ComprasAnular)]
     public async Task<IActionResult> CambiarEstado(
         int id,
         string estado)

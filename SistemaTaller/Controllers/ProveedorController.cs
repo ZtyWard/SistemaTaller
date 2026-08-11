@@ -1,9 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// =====================================================
+// ProveedorController
+// =====================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Negocios.DTOs;
 using Negocios.Interfaces;
+using Negocios.Seguridad;
 
-namespace SistemaTaller.Controllers;
+// =====================================================
 
+using Microsoft.AspNetCore.Authorization;
 public class ProveedorController : Controller
 {
     private readonly IProveedorService _service;
@@ -14,6 +21,7 @@ public class ProveedorController : Controller
     }
 
     // GET: Proveedor
+    [Authorize(Policy = Permisos.ProveedoresVer)]
     public async Task<IActionResult> Index()
     {
         var proveedores = await _service.ObtenerTodosAsync();
@@ -22,6 +30,7 @@ public class ProveedorController : Controller
     }
 
     // GET: Proveedor/Activos
+    [Authorize(Policy = Permisos.ProveedoresVer)]
     public async Task<IActionResult> Activos()
     {
         var proveedores = await _service.ObtenerActivosAsync();
@@ -30,6 +39,7 @@ public class ProveedorController : Controller
     }
 
     // GET: Proveedor/Details/5
+    [Authorize(Policy = Permisos.ProveedoresVer)]
     public async Task<IActionResult> Details(int id)
     {
         var proveedor = await _service.ObtenerPorIdAsync(id);
@@ -41,6 +51,7 @@ public class ProveedorController : Controller
     }
 
     // GET: Proveedor/Create
+    [Authorize(Policy = Permisos.ProveedoresCrear)]
     public IActionResult Create()
     {
         return View();
@@ -49,6 +60,7 @@ public class ProveedorController : Controller
     // POST: Proveedor/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ProveedoresCrear)]
     public async Task<IActionResult> Create(
         ProveedorGuardarDto dto)
     {
@@ -75,6 +87,7 @@ public class ProveedorController : Controller
     }
 
     // GET: Proveedor/Edit/5
+    [Authorize(Policy = Permisos.ProveedoresEditar)]
     public async Task<IActionResult> Edit(int id)
     {
         var proveedor = await _service.ObtenerPorIdAsync(id);
@@ -100,6 +113,7 @@ public class ProveedorController : Controller
     // POST: Proveedor/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ProveedoresEditar)]
     public async Task<IActionResult> Edit(
         int id,
         ProveedorGuardarDto dto)
@@ -139,6 +153,7 @@ public class ProveedorController : Controller
     // POST: Proveedor/CambiarEstado/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.ProveedoresDesactivar)]
     public async Task<IActionResult> CambiarEstado(
         int id,
         bool activo)

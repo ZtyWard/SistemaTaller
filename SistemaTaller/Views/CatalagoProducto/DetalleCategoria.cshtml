@@ -1,0 +1,116 @@
+﻿@model Negocios.DTOs.CategoriaProductoDto
+
+@{
+    ViewData["Title"] = "Detalle de categoría";
+}
+
+<div class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-kicker">CATÁLOGO · PRODUCTOS</span>
+            <h1>Detalle</h1>
+            <p>Información de la categoría seleccionada.</p>
+        </div>
+
+        <div class="axis-page-header-actions">
+
+            <a asp-action="Categorias"
+               class="axis-btn axis-btn-secondary">
+                Volver
+            </a>
+
+            <a asp-action="EditarCategoria"
+               asp-route-id="@Model.IdCategoriaProducto"
+               class="axis-btn axis-btn-primary">
+                Editar
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="axis-detail-grid">
+
+        <div class="axis-detail-card">
+
+            <div class="axis-detail-card-header">
+
+                <div class="axis-detail-avatar">
+                    @Model.Nombre.Substring(0, 1).ToUpper()
+                </div>
+
+                <div>
+
+                    <span class="axis-detail-label">
+                        CATEGORÍA
+                    </span>
+
+                    <h2>
+                        @Model.Nombre
+                    </h2>
+
+                </div>
+
+            </div>
+
+            <div class="axis-detail-status">
+
+                @if (Model.Activo)
+                {
+                    <span class="axis-status axis-status-active">
+                        ACTIVA
+                    </span>
+                }
+                else
+                {
+                    <span class="axis-status axis-status-inactive">
+                        INACTIVA
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+        <div class="axis-detail-card">
+
+            <span class="axis-detail-label">
+                INFORMACIÓN
+            </span>
+
+            <div class="axis-detail-list">
+
+                <div class="axis-detail-row">
+                    <span>ID de categoría</span>
+                    <strong>
+                        @Model.IdCategoriaProducto
+                    </strong>
+                </div>
+
+                <div class="axis-detail-row">
+                    <span>Nombre</span>
+                    <strong>
+                        @Model.Nombre
+                    </strong>
+                </div>
+
+                <div class="axis-detail-row">
+                    <span>Estado</span>
+
+                    <strong class="@(Model.Activo
+                                                    ? "axis-detail-active-text"
+                                                    : "")">
+                        @(Model.Activo ? "Activa" : "Inactiva")
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

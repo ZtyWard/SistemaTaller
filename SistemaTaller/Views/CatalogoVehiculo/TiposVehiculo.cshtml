@@ -1,0 +1,190 @@
+﻿@model IEnumerable<Negocios.DTOs.TipoVehiculoDto>
+
+@{
+    ViewData["Title"] = "Tipos de vehículo";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                CATÁLOGOS · VEHÍCULOS
+            </span>
+
+            <h1>Tipos de vehículo</h1>
+
+            <p>
+                Administra los tipos de vehículo disponibles.
+            </p>
+
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="TiposVehiculoActivos"
+               class="axis-button axis-button-secondary">
+                Activos
+            </a>
+
+            <a asp-action="CrearTipoVehiculo"
+               class="axis-button axis-button-primary">
+                + Nuevo tipo
+            </a>
+
+        </div>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+
+    <div class="axis-toolbar">
+
+        <span class="axis-record-count">
+            @Model.Count() tipos registrados
+        </span>
+
+    </div>
+
+
+    <div class="axis-table-card">
+
+        <div class="axis-table-wrapper">
+
+            <table class="axis-table">
+
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Identificador</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4"
+                                class="axis-empty">
+                                No hay tipos de vehículo registrados.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var tipo in Model)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <div class="axis-client-cell">
+
+                                        <div class="axis-client-avatar">
+                                            @tipo.Nombre.Substring(0, 1).ToUpper()
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                @tipo.Nombre
+                                            </strong>
+
+                                            <small class="axis-table-secondary-text">
+                                                Tipo de vehículo
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+                                <td>
+                                    #@tipo.IdTipoVehiculo
+                                </td>
+
+                                <td>
+
+                                    @if (tipo.Activo)
+                                    {
+                                        <span class="axis-status axis-status-active">
+                                            Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-status">
+                                            Inactivo
+                                        </span>
+                                    }
+
+                        </td>
+
+                        <td>
+
+                            <div class="axis-row-actions">
+
+                                <a asp-action="DetalleTipoVehiculo"
+                                   asp-route-id="@tipo.IdTipoVehiculo"
+                                   class="axis-row-action">
+                                    Ver
+                                </a>
+
+                                <a asp-action="EditarTipoVehiculo"
+                                   asp-route-id="@tipo.IdTipoVehiculo"
+                                   class="axis-row-action">
+                                    Editar
+                                </a>
+
+                                <form asp-action="CambiarEstadoTipoVehiculo"
+                                      asp-route-id="@tipo.IdTipoVehiculo"
+                                      method="post"
+                                      style="display:inline">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="activo"
+                                           value="@(!tipo.Activo).ToString().ToLower()" />
+
+                                    <button type="submit"
+                                            class="axis-row-action">
+
+                                        @(tipo.Activo
+                                                                                ? "Desactivar"
+                                                                                : "Activar")
+
+                                    </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

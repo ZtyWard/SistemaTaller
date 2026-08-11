@@ -1,9 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// =====================================================
+// CatalogoVehiculoController
+// =====================================================
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Negocios.DTOs;
 using Negocios.Interfaces;
+using Negocios.Seguridad;
 
-namespace SistemaTaller.Controllers;
+// =====================================================
 
+using Microsoft.AspNetCore.Authorization;
 public class CatalogoVehiculoController : Controller
 {
     private readonly IMarcaService _marcaService;
@@ -28,6 +35,7 @@ public class CatalogoVehiculoController : Controller
     // =====================================================
 
     // GET: CatalogoVehiculo/Marcas
+    [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> Marcas()
     {
         var marcas = await _marcaService.ObtenerTodosAsync();
@@ -36,6 +44,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/MarcasActivas
+    [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> MarcasActivas()
     {
         var marcas = await _marcaService.ObtenerActivasAsync();
@@ -44,6 +53,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/DetalleMarca/5
+    [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> DetalleMarca(int id)
     {
         var marca = await _marcaService.ObtenerPorIdAsync(id);
@@ -55,6 +65,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/CrearMarca
+    [Authorize(Policy = Permisos.VehiculosCrear)]
     public IActionResult CrearMarca()
     {
         return View();
@@ -63,6 +74,7 @@ public class CatalogoVehiculoController : Controller
     // POST: CatalogoVehiculo/CrearMarca
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.VehiculosCrear)]
     public async Task<IActionResult> CrearMarca(
         MarcaGuardarDto dto)
     {
@@ -89,6 +101,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/EditarMarca/5
+    [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> EditarMarca(int id)
     {
         var marca = await _marcaService.ObtenerPorIdAsync(id);
@@ -110,6 +123,7 @@ public class CatalogoVehiculoController : Controller
     // POST: CatalogoVehiculo/EditarMarca/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> EditarMarca(
         int id,
         MarcaGuardarDto dto)
@@ -149,6 +163,7 @@ public class CatalogoVehiculoController : Controller
     // POST: CatalogoVehiculo/CambiarEstadoMarca/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.VehiculosDesactivar)]
     public async Task<IActionResult> CambiarEstadoMarca(
         int id,
         bool activo)
@@ -172,6 +187,7 @@ public class CatalogoVehiculoController : Controller
     // =====================================================
 
     // GET: CatalogoVehiculo/Modelos
+    [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> Modelos()
     {
         var modelos = await _modeloService.ObtenerTodosAsync();
@@ -180,6 +196,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/ModelosActivos
+    [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> ModelosActivos()
     {
         var modelos = await _modeloService.ObtenerActivasAsync();
@@ -188,6 +205,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/DetalleModelo/5
+    [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> DetalleModelo(int id)
     {
         var modelo = await _modeloService.ObtenerPorIdAsync(id);
@@ -199,6 +217,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/CrearModelo
+    [Authorize(Policy = Permisos.VehiculosCrear)]
     public IActionResult CrearModelo()
     {
         return View();
@@ -207,6 +226,7 @@ public class CatalogoVehiculoController : Controller
     // POST: CatalogoVehiculo/CrearModelo
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.VehiculosCrear)]
     public async Task<IActionResult> CrearModelo(
         ModeloGuardarDto dto)
     {
@@ -233,6 +253,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/EditarModelo/5
+    [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> EditarModelo(int id)
     {
         var modelo = await _modeloService.ObtenerPorIdAsync(id);
@@ -255,6 +276,7 @@ public class CatalogoVehiculoController : Controller
     // POST: CatalogoVehiculo/EditarModelo/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> EditarModelo(
         int id,
         ModeloGuardarDto dto)
@@ -294,6 +316,7 @@ public class CatalogoVehiculoController : Controller
     // POST: CatalogoVehiculo/CambiarEstadoModelo/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.VehiculosDesactivar)]
     public async Task<IActionResult> CambiarEstadoModelo(
         int id,
         bool activo)
@@ -317,6 +340,7 @@ public class CatalogoVehiculoController : Controller
     // =====================================================
 
     // GET: CatalogoVehiculo/TiposVehiculo
+    [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> TiposVehiculo()
     {
         var tipos =
@@ -326,6 +350,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/TiposVehiculoActivos
+    [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> TiposVehiculoActivos()
     {
         var tipos =
@@ -335,6 +360,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/DetalleTipoVehiculo/5
+    [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> DetalleTipoVehiculo(int id)
     {
         var tipo =
@@ -347,6 +373,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/CrearTipoVehiculo
+    [Authorize(Policy = Permisos.VehiculosCrear)]
     public IActionResult CrearTipoVehiculo()
     {
         return View();
@@ -355,6 +382,7 @@ public class CatalogoVehiculoController : Controller
     // POST: CatalogoVehiculo/CrearTipoVehiculo
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.VehiculosCrear)]
     public async Task<IActionResult> CrearTipoVehiculo(
         TipoVehiculoGuardarDto dto)
     {
@@ -381,6 +409,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/EditarTipoVehiculo/5
+    [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> EditarTipoVehiculo(int id)
     {
         var tipo =
@@ -403,6 +432,7 @@ public class CatalogoVehiculoController : Controller
     // POST: CatalogoVehiculo/EditarTipoVehiculo/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> EditarTipoVehiculo(
         int id,
         TipoVehiculoGuardarDto dto)
@@ -444,6 +474,7 @@ public class CatalogoVehiculoController : Controller
     // POST: CatalogoVehiculo/CambiarEstadoTipoVehiculo/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.VehiculosDesactivar)]
     public async Task<IActionResult> CambiarEstadoTipoVehiculo(
         int id,
         bool activo)
@@ -469,6 +500,7 @@ public class CatalogoVehiculoController : Controller
     // =====================================================
 
     // GET: CatalogoVehiculo/TiposCombustible
+    [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> TiposCombustible()
     {
         var tipos =
@@ -478,6 +510,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/TiposCombustibleActivos
+    [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> TiposCombustibleActivos()
     {
         var tipos =
@@ -487,6 +520,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/DetalleTipoCombustible/5
+    [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> DetalleTipoCombustible(int id)
     {
         var tipo =
@@ -499,6 +533,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/CrearTipoCombustible
+    [Authorize(Policy = Permisos.VehiculosCrear)]
     public IActionResult CrearTipoCombustible()
     {
         return View();
@@ -507,6 +542,7 @@ public class CatalogoVehiculoController : Controller
     // POST: CatalogoVehiculo/CrearTipoCombustible
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.VehiculosCrear)]
     public async Task<IActionResult> CrearTipoCombustible(
         TipoCombustibleGuardarDto dto)
     {
@@ -533,6 +569,7 @@ public class CatalogoVehiculoController : Controller
     }
 
     // GET: CatalogoVehiculo/EditarTipoCombustible/5
+    [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> EditarTipoCombustible(int id)
     {
         var tipo =
@@ -555,6 +592,7 @@ public class CatalogoVehiculoController : Controller
     // POST: CatalogoVehiculo/EditarTipoCombustible/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> EditarTipoCombustible(
         int id,
         TipoCombustibleGuardarDto dto)
@@ -596,6 +634,7 @@ public class CatalogoVehiculoController : Controller
     // POST: CatalogoVehiculo/CambiarEstadoTipoCombustible/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.VehiculosDesactivar)]
     public async Task<IActionResult> CambiarEstadoTipoCombustible(
         int id,
         bool activo)

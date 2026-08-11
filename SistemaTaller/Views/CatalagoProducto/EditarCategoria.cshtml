@@ -1,0 +1,109 @@
+﻿@model Negocios.DTOs.CategoriaProductoGuardarDto
+
+@{
+    ViewData["Title"] = "Editar categoría";
+}
+
+<div class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-kicker">CATÁLOGO · PRODUCTOS</span>
+            <h1>Editar categoría</h1>
+            <p>Actualiza la información de la categoría seleccionada.</p>
+        </div>
+
+        <a asp-action="Categorias"
+           class="axis-btn axis-btn-secondary">
+            Volver
+        </a>
+
+    </div>
+
+    <div class="axis-form-card">
+
+        <form asp-action="EditarCategoria"
+              asp-route-id="@ViewBag.IdCategoriaProducto"
+              method="post"
+              class="axis-form">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-validation">
+            </div>
+
+            <div class="axis-form-grid">
+
+                <div class="axis-field">
+
+                    <label>ID</label>
+
+                    <input type="text"
+                           class="axis-input"
+                           value="@ViewBag.IdCategoriaProducto"
+                           disabled />
+
+                </div>
+
+                <div class="axis-field">
+
+                    <label asp-for="Nombre">
+                        Nombre de la categoría
+                    </label>
+
+                    <input asp-for="Nombre"
+                           class="axis-input"
+                           placeholder="Nombre de la categoría" />
+
+                    <span asp-validation-for="Nombre"
+                          class="axis-field-error">
+                    </span>
+
+                </div>
+
+                <div class="axis-field">
+
+                    <label asp-for="Activo">
+                        Estado
+                    </label>
+
+                    <div class="axis-checkbox">
+
+                        <input asp-for="Activo"
+                               type="checkbox" />
+
+                        <span>
+                            Categoría activa
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="axis-form-actions">
+
+                <a asp-action="Categorias"
+                   class="axis-btn axis-btn-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                        class="axis-btn axis-btn-primary">
+                    Guardar cambios
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

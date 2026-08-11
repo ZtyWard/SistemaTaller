@@ -1,0 +1,198 @@
+﻿@model IEnumerable<Negocios.DTOs.ServicioDto>
+
+@{
+    ViewData["Title"] = "Servicios";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <span class="axis-page-kicker">
+                TALLER · SERVICIOS
+            </span>
+
+            <h1>Servicios</h1>
+
+            <p>
+                Gestiona los servicios disponibles en el taller.
+            </p>
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Activos"
+               class="axis-button axis-button-secondary">
+                Activos
+            </a>
+
+            <a asp-action="Create"
+               class="axis-button axis-button-primary">
+                + Nuevo servicio
+            </a>
+
+        </div>
+
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    <div class="axis-toolbar">
+
+        <span class="axis-record-count">
+            @Model.Count() servicios registrados
+        </span>
+
+    </div>
+
+    <div class="axis-table-card">
+
+        <div class="axis-table-wrapper">
+
+            <table class="axis-table">
+
+                <thead>
+                    <tr>
+                        <th>Servicio</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Duración</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="axis-empty">
+                                No hay servicios registrados.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var servicio in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <div class="axis-client-cell">
+
+                                        <div class="axis-client-avatar">
+                                            @(
+                                                                                string.IsNullOrWhiteSpace(servicio.Nombre)
+                                                                                ? "S"
+                                                                                : servicio.Nombre
+                                                                                .Substring(0, 1)
+                                                                                .ToUpper()
+                                                                                )
+                                        </div>
+
+                                        <div>
+                                            <strong>
+                                                @servicio.Nombre
+                                            </strong>
+
+                                            <small class="axis-table-secondary-text">
+                                                #@servicio.IdServicio
+                                            </small>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                                <td>
+                                    @(string.IsNullOrWhiteSpace(servicio.Descripcion)
+                                                                ? "Sin descripción"
+                                                                : servicio.Descripcion)
+                                                                                   </td>
+
+                                <td>
+                                    @servicio.Precio.ToString("C2")
+                                </td>
+
+                                <td>
+                                    @(servicio.DuracionEstimada.HasValue
+                                                                ? $"{servicio.DuracionEstimada.Value} min"
+                                                                : "—")
+                        </td>
+
+                                <td>
+
+                            @if (servicio.Activo)
+                                    {
+                                        <span class="axis-status axis-status-active">
+                                            Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-status axis-status-inactive">
+                                            Inactivo
+                                        </span>
+                                    }
+
+                        </td>
+
+                        <td>
+
+                            <div class="axis-row-actions">
+
+                                <a asp-action="Details"
+                                   asp-route-id="@servicio.IdServicio"
+                                   class="axis-row-action">
+                                    Ver
+                                </a>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@servicio.IdServicio"
+                                   class="axis-row-action">
+                                    Editar
+                                </a>
+
+                                <form asp-action="CambiarEstado"
+                                      asp-route-id="@servicio.IdServicio"
+                                      method="post"
+                                      style="display:inline">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="activo"
+                                           value="@(!servicio.Activo).ToString().ToLower()" />
+
+                                    <button type="submit"
+                                            class="axis-row-action">
+                                        @(servicio.Activo
+                                                                                ? "Desactivar"
+                                                                                : "Activar")
+                                    </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>

@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Negocios.DTOs;
 using Negocios.Interfaces;
+using Negocios.Seguridad;
 
 namespace SistemaTaller.Controllers;
 
+[Authorize]
 public class VehiculoController : Controller
 {
     private readonly IVehiculoService _service;
@@ -13,34 +16,48 @@ public class VehiculoController : Controller
         _service = service;
     }
 
+    // =====================================================
+    // CONSULTAR VEHÍCULOS
+    // =====================================================
+
     // GET: Vehiculo
+    [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> Index()
     {
-        var vehiculos = await _service.ObtenerTodosAsync();
+        var vehiculos =
+            await _service.ObtenerTodosAsync();
 
         return View(vehiculos);
     }
 
     // GET: Vehiculo/Activos
+    [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> Activos()
     {
-        var vehiculos = await _service.ObtenerActivosAsync();
+        var vehiculos =
+            await _service.ObtenerActivosAsync();
 
         return View("Index", vehiculos);
     }
 
     // GET: Vehiculo/PorCliente/5
-    public async Task<IActionResult> PorCliente(int idCliente)
+    [Authorize(Policy = Permisos.VehiculosVer)]
+    public async Task<IActionResult> PorCliente(
+        int idCliente)
     {
-        var vehiculos = await _service.ObtenerPorClienteAsync(idCliente);
+        var vehiculos =
+            await _service.ObtenerPorClienteAsync(
+                idCliente);
 
         return View("Index", vehiculos);
     }
 
     // GET: Vehiculo/Details/5
+    [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> Details(int id)
     {
-        var vehiculo = await _service.ObtenerPorIdAsync(id);
+        var vehiculo =
+            await _service.ObtenerPorIdAsync(id);
 
         if (vehiculo == null)
             return NotFound();
@@ -49,16 +66,21 @@ public class VehiculoController : Controller
     }
 
     // GET: Vehiculo/BuscarPorPlaca
-    public async Task<IActionResult> BuscarPorPlaca(string placa)
+    [Authorize(Policy = Permisos.VehiculosVer)]
+    public async Task<IActionResult> BuscarPorPlaca(
+        string placa)
     {
         if (string.IsNullOrWhiteSpace(placa))
             return RedirectToAction(nameof(Index));
 
-        var vehiculo = await _service.ObtenerPorPlacaAsync(placa);
+        var vehiculo =
+            await _service.ObtenerPorPlacaAsync(
+                placa);
 
         if (vehiculo == null)
         {
-            TempData["Error"] = "No se encontró ningún vehículo con esa placa.";
+            TempData["Error"] =
+                "No se encontró ningún vehículo con esa placa.";
 
             return RedirectToAction(nameof(Index));
         }
@@ -66,7 +88,12 @@ public class VehiculoController : Controller
         return View("Details", vehiculo);
     }
 
+    // =====================================================
+    // CREAR VEHÍCULO
+    // =====================================================
+
     // GET: Vehiculo/Create
+    [Authorize(Policy = Permisos.VehiculosCrear)]
     public IActionResult Create()
     {
         return View();
@@ -75,7 +102,9 @@ public class VehiculoController : Controller
     // POST: Vehiculo/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(VehiculoGuardarDto dto)
+    [Authorize(Policy = Permisos.VehiculosCrear)]
+    public async Task<IActionResult> Create(
+        VehiculoGuardarDto dto)
     {
         if (!ModelState.IsValid)
             return View(dto);
@@ -99,10 +128,16 @@ public class VehiculoController : Controller
         }
     }
 
+    // =====================================================
+    // EDITAR VEHÍCULO
+    // =====================================================
+
     // GET: Vehiculo/Edit/5
+    [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> Edit(int id)
     {
-        var vehiculo = await _service.ObtenerPorIdAsync(id);
+        var vehiculo =
+            await _service.ObtenerPorIdAsync(id);
 
         if (vehiculo == null)
             return NotFound();
@@ -120,7 +155,8 @@ public class VehiculoController : Controller
             Kilometraje = vehiculo.Kilometraje
         };
 
-        ViewBag.IdVehiculo = vehiculo.IdVehiculo;
+        ViewBag.IdVehiculo =
+            vehiculo.IdVehiculo;
 
         return View(dto);
     }
@@ -128,6 +164,7 @@ public class VehiculoController : Controller
     // POST: Vehiculo/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> Edit(
         int id,
         VehiculoGuardarDto dto)
@@ -142,7 +179,9 @@ public class VehiculoController : Controller
         try
         {
             var actualizado =
-                await _service.ActualizarAsync(id, dto);
+                await _service.ActualizarAsync(
+                    id,
+                    dto);
 
             if (!actualizado)
                 return NotFound();
@@ -164,9 +203,14 @@ public class VehiculoController : Controller
         }
     }
 
+    // =====================================================
+    // DESACTIVAR VEHÍCULO
+    // =====================================================
+
     // POST: Vehiculo/Desactivar/5
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Policy = Permisos.VehiculosDesactivar)]
     public async Task<IActionResult> Desactivar(int id)
     {
         var desactivado =
