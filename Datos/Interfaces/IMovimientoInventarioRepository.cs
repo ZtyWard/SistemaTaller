@@ -13,4 +13,10 @@ public interface IMovimientoInventarioRepository
 
     Task<IEnumerable<MovimientoInventario>>
         ObtenerRecientesAsync(int cantidad);
+
+    Task RegistrarMovimientoAsync(
+        int idProducto,
+        string tipoMovimiento,
+        int cantidad,
+        string? observacion);
 }

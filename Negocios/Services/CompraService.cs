@@ -12,23 +12,41 @@ public class CompraService : ICompraService
     private readonly IProveedorRepository
         _proveedorRepository;
 
+    private readonly IProductoRepository
+        _productoRepository;
+
     public CompraService(
         ICompraRepository repository,
-        IProveedorRepository proveedorRepository)
+        IProveedorRepository proveedorRepository,
+        IProductoRepository productoRepository)
     {
-        _repository = repository;
+        _repository =
+            repository;
+
         _proveedorRepository =
             proveedorRepository;
+
+        _productoRepository =
+            productoRepository;
     }
+
+    // =====================================================
+    // OBTENER TODOS
+    // =====================================================
 
     public async Task<IEnumerable<CompraDto>>
         ObtenerTodosAsync()
     {
         var compras =
-            await _repository.ObtenerTodosAsync();
+            await _repository
+                .ObtenerTodosAsync();
 
         return compras.Select(MapearDto);
     }
+
+    // =====================================================
+    // POR PROVEEDOR
+    // =====================================================
 
     public async Task<IEnumerable<CompraDto>>
         ObtenerPorProveedorAsync(
@@ -42,6 +60,10 @@ public class CompraService : ICompraService
         return compras.Select(MapearDto);
     }
 
+    // =====================================================
+    // POR ESTADO
+    // =====================================================
+
     public async Task<IEnumerable<CompraDto>>
         ObtenerPorEstadoAsync(
             string estado)
@@ -53,6 +75,10 @@ public class CompraService : ICompraService
 
         return compras.Select(MapearDto);
     }
+
+    // =====================================================
+    // RECIENTES
+    // =====================================================
 
     public async Task<IEnumerable<CompraDto>>
         ObtenerRecientesAsync(
@@ -66,25 +92,34 @@ public class CompraService : ICompraService
         return compras.Select(MapearDto);
     }
 
+    // =====================================================
+    // POR ID
+    // =====================================================
+
     public async Task<CompraDto?>
         ObtenerPorIdAsync(int id)
     {
         var compra =
             await _repository
-                .ObtenerPorIdAsync(id);
+                .ObtenerPorIdConDetallesAsync(
+                    id);
 
         return compra == null
             ? null
             : MapearDto(compra);
     }
 
+    // =====================================================
+    // CREAR COMPRA
+    // =====================================================
+
     public async Task CrearAsync(
         CompraGuardarDto dto)
     {
-        Validar(dto);
+        await ValidarCompraAsync(dto);
 
-        await ValidarProveedorAsync(
-            dto.IdProveedor);
+        var calculo =
+            CalcularTotales(dto.Detalles);
 
         var compra = new Compra
         {
@@ -96,35 +131,106 @@ public class CompraService : ICompraService
                     ? DateTime.Now
                     : dto.FechaCompra,
 
+            Subtotal =
+                calculo.Subtotal,
+
+            Impuesto =
+                calculo.Impuesto,
+
+            Descuento =
+                calculo.Descuento,
+
             Total =
-                dto.Total,
+                calculo.Total,
 
             Estado =
                 NormalizarEstado(
-                    dto.Estado)
+                    dto.Estado),
+
+            NumeroFacturaProveedor =
+                dto.NumeroFacturaProveedor
+                    ?.Trim(),
+
+            FormaPago =
+                dto.FormaPago
+                    ?.Trim(),
+
+            UsuarioId =
+                dto.UsuarioId
         };
+
+        foreach (var detalleDto
+            in dto.Detalles)
+        {
+            var subtotal =
+                (detalleDto.Cantidad *
+                 detalleDto.CostoUnitario)
+                + detalleDto.Impuesto
+                - detalleDto.Descuento;
+
+            compra.Detalles.Add(
+                new DetalleCompra
+                {
+                    IdProducto =
+                        detalleDto.IdProducto,
+
+                    Cantidad =
+                        detalleDto.Cantidad,
+
+                    CostoUnitario =
+                        detalleDto.CostoUnitario,
+
+                    Impuesto =
+                        detalleDto.Impuesto,
+
+                    Descuento =
+                        detalleDto.Descuento,
+
+                    Subtotal =
+                        subtotal
+                });
+        }
 
         await _repository.AgregarAsync(
             compra);
 
-        await _repository.GuardarCambiosAsync();
+        await _repository
+            .GuardarCambiosAsync();
     }
 
-    public async Task<bool> ActualizarAsync(
-        int id,
-        CompraGuardarDto dto)
-    {
-        Validar(dto);
+    // =====================================================
+    // ACTUALIZAR
+    // =====================================================
 
-        await ValidarProveedorAsync(
-            dto.IdProveedor);
+    public async Task<bool>
+        ActualizarAsync(
+            int id,
+            CompraGuardarDto dto)
+    {
+        await ValidarCompraAsync(dto);
 
         var compra =
             await _repository
-                .ObtenerPorIdAsync(id);
+                .ObtenerPorIdConDetallesAsync(
+                    id);
 
         if (compra == null)
             return false;
+
+        if (compra.Estado == "Completada")
+        {
+            throw new InvalidOperationException(
+                "No se puede modificar una compra completada.");
+        }
+
+        if (compra.Estado == "Cancelada")
+        {
+            throw new InvalidOperationException(
+                "No se puede modificar una compra cancelada.");
+        }
+
+        var calculo =
+            CalcularTotales(dto.Detalles);
 
         compra.IdProveedor =
             dto.IdProveedor;
@@ -132,43 +238,237 @@ public class CompraService : ICompraService
         compra.FechaCompra =
             dto.FechaCompra;
 
+        compra.Subtotal =
+            calculo.Subtotal;
+
+        compra.Impuesto =
+            calculo.Impuesto;
+
+        compra.Descuento =
+            calculo.Descuento;
+
         compra.Total =
-            dto.Total;
+            calculo.Total;
 
         compra.Estado =
             NormalizarEstado(
                 dto.Estado);
 
+        compra.NumeroFacturaProveedor =
+            dto.NumeroFacturaProveedor
+                ?.Trim();
+
+        compra.FormaPago =
+            dto.FormaPago
+                ?.Trim();
+
+        compra.UsuarioId =
+            dto.UsuarioId;
+
+        // =================================================
+        // REEMPLAZAR DETALLES
+        // =================================================
+
+        compra.Detalles.Clear();
+
+        foreach (var detalleDto
+            in dto.Detalles)
+        {
+            var subtotal =
+                (detalleDto.Cantidad *
+                 detalleDto.CostoUnitario)
+                + detalleDto.Impuesto
+                - detalleDto.Descuento;
+
+            compra.Detalles.Add(
+                new DetalleCompra
+                {
+                    IdProducto =
+                        detalleDto.IdProducto,
+
+                    Cantidad =
+                        detalleDto.Cantidad,
+
+                    CostoUnitario =
+                        detalleDto.CostoUnitario,
+
+                    Impuesto =
+                        detalleDto.Impuesto,
+
+                    Descuento =
+                        detalleDto.Descuento,
+
+                    Subtotal =
+                        subtotal
+                });
+        }
+
         _repository.Actualizar(
             compra);
 
-        await _repository.GuardarCambiosAsync();
+        await _repository
+            .GuardarCambiosAsync();
 
         return true;
     }
+
+    // =====================================================
+    // CAMBIAR ESTADO
+    // =====================================================
 
     public async Task<bool>
         CambiarEstadoAsync(
             int id,
             string estado)
     {
+        var nuevoEstado =
+            NormalizarEstado(estado);
+
         var compra =
             await _repository
-                .ObtenerPorIdAsync(id);
+                .ObtenerPorIdConDetallesAsync(
+                    id);
 
         if (compra == null)
             return false;
 
+        // =================================================
+        // COMPLETAR COMPRA
+        // =================================================
+
+        if (nuevoEstado == "Completada")
+        {
+            if (compra.Estado ==
+                "Completada")
+            {
+                throw new InvalidOperationException(
+                    "La compra ya está completada.");
+            }
+
+            await _repository
+                .CompletarCompraAsync(id);
+
+            return true;
+        }
+
+        // =================================================
+        // CANCELAR
+        // =================================================
+
+        if (nuevoEstado == "Cancelada")
+        {
+            if (compra.Estado ==
+                "Completada")
+            {
+                throw new InvalidOperationException(
+                    "No se puede cancelar una compra completada.");
+            }
+        }
+
+        // =================================================
+        // PENDIENTE / CANCELADA
+        // =================================================
+
         compra.Estado =
-            NormalizarEstado(estado);
+            nuevoEstado;
 
         _repository.Actualizar(
             compra);
 
-        await _repository.GuardarCambiosAsync();
+        await _repository
+            .GuardarCambiosAsync();
 
         return true;
     }
+
+    // =====================================================
+    // VALIDAR COMPRA
+    // =====================================================
+
+    private async Task
+        ValidarCompraAsync(
+            CompraGuardarDto dto)
+    {
+        if (dto.IdProveedor <= 0)
+        {
+            throw new ArgumentException(
+                "Debe seleccionar un proveedor.");
+        }
+
+        await ValidarProveedorAsync(
+            dto.IdProveedor);
+
+        if (dto.FechaCompra == default)
+        {
+            dto.FechaCompra =
+                DateTime.Now;
+        }
+
+        NormalizarEstado(
+            dto.Estado);
+
+        if (dto.Detalles == null ||
+            dto.Detalles.Count == 0)
+        {
+            throw new ArgumentException(
+                "La compra debe tener al menos un detalle.");
+        }
+
+        foreach (var detalle
+            in dto.Detalles)
+        {
+            if (detalle.IdProducto <= 0)
+            {
+                throw new ArgumentException(
+                    "Todos los detalles deben tener un producto.");
+            }
+
+            if (detalle.Cantidad <= 0)
+            {
+                throw new ArgumentException(
+                    "La cantidad debe ser mayor que cero.");
+            }
+
+            if (detalle.CostoUnitario < 0)
+            {
+                throw new ArgumentException(
+                    "El costo unitario no puede ser negativo.");
+            }
+
+            if (detalle.Impuesto < 0)
+            {
+                throw new ArgumentException(
+                    "El impuesto no puede ser negativo.");
+            }
+
+            if (detalle.Descuento < 0)
+            {
+                throw new ArgumentException(
+                    "El descuento no puede ser negativo.");
+            }
+
+            var producto =
+                await _productoRepository
+                    .ObtenerPorIdAsync(
+                        detalle.IdProducto);
+
+            if (producto == null)
+            {
+                throw new ArgumentException(
+                    $"El producto {detalle.IdProducto} no existe.");
+            }
+
+            if (!producto.Activo)
+            {
+                throw new ArgumentException(
+                    $"El producto '{producto.Nombre}' está inactivo.");
+            }
+        }
+    }
+
+    // =====================================================
+    // VALIDAR PROVEEDOR
+    // =====================================================
 
     private async Task
         ValidarProveedorAsync(
@@ -198,51 +498,91 @@ public class CompraService : ICompraService
         }
     }
 
-    private static void Validar(
-        CompraGuardarDto dto)
+    // =====================================================
+    // CALCULAR TOTALES
+    // =====================================================
+
+    private static (
+        decimal Subtotal,
+        decimal Impuesto,
+        decimal Descuento,
+        decimal Total)
+        CalcularTotales(
+            IEnumerable<DetalleCompraGuardarDto>
+                detalles)
     {
-        if (dto.IdProveedor <= 0)
+        decimal subtotal = 0;
+        decimal impuesto = 0;
+        decimal descuento = 0;
+
+        foreach (var detalle in detalles)
         {
-            throw new ArgumentException(
-                "Debe seleccionar un proveedor.");
+            subtotal +=
+                detalle.Cantidad *
+                detalle.CostoUnitario;
+
+            impuesto +=
+                detalle.Impuesto;
+
+            descuento +=
+                detalle.Descuento;
         }
 
-        if (dto.FechaCompra == default)
+        var total =
+            subtotal +
+            impuesto -
+            descuento;
+
+        if (total < 0)
         {
             throw new ArgumentException(
-                "La fecha de compra es obligatoria.");
+                "El total de la compra no puede ser negativo.");
         }
 
-        if (dto.Total < 0)
-        {
-            throw new ArgumentException(
-                "El total no puede ser negativo.");
-        }
-
-        NormalizarEstado(dto.Estado);
+        return (
+            subtotal,
+            impuesto,
+            descuento,
+            total);
     }
+
+    // =====================================================
+    // NORMALIZAR ESTADO
+    // =====================================================
 
     private static string
         NormalizarEstado(
             string estado)
     {
         var valor =
-            estado.Trim()
+            (estado ?? string.Empty)
+                .Trim()
                 .ToLowerInvariant();
 
         return valor switch
         {
-            "pendiente" => "Pendiente",
-            "completada" => "Completada",
-            "cancelada" => "Cancelada",
+            "pendiente" =>
+                "Pendiente",
 
-            _ => throw new ArgumentException(
-                "El estado debe ser Pendiente, Completada o Cancelada.")
+            "completada" =>
+                "Completada",
+
+            "cancelada" =>
+                "Cancelada",
+
+            _ =>
+                throw new ArgumentException(
+                    "El estado debe ser Pendiente, Completada o Cancelada.")
         };
     }
 
-    private static CompraDto MapearDto(
-        Compra compra)
+    // =====================================================
+    // MAPEAR DTO
+    // =====================================================
+
+    private static CompraDto
+        MapearDto(
+            Compra compra)
     {
         return new CompraDto
         {
@@ -259,11 +599,64 @@ public class CompraService : ICompraService
             FechaCompra =
                 compra.FechaCompra,
 
+            Subtotal =
+                compra.Subtotal,
+
+            Impuesto =
+                compra.Impuesto,
+
+            Descuento =
+                compra.Descuento,
+
             Total =
                 compra.Total,
 
             Estado =
-                compra.Estado
+                compra.Estado,
+
+            NumeroFacturaProveedor =
+                compra.NumeroFacturaProveedor,
+
+            FormaPago =
+                compra.FormaPago,
+
+            UsuarioId =
+                compra.UsuarioId,
+
+            Detalles =
+                compra.Detalles
+                    .Select(x =>
+                        new DetalleCompraDto
+                        {
+                            IdDetalleCompra =
+                                x.IdDetalleCompra,
+
+                            IdCompra =
+                                x.IdCompra,
+
+                            IdProducto =
+                                x.IdProducto,
+
+                            Producto =
+                                x.Producto?.Nombre
+                                ?? string.Empty,
+
+                            Cantidad =
+                                x.Cantidad,
+
+                            CostoUnitario =
+                                x.CostoUnitario,
+
+                            Impuesto =
+                                x.Impuesto,
+
+                            Descuento =
+                                x.Descuento,
+
+                            Subtotal =
+                                x.Subtotal
+                        })
+                    .ToList()
         };
     }
 }

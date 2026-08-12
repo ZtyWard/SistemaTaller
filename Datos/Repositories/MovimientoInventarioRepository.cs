@@ -51,4 +51,23 @@ public class MovimientoInventarioRepository
             .Take(cantidad)
             .ToListAsync();
     }
+
+    // =====================================================
+    // REGISTRAR MOVIMIENTO MEDIANTE STORED PROCEDURE
+    // =====================================================
+
+    public async Task RegistrarMovimientoAsync(
+        int idProducto,
+        string tipoMovimiento,
+        int cantidad,
+        string? observacion)
+    {
+        await _context.Database
+            .ExecuteSqlInterpolatedAsync($@"
+                EXEC dbo.sp_RegistrarMovimientoInventario
+                    @IdProducto = {idProducto},
+                    @TipoMovimiento = {tipoMovimiento},
+                    @Cantidad = {cantidad},
+                    @Observacion = {observacion}");
+    }
 }

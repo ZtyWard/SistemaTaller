@@ -1,5 +1,4 @@
 ﻿using Datos.Interfaces;
-using Datos.Models;
 using Negocios.DTOs;
 using Negocios.Interfaces;
 
@@ -11,19 +10,16 @@ public class MovimientoInventarioService
     private readonly IMovimientoInventarioRepository
         _movimientoRepository;
 
-    private readonly IProductoRepository
-        _productoRepository;
-
     public MovimientoInventarioService(
-        IMovimientoInventarioRepository movimientoRepository,
-        IProductoRepository productoRepository)
+        IMovimientoInventarioRepository movimientoRepository)
     {
         _movimientoRepository =
             movimientoRepository;
-
-        _productoRepository =
-            productoRepository;
     }
+
+    // =====================================================
+    // OBTENER TODOS
+    // =====================================================
 
     public async Task<IEnumerable<MovimientoInventarioDto>>
         ObtenerTodosAsync()
@@ -34,6 +30,10 @@ public class MovimientoInventarioService
 
         return movimientos.Select(MapearDto);
     }
+
+    // =====================================================
+    // OBTENER POR PRODUCTO
+    // =====================================================
 
     public async Task<IEnumerable<MovimientoInventarioDto>>
         ObtenerPorProductoAsync(
@@ -47,6 +47,10 @@ public class MovimientoInventarioService
         return movimientos.Select(MapearDto);
     }
 
+    // =====================================================
+    // OBTENER POR TIPO
+    // =====================================================
+
     public async Task<IEnumerable<MovimientoInventarioDto>>
         ObtenerPorTipoAsync(
             string tipoMovimiento)
@@ -54,10 +58,14 @@ public class MovimientoInventarioService
         var movimientos =
             await _movimientoRepository
                 .ObtenerPorTipoAsync(
-                    tipoMovimiento);
+                    NormalizarTipo(tipoMovimiento));
 
         return movimientos.Select(MapearDto);
     }
+
+    // =====================================================
+    // OBTENER RECIENTES
+    // =====================================================
 
     public async Task<IEnumerable<MovimientoInventarioDto>>
         ObtenerRecientesAsync(
@@ -71,6 +79,10 @@ public class MovimientoInventarioService
         return movimientos.Select(MapearDto);
     }
 
+    // =====================================================
+    // OBTENER POR ID
+    // =====================================================
+
     public async Task<MovimientoInventarioDto?>
         ObtenerPorIdAsync(int id)
     {
@@ -83,91 +95,39 @@ public class MovimientoInventarioService
             : MapearDto(movimiento);
     }
 
+    // =====================================================
+    // CREAR MOVIMIENTO
+    // =====================================================
+
     public async Task CrearAsync(
         MovimientoInventarioGuardarDto dto)
     {
         Validar(dto);
 
-        var producto =
-            await _productoRepository
-                .ObtenerPorIdAsync(
-                    dto.IdProducto);
-
-        if (producto == null)
-        {
-            throw new ArgumentException(
-                "El producto indicado no existe.");
-        }
-
-        int nuevoStock =
-            CalcularNuevoStock(
-                producto.Stock,
-                dto.TipoMovimiento,
-                dto.Cantidad);
-
-        producto.Stock = nuevoStock;
-
-        _productoRepository.Actualizar(
-            producto);
-
-        var movimiento =
-            new MovimientoInventario
-            {
-                IdProducto =
-                    dto.IdProducto,
-
-                TipoMovimiento =
-                    NormalizarTipo(
-                        dto.TipoMovimiento),
-
-                Cantidad =
-                    dto.Cantidad,
-
-                FechaMovimiento =
-                    DateTime.Now,
-
-                Observacion =
-                    dto.Observacion?.Trim(),
-
-                Producto =
-                    null
-            };
-
-        await _movimientoRepository
-            .AgregarAsync(movimiento);
-
-        await _productoRepository
-            .GuardarCambiosAsync();
-    }
-
-    private static int CalcularNuevoStock(
-        int stockActual,
-        string tipoMovimiento,
-        int cantidad)
-    {
         var tipo =
-            NormalizarTipo(tipoMovimiento);
+            NormalizarTipo(
+                dto.TipoMovimiento);
 
-        return tipo switch
+        try
         {
-            "Entrada" =>
-                stockActual + cantidad,
-
-            "Salida" =>
-                stockActual - cantidad
-                < 0
-                    ? throw new ArgumentException(
-                        "No hay suficiente stock para realizar la salida.")
-                    : stockActual - cantidad,
-
-            "Ajuste" =>
-                cantidad,
-
-            _ =>
-                throw new ArgumentException(
-                    "Tipo de movimiento no válido.")
-        };
+            await _movimientoRepository
+                .RegistrarMovimientoAsync(
+                    dto.IdProducto,
+                    tipo,
+                    dto.Cantidad,
+                    dto.Observacion?.Trim());
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException(
+                ObtenerMensajeError(ex),
+                ex);
+        }
     }
+
+    // =====================================================
+    // VALIDACIONES
+    // =====================================================
 
     private static void Validar(
         MovimientoInventarioGuardarDto dto)
@@ -195,29 +155,42 @@ public class MovimientoInventarioService
             dto.TipoMovimiento);
     }
 
+    // =====================================================
+    // NORMALIZAR TIPO
+    // =====================================================
+
     private static string NormalizarTipo(
         string tipoMovimiento)
     {
         var tipo =
-            tipoMovimiento.Trim()
+            tipoMovimiento
+                .Trim()
                 .ToLowerInvariant();
 
         return tipo switch
         {
-            "entrada" => "Entrada",
+            "entrada" =>
+                "Entrada",
 
-            "salida" => "Salida",
+            "salida" =>
+                "Salida",
 
-            "ajuste" => "Ajuste",
+            "ajuste" =>
+                "Ajuste",
 
-            _ => throw new ArgumentException(
-                "El tipo de movimiento debe ser Entrada, Salida o Ajuste.")
+            _ =>
+                throw new ArgumentException(
+                    "El tipo de movimiento debe ser Entrada, Salida o Ajuste.")
         };
     }
 
+    // =====================================================
+    // MAPEAR DTO
+    // =====================================================
+
     private static MovimientoInventarioDto
         MapearDto(
-            MovimientoInventario movimiento)
+            Datos.Models.MovimientoInventario movimiento)
     {
         return new MovimientoInventarioDto
         {
@@ -243,5 +216,22 @@ public class MovimientoInventarioService
             Observacion =
                 movimiento.Observacion
         };
+    }
+
+    // =====================================================
+    // EXTRAER MENSAJE DE SQL SERVER
+    // =====================================================
+
+    private static string ObtenerMensajeError(
+        Exception ex)
+    {
+        var actual = ex;
+
+        while (actual.InnerException != null)
+        {
+            actual = actual.InnerException;
+        }
+
+        return actual.Message;
     }
 }

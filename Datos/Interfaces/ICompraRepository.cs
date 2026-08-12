@@ -12,4 +12,10 @@ public interface ICompraRepository : IRepository<Compra>
 
     Task<IEnumerable<Compra>> ObtenerRecientesAsync(
         int cantidad);
+
+    Task<Compra?> ObtenerPorIdConDetallesAsync(
+        int idCompra);
+
+    Task CompletarCompraAsync(
+        int idCompra);
 }

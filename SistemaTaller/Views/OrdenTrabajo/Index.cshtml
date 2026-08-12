@@ -2,9 +2,27 @@
 
 @{
     ViewData["Title"] = "Órdenes de trabajo";
+
+    var estadosOrden = new[]
+    {
+        "Registrada",
+        "Pendiente de aprobación",
+        "Aprobada",
+        "En proceso",
+        "En espera de repuestos",
+        "Suspendida",
+        "Finalizada",
+        "Facturada",
+        "Entregada",
+        "Cancelada"
+    };
 }
 
 <section class="axis-page">
+
+    <!-- =====================================================
+         ENCABEZADO
+         ===================================================== -->
 
     <div class="axis-page-header">
 
@@ -19,7 +37,8 @@
             </h1>
 
             <p>
-                Controla los trabajos activos y el estado de servicio de cada vehículo.
+                Controla los trabajos activos y el estado de servicio
+                de cada vehículo.
             </p>
 
         </div>
@@ -41,6 +60,9 @@
     </div>
 
 
+    <!-- =====================================================
+         MENSAJES
+         ===================================================== -->
     @if (TempData["Success"] != null)
     {
         <div class="axis-alert axis-alert-success">
@@ -56,6 +78,10 @@
     }
 
 
+    <!-- =====================================================
+         CONTADOR
+         ===================================================== -->
+
     <div class="axis-toolbar">
 
         <span class="axis-record-count">
@@ -64,6 +90,10 @@
 
     </div>
 
+
+    <!-- =====================================================
+         TABLA
+         ===================================================== -->
 
     <div class="axis-table-card">
 
@@ -111,6 +141,7 @@
 
                 </thead>
 
+
                 <tbody>
 
                     @if (!Model.Any())
@@ -131,6 +162,10 @@
                         foreach (var orden in Model)
                         {
                             <tr>
+
+                                <!-- =================================================
+                                     ORDEN
+                                     ================================================= -->
 
                                 <td>
 
@@ -157,6 +192,10 @@
                                 </td>
 
 
+                                <!-- =================================================
+                                     CLIENTE
+                                     ================================================= -->
+
                                 <td>
 
                                     <strong>
@@ -165,6 +204,10 @@
 
                                 </td>
 
+
+                                <!-- =================================================
+                                     VEHÍCULO
+                                     ================================================= -->
 
                                 <td>
 
@@ -175,10 +218,20 @@
                                 </td>
 
 
+                                <!-- =================================================
+                                     FECHA INICIO
+                                     ================================================= -->
+
                                 <td>
+
                                     @orden.FechaInicio.ToString("dd/MM/yyyy")
+
                                 </td>
 
+
+                                <!-- =================================================
+                                     FECHA FINALIZACIÓN
+                                     ================================================= -->
 
                                 <td>
 
@@ -193,17 +246,33 @@
                                         </span>
                                     }
 
-                        </td>
+                                </td>
 
 
-                        <td>
+                                <!-- =================================================
+                                     ESTADO
+                                     ================================================= -->
+
+                                <td>
+
+                                    @{
+                                        var estadoActivo =
+                                        orden.Estado.Equals(
+                                        "Finalizada",
+                                        StringComparison.OrdinalIgnoreCase);
+
+                                        var estadoCancelado =
+                                        orden.Estado.Equals(
+                                        "Cancelada",
+                                        StringComparison.OrdinalIgnoreCase);
+                                    }
 
                             <span class="axis-status
-                                        @(orden.Estado.Equals(
-                                                                              "Finalizada",
-                                                                              StringComparison.OrdinalIgnoreCase)
+                                        @(estadoActivo
                                                                               ? "axis-status-active"
-                                                                              : "axis-status-warning")">
+                                                                              : estadoCancelado
+                                                                                  ? "axis-status-error"
+                                                                                  : "axis-status-warning")">
 
                                 @orden.Estado
 
@@ -211,6 +280,10 @@
 
                                 </td>
 
+
+                                <!-- =================================================
+                                     TOTAL
+                                     ================================================= -->
 
                                 <td>
 
@@ -221,37 +294,84 @@
                                 </td>
 
 
+                                <!-- =================================================
+                                     ACCIONES
+                                     ================================================= -->
+
                                 <td>
 
                                     <div class="axis-row-actions">
 
+                                        <!-- Ver -->
+
                                         <a asp-action="Details"
                                            asp-route-id="@orden.IdOrdenTrabajo"
                                            class="axis-row-action">
+
                                             Ver
+
                                         </a>
+
+
+                                        <!-- Editar -->
 
                                         <a asp-action="Edit"
                                            asp-route-id="@orden.IdOrdenTrabajo"
                                            class="axis-row-action">
+
                                             Editar
+
                                         </a>
 
 
+                                        <!-- =================================================
+                                             CAMBIAR ESTADO
+                                             ================================================= -->
                                 @if (!orden.Estado.Equals(
-                                                                "Finalizada",
+                                                                "Entregada",
                                                                 StringComparison.OrdinalIgnoreCase))
                                         {
-                                            <form asp-action="Finalizar"
+                                            <form asp-action="CambiarEstado"
                                                   asp-route-id="@orden.IdOrdenTrabajo"
                                                   method="post"
-                                                  style="display:inline">
+                                                  style="display:inline-flex; align-items:center; gap:6px;">
 
                                                 @Html.AntiForgeryToken()
 
+                                                <select name="estado"
+                                                        class="axis-form-control"
+                                                        style="min-width:190px;">
+
+                                                    @foreach (var estado in estadosOrden)
+                                                    {
+                                                        if (orden.Estado.Equals(
+                                                        estado,
+                                                        StringComparison.OrdinalIgnoreCase))
+                                                        {
+                                                            <option value="@estado"
+                                                                    selected>
+
+                                                                @estado
+
+                                                            </option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@estado">
+
+                                                                @estado
+
+                                                            </option>
+                                                        }
+                                                    }
+
+                                                </select>
+
                                                 <button type="submit"
                                                         class="axis-row-action">
-                                                    Finalizar
+
+                                                    Guardar
+
                                                 </button>
 
                                             </form>

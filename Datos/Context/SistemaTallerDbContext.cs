@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Datos.Context;
 
-public class SistemaTallerDbContext : IdentityDbContext<ApplicationUser>
+public class SistemaTallerDbContext
+    : IdentityDbContext<ApplicationUser>
 {
     public SistemaTallerDbContext(
         DbContextOptions<SistemaTallerDbContext> options)
@@ -12,31 +13,83 @@ public class SistemaTallerDbContext : IdentityDbContext<ApplicationUser>
     {
     }
 
-    // Entidades principales
-    public DbSet<Cliente> Clientes => Set<Cliente>();
-    public DbSet<Vehiculo> Vehiculos => Set<Vehiculo>();
-    public DbSet<Empleado> Empleados => Set<Empleado>();
-    public DbSet<Servicio> Servicios => Set<Servicio>();
-    public DbSet<Producto> Productos => Set<Producto>();
-    public DbSet<Proveedor> Proveedores => Set<Proveedor>();
-    public DbSet<Recepcion> Recepciones => Set<Recepcion>();
-    public DbSet<Diagnostico> Diagnosticos => Set<Diagnostico>();
-    public DbSet<Cotizacion> Cotizaciones => Set<Cotizacion>();
-    public DbSet<OrdenTrabajo> OrdenesTrabajo => Set<OrdenTrabajo>();
-    public DbSet<MovimientoInventario> MovimientosInventario => Set<MovimientoInventario>();
-    public DbSet<Compra> Compras => Set<Compra>();
-    public DbSet<Auditoria> Auditorias => Set<Auditoria>();
+    // =====================================================
+    // ENTIDADES PRINCIPALES
+    // =====================================================
 
-    // Catálogos
-    public DbSet<CategoriaProducto> CategoriasProducto => Set<CategoriaProducto>();
-    public DbSet<Marca> Marcas => Set<Marca>();
-    public DbSet<Modelo> Modelos => Set<Modelo>();
-    public DbSet<TipoVehiculo> TiposVehiculo => Set<TipoVehiculo>();
-    public DbSet<TipoCombustible> TiposCombustible => Set<TipoCombustible>();
-    public DbSet<Puesto> Puestos => Set<Puesto>();
-    public DbSet<Especialidad> Especialidades => Set<Especialidad>();
+    public DbSet<Cliente>
+        Clientes => Set<Cliente>();
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    public DbSet<Vehiculo>
+        Vehiculos => Set<Vehiculo>();
+
+    public DbSet<Empleado>
+        Empleados => Set<Empleado>();
+
+    public DbSet<Servicio>
+        Servicios => Set<Servicio>();
+
+    public DbSet<Producto>
+        Productos => Set<Producto>();
+
+    public DbSet<Proveedor>
+        Proveedores => Set<Proveedor>();
+
+    public DbSet<Recepcion>
+        Recepciones => Set<Recepcion>();
+
+    public DbSet<Diagnostico>
+        Diagnosticos => Set<Diagnostico>();
+
+    public DbSet<Cotizacion>
+        Cotizaciones => Set<Cotizacion>();
+
+    public DbSet<OrdenTrabajo>
+        OrdenesTrabajo => Set<OrdenTrabajo>();
+
+    public DbSet<MovimientoInventario>
+        MovimientosInventario => Set<MovimientoInventario>();
+
+    public DbSet<Compra>
+        Compras => Set<Compra>();
+
+    public DbSet<DetalleCompra>
+        DetallesCompra => Set<DetalleCompra>();
+
+    public DbSet<Auditoria>
+        Auditorias => Set<Auditoria>();
+
+    // =====================================================
+    // CATÁLOGOS
+    // =====================================================
+
+    public DbSet<CategoriaProducto>
+        CategoriasProducto => Set<CategoriaProducto>();
+
+    public DbSet<Marca>
+        Marcas => Set<Marca>();
+
+    public DbSet<Modelo>
+        Modelos => Set<Modelo>();
+
+    public DbSet<TipoVehiculo>
+        TiposVehiculo => Set<TipoVehiculo>();
+
+    public DbSet<TipoCombustible>
+        TiposCombustible => Set<TipoCombustible>();
+
+    public DbSet<Puesto>
+        Puestos => Set<Puesto>();
+
+    public DbSet<Especialidad>
+        Especialidades => Set<Especialidad>();
+
+    // =====================================================
+    // CONFIGURACIÓN
+    // =====================================================
+
+    protected override void OnModelCreating(
+        ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
@@ -44,8 +97,9 @@ public class SistemaTallerDbContext : IdentityDbContext<ApplicationUser>
         builder.Entity<ApplicationUser>()
             .ToTable("IdentityUsuarios");
 
-        // Cargar todas las configuraciones
-        // existentes en este proyecto.
+        // Cargar automáticamente todas las
+        // configuraciones IEntityTypeConfiguration
+        // del ensamblado.
         builder.ApplyConfigurationsFromAssembly(
             typeof(SistemaTallerDbContext).Assembly);
     }

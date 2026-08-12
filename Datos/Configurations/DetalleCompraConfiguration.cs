@@ -4,57 +4,47 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Datos.Configurations;
 
-public class CompraConfiguration
-    : IEntityTypeConfiguration<Compra>
+public class DetalleCompraConfiguration
+    : IEntityTypeConfiguration<DetalleCompra>
 {
     public void Configure(
-        EntityTypeBuilder<Compra> builder)
+        EntityTypeBuilder<DetalleCompra> builder)
     {
         // =====================================================
         // TABLA
         // =====================================================
 
-        builder.ToTable("Compra");
+        builder.ToTable("DetalleCompra");
 
         // =====================================================
         // PRIMARY KEY
         // =====================================================
 
         builder.HasKey(x =>
-            x.IdCompra);
+            x.IdDetalleCompra);
+
+        // =====================================================
+        // PROPIEDADES
+        // =====================================================
+
+        builder.Property(x =>
+                x.IdDetalleCompra)
+            .ValueGeneratedOnAdd();
 
         builder.Property(x =>
                 x.IdCompra)
-            .ValueGeneratedOnAdd();
-
-        // =====================================================
-        // CAMPOS
-        // =====================================================
-
-        builder.Property(x =>
-                x.IdProveedor)
             .IsRequired();
 
         builder.Property(x =>
-                x.FechaCompra)
+                x.IdProducto)
             .IsRequired();
 
         builder.Property(x =>
-                x.Total)
-            .HasPrecision(18, 2)
+                x.Cantidad)
             .IsRequired();
 
         builder.Property(x =>
-                x.Estado)
-            .HasMaxLength(50)
-            .IsRequired();
-
-        builder.Property(x =>
-                x.NumeroFacturaProveedor)
-            .HasMaxLength(100);
-
-        builder.Property(x =>
-                x.Subtotal)
+                x.CostoUnitario)
             .HasPrecision(18, 2)
             .IsRequired();
 
@@ -69,34 +59,31 @@ public class CompraConfiguration
             .IsRequired();
 
         builder.Property(x =>
-                x.FormaPago)
-            .HasMaxLength(50);
-
-        builder.Property(x =>
-                x.UsuarioId)
-            .HasMaxLength(450);
+                x.Subtotal)
+            .HasPrecision(18, 2)
+            .IsRequired();
 
         // =====================================================
-        // PROVEEDOR
+        // RELACIÓN CON COMPRA
         // =====================================================
 
         builder.HasOne(x =>
-                x.Proveedor)
-            .WithMany()
-            .HasForeignKey(x =>
-                x.IdProveedor)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        // =====================================================
-        // DETALLES
-        // =====================================================
-
-        builder.HasMany(x =>
-                x.Detalles)
-            .WithOne(x =>
                 x.Compra)
+            .WithMany(x =>
+                x.Detalles)
             .HasForeignKey(x =>
                 x.IdCompra)
             .OnDelete(DeleteBehavior.Cascade);
+
+        // =====================================================
+        // RELACIÓN CON PRODUCTO
+        // =====================================================
+
+        builder.HasOne(x =>
+                x.Producto)
+            .WithMany()
+            .HasForeignKey(x =>
+                x.IdProducto)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

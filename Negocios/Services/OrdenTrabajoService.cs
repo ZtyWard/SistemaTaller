@@ -94,8 +94,12 @@ public class OrdenTrabajoService : IOrdenTrabajoService
         var orden = new OrdenTrabajo
         {
             IdCotizacion = dto.IdCotizacion,
+
             FechaInicio = DateTime.UtcNow,
-            Estado = "Abierta",
+
+            // Estado inicial oficial de la orden.
+            Estado = "Registrada",
+
             Observaciones = dto.Observaciones
         };
 
