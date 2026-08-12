@@ -45,6 +45,10 @@
             </div>
 
 
+            <!-- =====================================================
+                 INFORMACIÓN DE LA COMPRA
+                 ===================================================== -->
+
             <div class="axis-form-section">
 
                 <div class="axis-form-section-title">
@@ -53,6 +57,8 @@
 
                 <div class="axis-form-grid">
 
+
+                    <!-- PROVEEDOR -->
 
                     <div class="axis-field">
 
@@ -70,6 +76,8 @@
                     </div>
 
 
+                    <!-- FECHA -->
+
                     <div class="axis-field">
 
                         <label asp-for="FechaCompra">
@@ -83,6 +91,8 @@
 
                     </div>
 
+
+                    <!-- TOTAL -->
 
                     <div class="axis-field">
 
@@ -100,6 +110,8 @@
 
                     </div>
 
+
+                    <!-- ESTADO -->
 
                     <div class="axis-field">
 
@@ -132,19 +144,147 @@
             </div>
 
 
+            <!-- =====================================================
+                 DETALLE DE LA COMPRA
+                 ===================================================== -->
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Detalle de la compra
+                </div>
+
+
+                <div class="axis-form-grid">
+
+
+                    <!-- PRODUCTO -->
+
+                    <div class="axis-field">
+
+                        <label>
+                            Producto
+                        </label>
+
+                        <input type="number"
+                               name="Detalles[0].IdProducto"
+                               value="3"
+                               min="1"
+                               placeholder="ID del producto"
+                               required />
+
+                        <small>
+                            ID del producto que se está comprando.
+                        </small>
+
+                    </div>
+
+
+                    <!-- CANTIDAD -->
+
+                    <div class="axis-field">
+
+                        <label>
+                            Cantidad
+                        </label>
+
+                        <input type="number"
+                               name="Detalles[0].Cantidad"
+                               value="1"
+                               min="1"
+                               required />
+
+                    </div>
+
+
+                    <!-- COSTO UNITARIO -->
+
+                    <div class="axis-field">
+
+                        <label>
+                            Costo unitario
+                        </label>
+
+                        <input type="number"
+                               name="Detalles[0].CostoUnitario"
+                               value="1000"
+                               step="0.01"
+                               min="0"
+                               required />
+
+                    </div>
+
+
+                    <!-- IMPUESTO -->
+
+                    <div class="axis-field">
+
+                        <label>
+                            Impuesto
+                        </label>
+
+                        <input type="number"
+                               name="Detalles[0].Impuesto"
+                               value="0"
+                               step="0.01"
+                               min="0" />
+
+                    </div>
+
+
+                    <!-- DESCUENTO -->
+
+                    <div class="axis-field">
+
+                        <label>
+                            Descuento
+                        </label>
+
+                        <input type="number"
+                               name="Detalles[0].Descuento"
+                               value="0"
+                               step="0.01"
+                               min="0" />
+
+                    </div>
+
+                </div>
+
+
+                <p style="margin-top: 16px; opacity: .65;">
+
+                    Producto de prueba:
+                    <strong>TEST-001</strong>
+                    · ID 3
+
+                </p>
+
+            </div>
+
+
+            <!-- =====================================================
+                 ACCIONES
+                 ===================================================== -->
+
             <div class="axis-form-actions">
 
                 <a asp-action="Index"
                    class="axis-button axis-button-secondary">
+
                     Cancelar
+
                 </a>
+
 
                 <button type="submit"
                         class="axis-button axis-button-primary">
+
                     Registrar compra
+
                 </button>
 
             </div>
+
 
         </form>
 
@@ -152,6 +292,9 @@
 
 </section>
 
+
 @section Scripts {
+
     <partial name="_ValidationScriptsPartial" />
+
 }
