@@ -56,6 +56,20 @@ public class SistemaTallerDbContext
     public DbSet<DetalleCompra>
         DetallesCompra => Set<DetalleCompra>();
 
+    // =====================================================
+    // VENTAS
+    // =====================================================
+
+    public DbSet<Venta>
+        Ventas => Set<Venta>();
+
+    public DbSet<DetalleVenta>
+        DetallesVenta => Set<DetalleVenta>();
+
+    // =====================================================
+    // AUDITORÍA
+    // =====================================================
+
     public DbSet<Auditoria>
         Auditorias => Set<Auditoria>();
 

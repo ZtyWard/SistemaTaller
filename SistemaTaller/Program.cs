@@ -74,11 +74,12 @@ builder.Services.AddScoped<IOrdenTrabajoRepository, OrdenTrabajoRepository>();
 builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
 builder.Services.AddScoped<IServicioRepository, ServicioRepository>();
 
-// Inventario y compras
+// Inventario, compras y ventas
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<IMovimientoInventarioRepository, MovimientoInventarioRepository>();
 builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
 builder.Services.AddScoped<ICompraRepository, CompraRepository>();
+builder.Services.AddScoped<IVentaRepository, VentaRepository>();
 
 // Catálogos
 builder.Services.AddScoped<ICategoriaProductoRepository, CategoriaProductoRepository>();
@@ -103,11 +104,12 @@ builder.Services.AddScoped<IOrdenTrabajoService, OrdenTrabajoService>();
 builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
 builder.Services.AddScoped<IServicioService, ServicioService>();
 
-// Inventario y compras
+// Inventario, compras y ventas
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IMovimientoInventarioService, MovimientoInventarioService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<ICompraService, CompraService>();
+builder.Services.AddScoped<IVentaService, VentaService>();
 
 // Catálogos
 builder.Services.AddScoped<ICategoriaProductoService, CategoriaProductoService>();
