@@ -4,24 +4,54 @@ namespace Negocios.Interfaces;
 
 public interface IOrdenTrabajoService
 {
-    Task<IEnumerable<OrdenTrabajoDto>> ObtenerTodasAsync();
+    // =====================================================
+    // CONSULTAS
+    // =====================================================
 
-    Task<IEnumerable<OrdenTrabajoDto>> ObtenerAbiertasAsync();
+    Task<IEnumerable<OrdenTrabajoDto>>
+        ObtenerTodasAsync();
 
-    Task<IEnumerable<OrdenTrabajoDto>> ObtenerPorEstadoAsync(
-        string estado);
+    Task<IEnumerable<OrdenTrabajoDto>>
+        ObtenerAbiertasAsync();
 
-    Task<OrdenTrabajoDto?> ObtenerPorIdAsync(int id);
+    Task<IEnumerable<OrdenTrabajoDto>>
+        ObtenerPorEstadoAsync(string estado);
 
-    Task CrearAsync(OrdenTrabajoGuardarDto dto);
+    Task<OrdenTrabajoDto?>
+        ObtenerPorIdAsync(int id);
+
+    // =====================================================
+    // CREAR
+    // =====================================================
+
+    Task CrearAsync(
+        OrdenTrabajoGuardarDto dto,
+        string usuarioId);
+
+    // =====================================================
+    // ACTUALIZAR
+    // =====================================================
 
     Task<bool> ActualizarAsync(
         int id,
-        OrdenTrabajoGuardarDto dto);
+        OrdenTrabajoGuardarDto dto,
+        string usuarioId);
+
+    // =====================================================
+    // CAMBIAR ESTADO
+    // =====================================================
 
     Task<bool> CambiarEstadoAsync(
         int id,
-        string estado);
+        string estado,
+        string usuarioId,
+        string? observaciones = null);
 
-    Task<bool> FinalizarAsync(int id);
+    // =====================================================
+    // FINALIZAR
+    // =====================================================
+
+    Task<bool> FinalizarAsync(
+        int id,
+        string usuarioId);
 }

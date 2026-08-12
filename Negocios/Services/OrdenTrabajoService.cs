@@ -2,6 +2,7 @@
 using Datos.Models;
 using Negocios.DTOs;
 using Negocios.Interfaces;
+using System.Data.Common;
 
 namespace Negocios.Services;
 
@@ -15,13 +16,22 @@ public class OrdenTrabajoService : IOrdenTrabajoService
         _repository = repository;
     }
 
+    // =====================================================
+    // OBTENER TODAS
+    // =====================================================
+
     public async Task<IEnumerable<OrdenTrabajoDto>>
         ObtenerTodasAsync()
     {
-        var ordenes = await _repository.ObtenerTodosAsync();
+        var ordenes =
+            await _repository.ObtenerTodosAsync();
 
         return ordenes.Select(MapearDto);
     }
+
+    // =====================================================
+    // OBTENER ABIERTAS
+    // =====================================================
 
     public async Task<IEnumerable<OrdenTrabajoDto>>
         ObtenerAbiertasAsync()
@@ -32,16 +42,26 @@ public class OrdenTrabajoService : IOrdenTrabajoService
         return ordenes.Select(MapearDto);
     }
 
+    // =====================================================
+    // OBTENER POR ESTADO
+    // =====================================================
+
     public async Task<IEnumerable<OrdenTrabajoDto>>
         ObtenerPorEstadoAsync(string estado)
     {
         var ordenes =
-            await _repository.ObtenerPorEstadoAsync(estado);
+            await _repository.ObtenerPorEstadoAsync(
+                estado);
 
         return ordenes.Select(MapearDto);
     }
 
-    public async Task<OrdenTrabajoDto?> ObtenerPorIdAsync(int id)
+    // =====================================================
+    // OBTENER POR ID
+    // =====================================================
+
+    public async Task<OrdenTrabajoDto?>
+        ObtenerPorIdAsync(int id)
     {
         var orden =
             await _repository.ObtenerCompletaAsync(id);
@@ -51,9 +71,26 @@ public class OrdenTrabajoService : IOrdenTrabajoService
             : MapearDto(orden);
     }
 
+    // =====================================================
+    // CREAR
+    // =====================================================
+
     public async Task CrearAsync(
-        OrdenTrabajoGuardarDto dto)
+        OrdenTrabajoGuardarDto dto,
+        string usuarioId)
     {
+        if (string.IsNullOrWhiteSpace(usuarioId))
+        {
+            throw new ArgumentException(
+                "El usuario autenticado es obligatorio.");
+        }
+
+        if (dto.IdCotizacion <= 0)
+        {
+            throw new ArgumentException(
+                "La cotización es obligatoria.");
+        }
+
         var orden = new OrdenTrabajo
         {
             IdCotizacion = dto.IdCotizacion,
@@ -62,77 +99,97 @@ public class OrdenTrabajoService : IOrdenTrabajoService
             Observaciones = dto.Observaciones
         };
 
-        await _repository.AgregarAsync(orden);
-        await _repository.GuardarCambiosAsync();
+        await _repository.CrearConUsuarioAsync(
+            orden,
+            usuarioId);
     }
+
+    // =====================================================
+    // ACTUALIZAR
+    // =====================================================
 
     public async Task<bool> ActualizarAsync(
         int id,
-        OrdenTrabajoGuardarDto dto)
+        OrdenTrabajoGuardarDto dto,
+        string usuarioId)
     {
-        var orden =
-            await _repository.ObtenerPorIdAsync(id);
+        if (string.IsNullOrWhiteSpace(usuarioId))
+        {
+            throw new ArgumentException(
+                "El usuario autenticado es obligatorio.");
+        }
 
-        if (orden == null)
-            return false;
+        if (dto.IdCotizacion <= 0)
+        {
+            throw new ArgumentException(
+                "La cotización es obligatoria.");
+        }
 
-        orden.IdCotizacion = dto.IdCotizacion;
-        orden.Observaciones = dto.Observaciones;
-
-        _repository.Actualizar(orden);
-
-        await _repository.GuardarCambiosAsync();
-
-        return true;
+        return await _repository
+            .ActualizarConUsuarioAsync(
+                id,
+                dto.IdCotizacion,
+                dto.Observaciones,
+                usuarioId);
     }
+
+    // =====================================================
+    // CAMBIAR ESTADO
+    // =====================================================
 
     public async Task<bool> CambiarEstadoAsync(
         int id,
-        string estado)
+        string estado,
+        string usuarioId,
+        string? observaciones = null)
     {
         if (string.IsNullOrWhiteSpace(estado))
+        {
             throw new ArgumentException(
                 "El estado es obligatorio.");
-
-        var orden =
-            await _repository.ObtenerPorIdAsync(id);
-
-        if (orden == null)
-            return false;
-
-        orden.Estado = estado;
-
-        if (estado.Equals(
-            "Finalizada",
-            StringComparison.OrdinalIgnoreCase))
-        {
-            orden.FechaFin = DateTime.UtcNow;
         }
 
-        _repository.Actualizar(orden);
+        if (string.IsNullOrWhiteSpace(usuarioId))
+        {
+            throw new ArgumentException(
+                "El usuario autenticado es obligatorio.");
+        }
 
-        await _repository.GuardarCambiosAsync();
+        try
+        {
+            await _repository.CambiarEstadoAsync(
+                id,
+                estado,
+                usuarioId,
+                observaciones);
+        }
+        catch (DbException ex)
+        {
+            throw new InvalidOperationException(
+                ex.Message,
+                ex);
+        }
 
         return true;
     }
 
-    public async Task<bool> FinalizarAsync(int id)
+    // =====================================================
+    // FINALIZAR
+    // =====================================================
+
+    public async Task<bool> FinalizarAsync(
+        int id,
+        string usuarioId)
     {
-        var orden =
-            await _repository.ObtenerPorIdAsync(id);
-
-        if (orden == null)
-            return false;
-
-        orden.Estado = "Finalizada";
-        orden.FechaFin = DateTime.UtcNow;
-
-        _repository.Actualizar(orden);
-
-        await _repository.GuardarCambiosAsync();
-
-        return true;
+        return await CambiarEstadoAsync(
+            id,
+            "Finalizada",
+            usuarioId);
     }
+
+    // =====================================================
+    // MAPEAR DTO
+    // =====================================================
 
     private static OrdenTrabajoDto MapearDto(
         OrdenTrabajo orden)
@@ -143,23 +200,36 @@ public class OrdenTrabajoService : IOrdenTrabajoService
                 .Recepcion?
                 .Vehiculo;
 
-        var cliente = vehiculo?.Cliente;
+        var cliente =
+            vehiculo?.Cliente;
 
         return new OrdenTrabajoDto
         {
-            IdOrdenTrabajo = orden.IdOrdenTrabajo,
-            IdCotizacion = orden.IdCotizacion,
+            IdOrdenTrabajo =
+                orden.IdOrdenTrabajo,
 
-            Placa = vehiculo?.Placa ?? string.Empty,
+            IdCotizacion =
+                orden.IdCotizacion,
 
-            ClienteNombre = cliente != null
-                ? $"{cliente.Nombre} {cliente.Apellido1}"
-                : string.Empty,
+            Placa =
+                vehiculo?.Placa ?? string.Empty,
 
-            FechaInicio = orden.FechaInicio,
-            FechaFin = orden.FechaFin,
-            Estado = orden.Estado,
-            Observaciones = orden.Observaciones,
+            ClienteNombre =
+                cliente != null
+                    ? $"{cliente.Nombre} {cliente.Apellido1}"
+                    : string.Empty,
+
+            FechaInicio =
+                orden.FechaInicio,
+
+            FechaFin =
+                orden.FechaFin,
+
+            Estado =
+                orden.Estado,
+
+            Observaciones =
+                orden.Observaciones,
 
             TotalCotizacion =
                 orden.Cotizacion?.Total ?? 0

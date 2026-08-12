@@ -10,4 +10,20 @@ public interface IOrdenTrabajoRepository : IRepository<OrdenTrabajo>
         string estado);
 
     Task<IEnumerable<OrdenTrabajo>> ObtenerAbiertasAsync();
+
+    Task CambiarEstadoAsync(
+        int idOrdenTrabajo,
+        string nuevoEstado,
+        string usuarioId,
+        string? observaciones);
+
+    Task CrearConUsuarioAsync(
+        OrdenTrabajo orden,
+        string usuarioId);
+
+    Task<bool> ActualizarConUsuarioAsync(
+        int idOrdenTrabajo,
+        int idCotizacion,
+        string? observaciones,
+        string usuarioId);
 }

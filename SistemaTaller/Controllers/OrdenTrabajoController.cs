@@ -1,61 +1,79 @@
-﻿// =====================================================
-// OrdenTrabajoController
-// =====================================================
-
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Negocios.DTOs;
 using Negocios.Interfaces;
 using Negocios.Seguridad;
+using System.Security.Claims;
 
-// =====================================================
+namespace SistemaTaller.Controllers;
 
-using Microsoft.AspNetCore.Authorization;
 public class OrdenTrabajoController : Controller
 {
     private readonly IOrdenTrabajoService _service;
 
-    public OrdenTrabajoController(IOrdenTrabajoService service)
+    public OrdenTrabajoController(
+        IOrdenTrabajoService service)
     {
         _service = service;
     }
+
+    // =====================================================
+    // INDEX
+    // =====================================================
 
     // GET: OrdenTrabajo
     [Authorize(Policy = Permisos.OrdenesVer)]
     public async Task<IActionResult> Index()
     {
-        var ordenes = await _service.ObtenerTodasAsync();
+        var ordenes =
+            await _service.ObtenerTodasAsync();
 
         return View(ordenes);
     }
+
+    // =====================================================
+    // ABIERTAS
+    // =====================================================
 
     // GET: OrdenTrabajo/Abiertas
     [Authorize(Policy = Permisos.OrdenesVer)]
     public async Task<IActionResult> Abiertas()
     {
-        var ordenes = await _service.ObtenerAbiertasAsync();
+        var ordenes =
+            await _service.ObtenerAbiertasAsync();
 
         return View("Index", ordenes);
     }
 
+    // =====================================================
+    // POR ESTADO
+    // =====================================================
+
     // GET: OrdenTrabajo/PorEstado?estado=Pendiente
     [Authorize(Policy = Permisos.OrdenesVer)]
-    public async Task<IActionResult> PorEstado(string estado)
+    public async Task<IActionResult> PorEstado(
+        string estado)
     {
         if (string.IsNullOrWhiteSpace(estado))
             return RedirectToAction(nameof(Index));
 
         var ordenes =
-            await _service.ObtenerPorEstadoAsync(estado);
+            await _service.ObtenerPorEstadoAsync(
+                estado);
 
         return View("Index", ordenes);
     }
+
+    // =====================================================
+    // DETAILS
+    // =====================================================
 
     // GET: OrdenTrabajo/Details/5
     [Authorize(Policy = Permisos.OrdenesVer)]
     public async Task<IActionResult> Details(int id)
     {
-        var orden = await _service.ObtenerPorIdAsync(id);
+        var orden =
+            await _service.ObtenerPorIdAsync(id);
 
         if (orden == null)
             return NotFound();
@@ -63,12 +81,20 @@ public class OrdenTrabajoController : Controller
         return View(orden);
     }
 
+    // =====================================================
+    // CREATE - GET
+    // =====================================================
+
     // GET: OrdenTrabajo/Create
     [Authorize(Policy = Permisos.OrdenesCrear)]
     public IActionResult Create()
     {
         return View();
     }
+
+    // =====================================================
+    // CREATE - POST
+    // =====================================================
 
     // POST: OrdenTrabajo/Create
     [HttpPost]
@@ -80,14 +106,25 @@ public class OrdenTrabajoController : Controller
         if (!ModelState.IsValid)
             return View(dto);
 
+        // Obtener usuario autenticado.
+        var usuarioId =
+            User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrWhiteSpace(usuarioId))
+            return Forbid();
+
         try
         {
-            await _service.CrearAsync(dto);
+            await _service.CrearAsync(
+                dto,
+                usuarioId);
 
             TempData["Success"] =
                 "Orden de trabajo creada correctamente.";
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(
+                nameof(Index));
         }
         catch (InvalidOperationException ex)
         {
@@ -97,27 +134,49 @@ public class OrdenTrabajoController : Controller
 
             return View(dto);
         }
+        catch (ArgumentException ex)
+        {
+            ModelState.AddModelError(
+                string.Empty,
+                ex.Message);
+
+            return View(dto);
+        }
     }
+
+    // =====================================================
+    // EDIT - GET
+    // =====================================================
 
     // GET: OrdenTrabajo/Edit/5
     [Authorize(Policy = Permisos.OrdenesEditar)]
     public async Task<IActionResult> Edit(int id)
     {
-        var orden = await _service.ObtenerPorIdAsync(id);
+        var orden =
+            await _service.ObtenerPorIdAsync(id);
 
         if (orden == null)
             return NotFound();
 
-        var dto = new OrdenTrabajoGuardarDto
-        {
-            IdCotizacion = orden.IdCotizacion,
-            Observaciones = orden.Observaciones
-        };
+        var dto =
+            new OrdenTrabajoGuardarDto
+            {
+                IdCotizacion =
+                    orden.IdCotizacion,
 
-        ViewBag.IdOrdenTrabajo = orden.IdOrdenTrabajo;
+                Observaciones =
+                    orden.Observaciones
+            };
+
+        ViewBag.IdOrdenTrabajo =
+            orden.IdOrdenTrabajo;
 
         return View(dto);
     }
+
+    // =====================================================
+    // EDIT - POST
+    // =====================================================
 
     // POST: OrdenTrabajo/Edit/5
     [HttpPost]
@@ -134,10 +193,21 @@ public class OrdenTrabajoController : Controller
             return View(dto);
         }
 
+        // Obtener usuario autenticado.
+        var usuarioId =
+            User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrWhiteSpace(usuarioId))
+            return Forbid();
+
         try
         {
             var actualizado =
-                await _service.ActualizarAsync(id, dto);
+                await _service.ActualizarAsync(
+                    id,
+                    dto,
+                    usuarioId);
 
             if (!actualizado)
                 return NotFound();
@@ -145,7 +215,8 @@ public class OrdenTrabajoController : Controller
             TempData["Success"] =
                 "Orden de trabajo actualizada correctamente.";
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(
+                nameof(Index));
         }
         catch (InvalidOperationException ex)
         {
@@ -157,7 +228,21 @@ public class OrdenTrabajoController : Controller
 
             return View(dto);
         }
+        catch (ArgumentException ex)
+        {
+            ModelState.AddModelError(
+                string.Empty,
+                ex.Message);
+
+            ViewBag.IdOrdenTrabajo = id;
+
+            return View(dto);
+        }
     }
+
+    // =====================================================
+    // CAMBIAR ESTADO
+    // =====================================================
 
     // POST: OrdenTrabajo/CambiarEstado/5
     [HttpPost]
@@ -172,36 +257,89 @@ public class OrdenTrabajoController : Controller
             TempData["Error"] =
                 "El estado de la orden de trabajo es obligatorio.";
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(
+                nameof(Index));
         }
 
-        var actualizado =
-            await _service.CambiarEstadoAsync(id, estado);
+        var usuarioId =
+            User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
 
-        if (!actualizado)
-            return NotFound();
+        if (string.IsNullOrWhiteSpace(usuarioId))
+            return Forbid();
 
-        TempData["Success"] =
-            "Estado de la orden de trabajo actualizado correctamente.";
+        try
+        {
+            var actualizado =
+                await _service.CambiarEstadoAsync(
+                    id,
+                    estado,
+                    usuarioId);
 
-        return RedirectToAction(nameof(Index));
+            if (!actualizado)
+                return NotFound();
+
+            TempData["Success"] =
+                "Estado de la orden de trabajo actualizado correctamente.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Error"] =
+                ex.Message;
+        }
+        catch (ArgumentException ex)
+        {
+            TempData["Error"] =
+                ex.Message;
+        }
+
+        return RedirectToAction(
+            nameof(Index));
     }
+
+    // =====================================================
+    // FINALIZAR
+    // =====================================================
 
     // POST: OrdenTrabajo/Finalizar/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.OrdenesAprobar)]
-    public async Task<IActionResult> Finalizar(int id)
+    public async Task<IActionResult> Finalizar(
+        int id)
     {
-        var finalizada =
-            await _service.FinalizarAsync(id);
+        var usuarioId =
+            User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
 
-        if (!finalizada)
-            return NotFound();
+        if (string.IsNullOrWhiteSpace(usuarioId))
+            return Forbid();
 
-        TempData["Success"] =
-            "Orden de trabajo finalizada correctamente.";
+        try
+        {
+            var finalizada =
+                await _service.FinalizarAsync(
+                    id,
+                    usuarioId);
 
-        return RedirectToAction(nameof(Index));
+            if (!finalizada)
+                return NotFound();
+
+            TempData["Success"] =
+                "Orden de trabajo finalizada correctamente.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Error"] =
+                ex.Message;
+        }
+        catch (ArgumentException ex)
+        {
+            TempData["Error"] =
+                ex.Message;
+        }
+
+        return RedirectToAction(
+            nameof(Index));
     }
 }

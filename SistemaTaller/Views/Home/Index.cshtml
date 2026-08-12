@@ -1,6 +1,4 @@
-﻿@using Negocios.Seguridad
-
-@{
+﻿@{
     ViewData["Title"] = "Inicio";
 }
 
@@ -28,223 +26,126 @@
 
     </div>
 
-
     <div class="axis-module-gallery">
 
-        @* =====================================================
-           01 - CLIENTES
-           ===================================================== *@
+        <a class="axis-module"
+           asp-controller="Cliente"
+           asp-action="Index">
 
-        @if (User.HasClaim("Permiso", Permisos.ClientesVer))
-        {
-            <a class="axis-module"
-               asp-controller="Cliente"
-               asp-action="Index">
+            <div class="axis-module-image axis-image-clientes"></div>
+            <div class="axis-module-overlay"></div>
 
-                <div class="axis-module-image axis-image-clientes"></div>
+            <span class="axis-module-title">
+                CLIENTES
+            </span>
 
-                <div class="axis-module-overlay"></div>
+            <div class="axis-module-info">
+                <span>01</span>
+                <strong>Clientes</strong>
+                <small>Gestionar clientes</small>
+            </div>
 
-                <span class="axis-module-title">
-                    CLIENTES
-                </span>
+        </a>
 
-                <div class="axis-module-info">
 
-                    <span>01</span>
+        <a class="axis-module"
+           asp-controller="Vehiculo"
+           asp-action="Index">
 
-                    <strong>
-                        Clientes
-                    </strong>
+            <div class="axis-module-image axis-image-vehiculos"></div>
+            <div class="axis-module-overlay"></div>
 
-                    <small>
-                        Gestionar clientes
-                    </small>
+            <span class="axis-module-title">
+                VEHÍCULOS
+            </span>
 
-                </div>
+            <div class="axis-module-info">
+                <span>02</span>
+                <strong>Vehículos</strong>
+                <small>Registro y control</small>
+            </div>
 
-            </a>
-        }
+        </a>
 
 
-        @* =====================================================
-           02 - VEHÍCULOS
-           ===================================================== *@
+        <a class="axis-module"
+           asp-controller="Recepcion"
+           asp-action="Index">
 
-        @if (User.HasClaim("Permiso", Permisos.VehiculosVer))
-        {
-            <a class="axis-module"
-               asp-controller="Vehiculo"
-               asp-action="Index">
+            <div class="axis-module-image axis-image-recepcion"></div>
+            <div class="axis-module-overlay"></div>
 
-                <div class="axis-module-image axis-image-vehiculos"></div>
+            <span class="axis-module-title">
+                RECEPCIÓN
+            </span>
 
-                <div class="axis-module-overlay"></div>
+            <div class="axis-module-info">
+                <span>03</span>
+                <strong>Recepción</strong>
+                <small>Ingreso de vehículos</small>
+            </div>
 
-                <span class="axis-module-title">
-                    VEHÍCULOS
-                </span>
+        </a>
 
-                <div class="axis-module-info">
 
-                    <span>02</span>
+        <a class="axis-module"
+           asp-controller="Diagnostico"
+           asp-action="Index">
 
-                    <strong>
-                        Vehículos
-                    </strong>
+            <div class="axis-module-image axis-image-diagnostico"></div>
+            <div class="axis-module-overlay"></div>
 
-                    <small>
-                        Registro y control
-                    </small>
+            <span class="axis-module-title">
+                DIAGNÓSTICO
+            </span>
 
-                </div>
+            <div class="axis-module-info">
+                <span>04</span>
+                <strong>Diagnóstico</strong>
+                <small>Evaluación técnica</small>
+            </div>
 
-            </a>
-        }
+        </a>
 
 
-        @* =====================================================
-           03 - RECEPCIÓN
-           ===================================================== *@
+        <a class="axis-module"
+           asp-controller="Cotizacion"
+           asp-action="Index">
 
-        @if (User.HasClaim("Permiso", Permisos.RecepcionesVer))
-        {
-            <a class="axis-module"
-               asp-controller="Recepcion"
-               asp-action="Index">
+            <div class="axis-module-image axis-image-cotizacion"></div>
+            <div class="axis-module-overlay"></div>
 
-                <div class="axis-module-image axis-image-recepcion"></div>
+            <span class="axis-module-title">
+                COTIZACIÓN
+            </span>
 
-                <div class="axis-module-overlay"></div>
+            <div class="axis-module-info">
+                <span>05</span>
+                <strong>Cotizaciones</strong>
+                <small>Presupuestos</small>
+            </div>
 
-                <span class="axis-module-title">
-                    RECEPCIÓN
-                </span>
+        </a>
 
-                <div class="axis-module-info">
 
-                    <span>03</span>
-
-                    <strong>
-                        Recepción
-                    </strong>
-
-                    <small>
-                        Ingreso de vehículos
-                    </small>
-
-                </div>
-
-            </a>
-        }
-
-
-        @* =====================================================
-           04 - DIAGNÓSTICO
-           ===================================================== *@
-
-        @if (User.HasClaim("Permiso", Permisos.DiagnosticosVer))
-        {
-            <a class="axis-module"
-               asp-controller="Diagnostico"
-               asp-action="Index">
-
-                <div class="axis-module-image axis-image-diagnostico"></div>
-
-                <div class="axis-module-overlay"></div>
-
-                <span class="axis-module-title">
-                    DIAGNÓSTICO
-                </span>
-
-                <div class="axis-module-info">
-
-                    <span>04</span>
-
-                    <strong>
-                        Diagnóstico
-                    </strong>
-
-                    <small>
-                        Evaluación técnica
-                    </small>
-
-                </div>
-
-            </a>
-        }
-
-
-        @* =====================================================
-           05 - COTIZACIÓN
-           ===================================================== *@
-
-        @if (User.HasClaim("Permiso", Permisos.CotizacionesVer))
-        {
-            <a class="axis-module"
-               asp-controller="Cotizacion"
-               asp-action="Index">
-
-                <div class="axis-module-image axis-image-cotizacion"></div>
-
-                <div class="axis-module-overlay"></div>
-
-                <span class="axis-module-title">
-                    COTIZACIÓN
-                </span>
-
-                <div class="axis-module-info">
-
-                    <span>05</span>
-
-                    <strong>
-                        Cotizaciones
-                    </strong>
-
-                    <small>
-                        Presupuestos
-                    </small>
-
-                </div>
-
-            </a>
-        }
-
-
-        @* =====================================================
-           06 - ÓRDENES DE TRABAJO
-           ===================================================== *@
-
-        @if (User.HasClaim("Permiso", Permisos.OrdenesVer))
-        {
-            <a class="axis-module"
-               asp-controller="OrdenTrabajo"
-               asp-action="Index">
-
-                <div class="axis-module-image axis-image-ordenes"></div>
-
-                <div class="axis-module-overlay"></div>
-
-                <span class="axis-module-title">
-                    ÓRDENES
-                </span>
-
-                <div class="axis-module-info">
-
-                    <span>06</span>
-
-                    <strong>
-                        Órdenes de trabajo
-                    </strong>
-
-                    <small>
-                        Control operativo
-                    </small>
-
-                </div>
-
-            </a>
-        }
+        <a class="axis-module"
+           asp-controller="OrdenTrabajo"
+           asp-action="Index">
+
+            <div class="axis-module-image axis-image-ordenes"></div>
+            <div class="axis-module-overlay"></div>
+
+            <span class="axis-module-title">
+                ÓRDENES
+            </span>
+
+            <div class="axis-module-info">
+                <span>06</span>
+                <strong>Órdenes de trabajo</strong>
+                <small>Control operativo</small>
+            </div>
+
+        </a>
 
     </div>
 
