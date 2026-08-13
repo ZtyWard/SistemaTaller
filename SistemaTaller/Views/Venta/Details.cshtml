@@ -1,0 +1,284 @@
+﻿@model Negocios.DTOs.VentaDto
+
+@{
+    ViewData["Title"] = "Detalle de venta";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+        <div>
+            <span class="axis-page-kicker">
+                VENTAS · DETALLE
+            </span>
+
+            <h1>Venta #@Model.IdVenta</h1>
+
+            <p>
+                Consulta la información y los productos asociados a esta venta.
+            </p>
+        </div>
+
+        <a asp-action="Index"
+           class="axis-button axis-button-secondary">
+            ← Volver
+        </a>
+    </div>
+
+
+    <!-- =====================================================
+         INFORMACIÓN GENERAL
+         ===================================================== -->
+
+    <div class="axis-form-card">
+
+        <div class="axis-form-section">
+
+            <div class="axis-form-section-title">
+                Información de la venta
+            </div>
+
+            <div class="axis-form-grid">
+
+                <div class="axis-field">
+                    <label>Número de venta</label>
+
+                    <input value="@Model.NumeroVenta"
+                           readonly />
+                </div>
+
+
+                <div class="axis-field">
+                    <label>Cliente</label>
+
+                    <input value="@(string.IsNullOrWhiteSpace(Model.Cliente)
+                                                               ? "Cliente no disponible"
+                                                               : Model.Cliente)"
+                           readonly />
+                </div>
+
+
+                <div class="axis-field">
+                    <label>Vendedor</label>
+
+                    <input value="@Model.IdVendedor"
+                           readonly />
+                </div>
+
+
+                <div class="axis-field">
+                    <label>Cajero</label>
+
+                    <input value="@(Model.IdCajero?.ToString() ?? "No asignado")"
+                           readonly />
+                </div>
+
+
+                <div class="axis-field">
+                    <label>Fecha de venta</label>
+
+                    <input value="@Model.FechaVenta.ToString("dd/MM/yyyy HH:mm")"
+                           readonly />
+                </div>
+
+
+                <div class="axis-field">
+                    <label>Forma de pago</label>
+
+                    <input value="@(Model.FormaPago ?? "No especificada")"
+                           readonly />
+                </div>
+
+
+                <div class="axis-field">
+                    <label>Estado</label>
+
+                    <input value="@Model.Estado"
+                           readonly />
+                </div>
+
+
+                <div class="axis-field">
+                    <label>Total</label>
+
+                    <input value="@Model.Total.ToString("C2")"
+                           readonly />
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             RESUMEN
+             ===================================================== -->
+
+        <div class="axis-form-section">
+
+            <div class="axis-form-section-title">
+                Resumen de la venta
+            </div>
+
+            <div class="axis-form-grid">
+
+                <div class="axis-field">
+                    <label>Subtotal</label>
+
+                    <input value="@Model.Subtotal.ToString("C2")"
+                           readonly />
+                </div>
+
+
+                <div class="axis-field">
+                    <label>Impuesto</label>
+
+                    <input value="@Model.Impuesto.ToString("C2")"
+                           readonly />
+                </div>
+
+
+                <div class="axis-field">
+                    <label>Descuento</label>
+
+                    <input value="@Model.Descuento.ToString("C2")"
+                           readonly />
+                </div>
+
+
+                <div class="axis-field">
+                    <label>Total</label>
+
+                    <input value="@Model.Total.ToString("C2")"
+                           readonly />
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             DETALLES
+             ===================================================== -->
+
+        <div class="axis-form-section">
+
+            <div class="axis-form-section-title">
+                Productos de la venta
+            </div>
+
+
+            @if (Model.Detalles != null && Model.Detalles.Count > 0)
+            {
+                <div style="overflow-x:auto;">
+
+                    <table style="width:100%; border-collapse:collapse;">
+
+                        <thead>
+
+                            <tr>
+
+                                <th style="text-align:left; padding:14px;">
+                                    Producto
+                                </th>
+
+                                <th style="text-align:center; padding:14px;">
+                                    Cantidad
+                                </th>
+
+                                <th style="text-align:right; padding:14px;">
+                                    Precio unitario
+                                </th>
+
+                                <th style="text-align:right; padding:14px;">
+                                    Impuesto
+                                </th>
+
+                                <th style="text-align:right; padding:14px;">
+                                    Descuento
+                                </th>
+
+                                <th style="text-align:right; padding:14px;">
+                                    Subtotal
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var detalle in Model.Detalles)
+                            {
+                                <tr style="border-top:1px solid #e5e5e5;">
+
+                                    <td style="padding:14px;">
+                                        Producto #@detalle.IdProducto
+                                    </td>
+
+                                    <td style="text-align:center; padding:14px;">
+                                        @detalle.Cantidad
+                                    </td>
+
+                                    <td style="text-align:right; padding:14px;">
+                                        @detalle.PrecioUnitario.ToString("C2")
+                                    </td>
+
+                                    <td style="text-align:right; padding:14px;">
+                                        @detalle.Impuesto.ToString("C2")
+                                    </td>
+
+                                    <td style="text-align:right; padding:14px;">
+                                        @detalle.Descuento.ToString("C2")
+                                    </td>
+
+                                    <td style="text-align:right; padding:14px;">
+                                        @detalle.Subtotal.ToString("C2")
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <div class="axis-empty-state">
+
+                    <p>
+                        Esta venta no tiene detalles registrados.
+                    </p>
+
+                </div>
+            }
+
+        </div>
+
+
+        <!-- =====================================================
+             ACCIONES
+             ===================================================== -->
+
+        <div class="axis-form-actions">
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver a ventas
+            </a>
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.IdVenta"
+               class="axis-button axis-button-primary">
+                Editar venta
+            </a>
+
+        </div>
+
+    </div>
+
+</section>

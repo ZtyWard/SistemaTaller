@@ -232,6 +232,16 @@ public class CompraService : ICompraService
         var calculo =
             CalcularTotales(dto.Detalles);
 
+        var nuevoEstado =
+            NormalizarEstado(dto.Estado);
+
+        // =================================================
+        // SI SE QUIERE COMPLETAR DESDE EDICIÓN
+        // =================================================
+
+        var completarDespuesDeActualizar =
+            nuevoEstado == "Completada";
+
         compra.IdProveedor =
             dto.IdProveedor;
 
@@ -250,9 +260,25 @@ public class CompraService : ICompraService
         compra.Total =
             calculo.Total;
 
+        /*
+         * Si el usuario seleccionó "Completada",
+         * primero guardamos la compra como Pendiente.
+         *
+         * Después llamamos a CompletarCompraAsync(),
+         * que es el método encargado de:
+         *
+         * 1. Registrar las entradas de inventario.
+         * 2. Actualizar el stock.
+         * 3. Cambiar la compra a Completada.
+         *
+         * Así evitamos simplemente cambiar el estado
+         * sin ejecutar la integración con inventario.
+         */
+
         compra.Estado =
-            NormalizarEstado(
-                dto.Estado);
+            completarDespuesDeActualizar
+                ? "Pendiente"
+                : nuevoEstado;
 
         compra.NumeroFacturaProveedor =
             dto.NumeroFacturaProveedor
@@ -308,6 +334,16 @@ public class CompraService : ICompraService
 
         await _repository
             .GuardarCambiosAsync();
+
+        // =================================================
+        // COMPLETAR DESDE EDICIÓN
+        // =================================================
+
+        if (completarDespuesDeActualizar)
+        {
+            await _repository
+                .CompletarCompraAsync(id);
+        }
 
         return true;
     }

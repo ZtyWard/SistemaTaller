@@ -8,9 +8,6 @@ using Negocios.DTOs;
 using Negocios.Interfaces;
 using Negocios.Seguridad;
 
-// =====================================================
-
-using Microsoft.AspNetCore.Authorization;
 public class CompraController : Controller
 {
     private readonly ICompraService _service;
@@ -20,6 +17,10 @@ public class CompraController : Controller
         _service = service;
     }
 
+    // =====================================================
+    // LISTADO
+    // =====================================================
+
     // GET: Compra
     [Authorize(Policy = Permisos.ComprasVer)]
     public async Task<IActionResult> Index()
@@ -28,6 +29,10 @@ public class CompraController : Controller
 
         return View(compras);
     }
+
+    // =====================================================
+    // FILTROS
+    // =====================================================
 
     // GET: Compra/PorProveedor/5
     [Authorize(Policy = Permisos.ComprasVer)]
@@ -65,17 +70,26 @@ public class CompraController : Controller
         return View("Index", compras);
     }
 
+    // =====================================================
+    // DETALLES
+    // =====================================================
+
     // GET: Compra/Details/5
     [Authorize(Policy = Permisos.ComprasVer)]
     public async Task<IActionResult> Details(int id)
     {
-        var compra = await _service.ObtenerPorIdAsync(id);
+        var compra =
+            await _service.ObtenerPorIdAsync(id);
 
         if (compra == null)
             return NotFound();
 
         return View(compra);
     }
+
+    // =====================================================
+    // CREAR
+    // =====================================================
 
     // GET: Compra/Create
     [Authorize(Policy = Permisos.ComprasCrear)]
@@ -88,7 +102,8 @@ public class CompraController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.ComprasCrear)]
-    public async Task<IActionResult> Create(CompraGuardarDto dto)
+    public async Task<IActionResult> Create(
+        CompraGuardarDto dto)
     {
         if (!ModelState.IsValid)
             return View(dto);
@@ -102,6 +117,14 @@ public class CompraController : Controller
 
             return RedirectToAction(nameof(Index));
         }
+        catch (ArgumentException ex)
+        {
+            ModelState.AddModelError(
+                string.Empty,
+                ex.Message);
+
+            return View(dto);
+        }
         catch (InvalidOperationException ex)
         {
             ModelState.AddModelError(
@@ -112,27 +135,79 @@ public class CompraController : Controller
         }
     }
 
+    // =====================================================
+    // EDITAR - GET
+    // =====================================================
+
     // GET: Compra/Edit/5
     [Authorize(Policy = Permisos.ComprasEditar)]
     public async Task<IActionResult> Edit(int id)
     {
-        var compra = await _service.ObtenerPorIdAsync(id);
+        var compra =
+            await _service.ObtenerPorIdAsync(id);
 
         if (compra == null)
             return NotFound();
 
         var dto = new CompraGuardarDto
         {
-            IdProveedor = compra.IdProveedor,
-            FechaCompra = compra.FechaCompra,
-            Total = compra.Total,
-            Estado = compra.Estado
+            IdProveedor =
+                compra.IdProveedor,
+
+            FechaCompra =
+                compra.FechaCompra,
+
+            Total =
+                compra.Total,
+
+            Estado =
+                compra.Estado,
+
+            NumeroFacturaProveedor =
+                compra.NumeroFacturaProveedor,
+
+            FormaPago =
+                compra.FormaPago,
+
+            UsuarioId =
+                compra.UsuarioId
         };
 
-        ViewBag.IdCompra = compra.IdCompra;
+        // =================================================
+        // CARGAR LOS DETALLES EXISTENTES
+        // =================================================
+
+        foreach (var detalle in compra.Detalles)
+        {
+            dto.Detalles.Add(
+                new DetalleCompraGuardarDto
+                {
+                    IdProducto =
+                        detalle.IdProducto,
+
+                    Cantidad =
+                        detalle.Cantidad,
+
+                    CostoUnitario =
+                        detalle.CostoUnitario,
+
+                    Impuesto =
+                        detalle.Impuesto,
+
+                    Descuento =
+                        detalle.Descuento
+                });
+        }
+
+        ViewBag.IdCompra =
+            compra.IdCompra;
 
         return View(dto);
     }
+
+    // =====================================================
+    // EDITAR - POST
+    // =====================================================
 
     // POST: Compra/Edit/5
     [HttpPost]
@@ -152,7 +227,9 @@ public class CompraController : Controller
         try
         {
             var actualizado =
-                await _service.ActualizarAsync(id, dto);
+                await _service.ActualizarAsync(
+                    id,
+                    dto);
 
             if (!actualizado)
                 return NotFound();
@@ -160,7 +237,18 @@ public class CompraController : Controller
             TempData["Success"] =
                 "Compra actualizada correctamente.";
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(
+                nameof(Index));
+        }
+        catch (ArgumentException ex)
+        {
+            ModelState.AddModelError(
+                string.Empty,
+                ex.Message);
+
+            ViewBag.IdCompra = id;
+
+            return View(dto);
         }
         catch (InvalidOperationException ex)
         {
@@ -173,6 +261,10 @@ public class CompraController : Controller
             return View(dto);
         }
     }
+
+    // =====================================================
+    // CAMBIAR ESTADO
+    // =====================================================
 
     // POST: Compra/CambiarEstado/5
     [HttpPost]
@@ -187,18 +279,41 @@ public class CompraController : Controller
             TempData["Error"] =
                 "El estado de la compra es obligatorio.";
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(
+                nameof(Index));
         }
 
-        var actualizado =
-            await _service.CambiarEstadoAsync(id, estado);
+        try
+        {
+            var actualizado =
+                await _service.CambiarEstadoAsync(
+                    id,
+                    estado);
 
-        if (!actualizado)
-            return NotFound();
+            if (!actualizado)
+                return NotFound();
 
-        TempData["Success"] =
-            "Estado de la compra actualizado correctamente.";
+            TempData["Success"] =
+                "Estado de la compra actualizado correctamente.";
 
-        return RedirectToAction(nameof(Index));
+            return RedirectToAction(
+                nameof(Index));
+        }
+        catch (ArgumentException ex)
+        {
+            TempData["Error"] =
+                ex.Message;
+
+            return RedirectToAction(
+                nameof(Index));
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Error"] =
+                ex.Message;
+
+            return RedirectToAction(
+                nameof(Index));
+        }
     }
 }
