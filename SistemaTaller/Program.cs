@@ -25,21 +25,18 @@ builder.Services.AddDbContext<SistemaTallerDbContext>(options =>
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
-        // Contraseñas
         options.Password.RequireDigit = false;
         options.Password.RequireLowercase = false;
         options.Password.RequireUppercase = false;
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequiredLength = 6;
 
-        // Bloqueo de cuenta
         options.Lockout.DefaultLockoutTimeSpan =
             TimeSpan.FromMinutes(10);
 
         options.Lockout.MaxFailedAccessAttempts = 5;
         options.Lockout.AllowedForNewUsers = true;
 
-        // Usuario
         options.User.RequireUniqueEmail = true;
     })
     .AddEntityFrameworkStores<SistemaTallerDbContext>()
@@ -65,6 +62,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 // =====================================================
 
 // Módulos principales
+
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IVehiculoRepository, VehiculoRepository>();
 builder.Services.AddScoped<IRecepcionRepository, RecepcionRepository>();
@@ -74,14 +72,18 @@ builder.Services.AddScoped<IOrdenTrabajoRepository, OrdenTrabajoRepository>();
 builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
 builder.Services.AddScoped<IServicioRepository, ServicioRepository>();
 
-// Inventario, compras y ventas
+// Inventario, compras, ventas y facturación
+
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<IMovimientoInventarioRepository, MovimientoInventarioRepository>();
 builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
 builder.Services.AddScoped<ICompraRepository, CompraRepository>();
 builder.Services.AddScoped<IVentaRepository, VentaRepository>();
 
+builder.Services.AddScoped<IFacturaRepository, FacturaRepository>();
+
 // Catálogos
+
 builder.Services.AddScoped<ICategoriaProductoRepository, CategoriaProductoRepository>();
 builder.Services.AddScoped<IMarcaRepository, MarcaRepository>();
 builder.Services.AddScoped<IModeloRepository, ModeloRepository>();
@@ -95,6 +97,7 @@ builder.Services.AddScoped<IEspecialidadRepository, EspecialidadRepository>();
 // =====================================================
 
 // Módulos principales
+
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IVehiculoService, VehiculoService>();
 builder.Services.AddScoped<IRecepcionService, RecepcionService>();
@@ -104,14 +107,18 @@ builder.Services.AddScoped<IOrdenTrabajoService, OrdenTrabajoService>();
 builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
 builder.Services.AddScoped<IServicioService, ServicioService>();
 
-// Inventario, compras y ventas
+// Inventario, compras, ventas y facturación
+
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IMovimientoInventarioService, MovimientoInventarioService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<ICompraService, CompraService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
 
+builder.Services.AddScoped<IFacturaService, FacturaService>();
+
 // Catálogos
+
 builder.Services.AddScoped<ICategoriaProductoService, CategoriaProductoService>();
 builder.Services.AddScoped<IMarcaService, MarcaService>();
 builder.Services.AddScoped<IModeloService, ModeloService>();
@@ -172,10 +179,6 @@ using (var scope = app.Services.CreateScope())
         scope.ServiceProvider
             .GetRequiredService<UserManager<ApplicationUser>>();
 
-    // =================================================
-    // ROLES DEL SISTEMA
-    // =================================================
-
     string[] roles =
     {
         "Administrador",
@@ -205,10 +208,6 @@ using (var scope = app.Services.CreateScope())
             }
         }
     }
-
-    // =================================================
-    // USUARIO ADMINISTRADOR
-    // =================================================
 
     var usuario =
         await userManager.FindByNameAsync("admin");
@@ -245,13 +244,11 @@ using (var scope = app.Services.CreateScope())
     }
     else
     {
-        // Asegurar que esté activo
         usuario.Activo = true;
         usuario.EmailConfirmed = true;
 
         await userManager.UpdateAsync(usuario);
 
-        // Restablecer contraseña de desarrollo
         var token =
             await userManager.GeneratePasswordResetTokenAsync(
                 usuario);
@@ -271,10 +268,6 @@ using (var scope = app.Services.CreateScope())
             }
         }
     }
-
-    // =================================================
-    // ASIGNAR ROL ADMINISTRADOR
-    // =================================================
 
     if (!await userManager.IsInRoleAsync(
             usuario,

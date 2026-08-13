@@ -1,0 +1,449 @@
+﻿@model Negocios.DTOs.FacturaDto
+
+@{
+    ViewData["Title"] = "Detalle de factura";
+
+    var estadoClass = Model.Estado switch
+    {
+        "Pagada" => "axis-status-success",
+        "Anulada" => "axis-status-danger",
+        "Parcialmente pagada" => "axis-status-warning",
+        _ => "axis-status-neutral"
+    };
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                FACTURACIÓN · DETALLE
+            </span>
+
+            <h1>@Model.NumeroFactura</h1>
+
+            <p>
+                Consulta el estado financiero de la factura.
+            </p>
+
+        </div>
+
+        <div style="display:flex; gap:10px;">
+
+            @if (Model.Estado != "Pagada" &&
+                        Model.Estado != "Anulada")
+            {
+                <a asp-action="Edit"
+                   asp-route-id="@Model.IdFactura"
+                   class="axis-button axis-button-primary">
+                    Editar
+                </a>
+            }
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="axis-form-card">
+
+
+        <!-- =====================================================
+             ESTADO
+             ===================================================== -->
+
+        <div class="axis-form-section">
+
+            <div class="axis-form-section-title">
+                Estado de la factura
+            </div>
+
+            <div style="display:flex; align-items:center; gap:15px;">
+
+                <span class="axis-status @estadoClass">
+                    @Model.Estado
+                </span>
+
+                @if (Model.Estado == "Pendiente")
+                {
+                    <span style="color:#777; font-size:13px;">
+                        Factura pendiente de pago.
+                    </span>
+                }
+                else if (Model.Estado == "Parcialmente pagada")
+                {
+                    <span style="color:#777; font-size:13px;">
+                        La factura tiene pagos registrados.
+                    </span>
+                }
+                else if (Model.Estado == "Pagada")
+                {
+                    <span style="color:#777; font-size:13px;">
+                        La factura fue cancelada completamente.
+                    </span>
+                }
+                else if (Model.Estado == "Anulada")
+                {
+                    <span style="color:#777; font-size:13px;">
+                        Esta factura fue anulada.
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             INFORMACIÓN
+             ===================================================== -->
+
+        <div class="axis-form-section">
+
+            <div class="axis-form-section-title">
+                Información general
+            </div>
+
+            <div class="axis-form-grid">
+
+                <div class="axis-field">
+
+                    <label>Número de factura</label>
+
+                    <input value="@Model.NumeroFactura"
+                           readonly />
+
+                </div>
+
+
+                <div class="axis-field">
+
+                    <label>Cliente</label>
+
+                    <input value="@(string.IsNullOrWhiteSpace(Model.Cliente)
+                                                               ? "Cliente no disponible"
+                                                               : Model.Cliente)"
+                           readonly />
+
+                </div>
+
+
+                <div class="axis-field">
+
+                    <label>Orden de trabajo</label>
+
+                    <input value="@(Model.IdOrdenTrabajo?.ToString() ?? "No asociada")"
+                           readonly />
+
+                </div>
+
+
+                <div class="axis-field">
+
+                    <label>Venta</label>
+
+                    <input value="@(Model.IdVenta?.ToString() ?? "No asociada")"
+                           readonly />
+
+                </div>
+
+
+                <div class="axis-field">
+
+                    <label>Fecha de emisión</label>
+
+                    <input value="@Model.FechaEmision.ToString("dd/MM/yyyy HH:mm")"
+                           readonly />
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             RESUMEN FINANCIERO
+             ===================================================== -->
+
+        <div class="axis-form-section">
+
+            <div class="axis-form-section-title">
+                Resumen financiero
+            </div>
+
+            <div class="axis-finance-grid">
+
+                <div class="axis-finance-card">
+
+                    <span>
+                        Subtotal
+                    </span>
+
+                    <strong>
+                        @Model.Subtotal.ToString("C2")
+                    </strong>
+
+                </div>
+
+
+                <div class="axis-finance-card">
+
+                    <span>
+                        Impuesto
+                    </span>
+
+                    <strong>
+                        @Model.Impuesto.ToString("C2")
+                    </strong>
+
+                </div>
+
+
+                <div class="axis-finance-card">
+
+                    <span>
+                        Descuento
+                    </span>
+
+                    <strong>
+                        @Model.Descuento.ToString("C2")
+                    </strong>
+
+                </div>
+
+
+                <div class="axis-finance-card">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong>
+                        @Model.Total.ToString("C2")
+                    </strong>
+
+                </div>
+
+
+                <div class="axis-finance-card axis-finance-paid">
+
+                    <span>
+                        Total pagado
+                    </span>
+
+                    <strong>
+                        @Model.TotalPagado.ToString("C2")
+                    </strong>
+
+                </div>
+
+
+                <div class="axis-finance-card axis-finance-balance">
+
+                    <span>
+                        Saldo pendiente
+                    </span>
+
+                    <strong>
+                        @Model.SaldoPendiente.ToString("C2")
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             PAGOS
+             ===================================================== -->
+
+        <div class="axis-form-section">
+
+            <div class="axis-form-section-title">
+                Pagos
+            </div>
+
+            @if (Model.TotalPagado > 0)
+            {
+                <div class="axis-payment-summary">
+
+                    <div>
+
+                        <span>Total registrado en pagos</span>
+
+                        <strong>
+                            @Model.TotalPagado.ToString("C2")
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>Saldo restante</span>
+
+                        <strong>
+                            @Model.SaldoPendiente.ToString("C2")
+                        </strong>
+
+                    </div>
+
+                </div>
+            }
+            else
+            {
+                <div class="axis-empty-state">
+
+                    <h3>Sin pagos registrados</h3>
+
+                    <p>
+                        Esta factura todavía no tiene pagos asociados.
+                    </p>
+
+                </div>
+            }
+
+        </div>
+
+
+        <!-- =====================================================
+             ACCIONES
+             ===================================================== -->
+
+        <div class="axis-form-actions">
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+                ← Volver a facturación
+            </a>
+
+            @if (Model.Estado != "Pagada" &&
+                        Model.Estado != "Anulada")
+            {
+                <a asp-controller="Pago"
+                   asp-action="Create"
+                   asp-route-idFactura="@Model.IdFactura"
+                   class="axis-button axis-button-primary">
+                    + Registrar pago
+                </a>
+            }
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<style>
+
+    .axis-finance-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .axis-finance-card {
+        padding: 20px;
+        border: 1px solid #e4e4e4;
+        border-radius: 14px;
+        background: #fafafa;
+    }
+
+        .axis-finance-card span {
+            display: block;
+            margin-bottom: 8px;
+            color: #777;
+            font-size: 12px;
+        }
+
+        .axis-finance-card strong {
+            display: block;
+            color: #222;
+            font-size: 21px;
+        }
+
+    .axis-finance-paid {
+        background: #f1f7ef;
+        border-color: #d5e5d0;
+    }
+
+    .axis-finance-balance {
+        background: #faf5e8;
+        border-color: #e8ddbc;
+    }
+
+    .axis-payment-summary {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+        .axis-payment-summary > div {
+            padding: 18px;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            background: #fff;
+        }
+
+        .axis-payment-summary span {
+            display: block;
+            margin-bottom: 7px;
+            color: #777;
+            font-size: 12px;
+        }
+
+        .axis-payment-summary strong {
+            font-size: 18px;
+            color: #222;
+        }
+
+    .axis-status {
+        display: inline-flex;
+        padding: 7px 11px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .axis-status-success {
+        background: #e8f2e5;
+        color: #42623c;
+    }
+
+    .axis-status-danger {
+        background: #f4e7e7;
+        color: #824141;
+    }
+
+    .axis-status-warning {
+        background: #f5f1df;
+        color: #75672e;
+    }
+
+    .axis-status-neutral {
+        background: #eeeeee;
+        color: #555;
+    }
+
+    @@media (max-width: 900px) {
+
+        .axis-finance-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .axis-payment-summary {
+            grid-template-columns: 1fr;
+        }
+    }
+
+</style>

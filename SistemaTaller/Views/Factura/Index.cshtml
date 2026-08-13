@@ -1,0 +1,321 @@
+﻿@model IEnumerable<Negocios.DTOs.FacturaDto>
+
+@{
+    ViewData["Title"] = "Facturación";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+        <div>
+            <span class="axis-page-kicker">
+                FACTURACIÓN · ADMINISTRACIÓN
+            </span>
+
+            <h1>Facturación</h1>
+
+            <p>
+                Consulta y administra las facturas generadas en AXIS.
+            </p>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+
+            <a asp-action="Pendientes"
+               class="axis-button axis-button-secondary">
+                Pendientes
+            </a>
+
+            <a asp-action="Create"
+               class="axis-button axis-button-primary">
+                + Nueva factura
+            </a>
+
+        </div>
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="axis-alert axis-alert-error">
+            @TempData["Error"]
+        </div>
+    }
+
+
+    <div class="axis-form-card">
+
+        <div class="axis-form-section">
+
+            <div class="axis-form-section-title">
+                Facturas registradas
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="axis-empty-state">
+
+                    <h3>No hay facturas registradas</h3>
+
+                    <p>
+                        Todavía no existen facturas para mostrar.
+                    </p>
+
+                    <a asp-action="Create"
+                       class="axis-button axis-button-primary">
+                        Crear primera factura
+                    </a>
+
+                </div>
+            }
+            else
+            {
+                <div style="overflow-x:auto;">
+
+                    <table class="axis-data-table">
+
+                        <thead>
+                            <tr>
+                                <th>FACTURA</th>
+                                <th>CLIENTE</th>
+                                <th>FECHA</th>
+                                <th>TOTAL</th>
+                                <th>PAGADO</th>
+                                <th>SALDO</th>
+                                <th>ESTADO</th>
+                                <th>ACCIONES</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var factura in Model)
+                            {
+                                var estadoClass = factura.Estado switch
+                                {
+                                    "Pagada" => "axis-status-success",
+                                    "Anulada" => "axis-status-danger",
+                                    "Parcialmente pagada" => "axis-status-warning",
+                                    _ => "axis-status-neutral"
+                                };
+
+                                <tr>
+
+                                    <td>
+                                        <strong>
+                                            @factura.NumeroFactura
+                                        </strong>
+
+                                        <div class="axis-table-secondary">
+                                            Factura #@factura.IdFactura
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        @(string.IsNullOrWhiteSpace(factura.Cliente)
+                                                                        ? "Cliente no disponible"
+                                                                        : factura.Cliente)
+                            </td>
+
+                                    <td>
+                                        @factura.FechaEmision.ToString("dd/MM/yyyy")
+                                    </td>
+
+                                    <td>
+                                        <strong>
+                                            @factura.Total.ToString("C2")
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        @factura.TotalPagado.ToString("C2")
+                                    </td>
+
+                                    <td>
+                                        <strong>
+                                            @factura.SaldoPendiente.ToString("C2")
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        <span class="axis-status @estadoClass">
+                                            @factura.Estado
+                                        </span>
+                                    </td>
+
+                                    <td>
+
+                                        <div class="axis-actions">
+
+                                            <a asp-action="Details"
+                                               asp-route-id="@factura.IdFactura"
+                                               class="axis-small-button">
+                                                Ver
+                                            </a>
+
+                                    @if (factura.Estado != "Pagada" &&
+                                                                        factura.Estado != "Anulada")
+                                            {
+                                                <a asp-action="Edit"
+                                                   asp-route-id="@factura.IdFactura"
+                                                   class="axis-small-button">
+                                                    Editar
+                                                </a>
+
+                                                <form asp-action="Anular"
+                                                      asp-route-id="@factura.IdFactura"
+                                                      method="post"
+                                                      style="display:inline;">
+
+                                                    @Html.AntiForgeryToken()
+
+                                                    <button type="submit"
+                                                            class="axis-small-button axis-small-danger"
+                                                            onclick="return confirm('¿Desea anular esta factura?');">
+                                                        Anular
+                                                    </button>
+
+                                                </form>
+                                            }
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</section>
+
+<style>
+
+    .axis-alert {
+        padding: 14px 18px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        font-size: 13px;
+    }
+
+    .axis-alert-success {
+        background: #edf5e9;
+        border: 1px solid #c9dbc1;
+        color: #41603a;
+    }
+
+    .axis-alert-error {
+        background: #f8eeee;
+        border: 1px solid #e5c8c8;
+        color: #8b3d3d;
+    }
+
+    .axis-data-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1050px;
+    }
+
+        .axis-data-table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            color: #777;
+            background: #fafafa;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .axis-data-table td {
+            padding: 16px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+            color: #555;
+            vertical-align: middle;
+        }
+
+        .axis-data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+    .axis-table-secondary {
+        margin-top: 4px;
+        color: #999;
+        font-size: 11px;
+    }
+
+    .axis-status {
+        display: inline-flex;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .axis-status-success {
+        background: #e8f2e5;
+        color: #42623c;
+    }
+
+    .axis-status-danger {
+        background: #f4e7e7;
+        color: #824141;
+    }
+
+    .axis-status-warning {
+        background: #f5f1df;
+        color: #75672e;
+    }
+
+    .axis-status-neutral {
+        background: #eeeeee;
+        color: #555;
+    }
+
+    .axis-actions {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .axis-small-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 7px 11px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        background: white;
+        color: #333;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 11px;
+    }
+
+        .axis-small-button:hover {
+            background: #f7f7f7;
+        }
+
+    .axis-small-danger {
+        color: #8a3d3d;
+        border-color: #e5cccc;
+        background: #faf0f0;
+    }
+
+</style>

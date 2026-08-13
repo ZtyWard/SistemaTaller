@@ -1,0 +1,253 @@
+﻿@model Negocios.DTOs.FacturaGuardarDto
+
+@{
+    ViewData["Title"] = "Nueva factura";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                FACTURACIÓN · REGISTRO
+            </span>
+
+            <h1>Nueva factura</h1>
+
+            <p>
+                Registra una nueva factura en el sistema.
+            </p>
+
+        </div>
+
+        <a asp-action="Index"
+           class="axis-button axis-button-secondary">
+            ← Volver
+        </a>
+
+    </div>
+
+
+    <div class="axis-form-card">
+
+        <form asp-action="Create"
+              method="post"
+              class="axis-form">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-form-validation">
+            </div>
+
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Información de la factura
+                </div>
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field">
+
+                        <label asp-for="NumeroFactura">
+                            Número de factura
+                        </label>
+
+                        <input asp-for="NumeroFactura"
+                               placeholder="FAC-000001" />
+
+                        <span asp-validation-for="NumeroFactura"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdCliente">
+                            Cliente
+                        </label>
+
+                        <input asp-for="IdCliente"
+                               type="number"
+                               min="1"
+                               placeholder="ID del cliente" />
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdOrdenTrabajo">
+                            Orden de trabajo
+                        </label>
+
+                        <input asp-for="IdOrdenTrabajo"
+                               type="number"
+                               min="1"
+                               placeholder="Opcional" />
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdVenta">
+                            Venta
+                        </label>
+
+                        <input asp-for="IdVenta"
+                               type="number"
+                               min="1"
+                               placeholder="Opcional" />
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="FechaEmision">
+                            Fecha de emisión
+                        </label>
+
+                        <input asp-for="FechaEmision"
+                               type="datetime-local" />
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Estado">
+                            Estado
+                        </label>
+
+                        <select asp-for="Estado">
+
+                            <option value="Pendiente">
+                                Pendiente
+                            </option>
+
+                            <option value="Parcialmente pagada">
+                                Parcialmente pagada
+                            </option>
+
+                            <option value="Pagada">
+                                Pagada
+                            </option>
+
+                            <option value="Anulada">
+                                Anulada
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Montos
+                </div>
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field">
+
+                        <label asp-for="Subtotal">
+                            Subtotal
+                        </label>
+
+                        <input asp-for="Subtotal"
+                               type="number"
+                               min="0"
+                               step="0.01" />
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Impuesto">
+                            Impuesto
+                        </label>
+
+                        <input asp-for="Impuesto"
+                               type="number"
+                               min="0"
+                               step="0.01" />
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Descuento">
+                            Descuento
+                        </label>
+
+                        <input asp-for="Descuento"
+                               type="number"
+                               min="0"
+                               step="0.01" />
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Total">
+                            Total
+                        </label>
+
+                        <input asp-for="Total"
+                               type="number"
+                               min="0"
+                               step="0.01" />
+
+                        <small>
+                            Subtotal + impuesto - descuento
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-form-actions">
+
+                <a asp-action="Index"
+                   class="axis-button axis-button-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                        class="axis-button axis-button-primary">
+                    Registrar factura
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

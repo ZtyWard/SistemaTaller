@@ -67,6 +67,16 @@ public class SistemaTallerDbContext
         DetallesVenta => Set<DetalleVenta>();
 
     // =====================================================
+    // FACTURACIÓN
+    // =====================================================
+
+    public DbSet<Factura>
+        Facturas => Set<Factura>();
+
+    public DbSet<Pago>
+        Pagos => Set<Pago>();
+
+    // =====================================================
     // AUDITORÍA
     // =====================================================
 
@@ -108,12 +118,14 @@ public class SistemaTallerDbContext
         base.OnModelCreating(builder);
 
         // ASP.NET Identity
+
         builder.Entity<ApplicationUser>()
             .ToTable("IdentityUsuarios");
 
         // Cargar automáticamente todas las
         // configuraciones IEntityTypeConfiguration
         // del ensamblado.
+
         builder.ApplyConfigurationsFromAssembly(
             typeof(SistemaTallerDbContext).Assembly);
     }
