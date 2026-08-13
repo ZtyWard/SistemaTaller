@@ -79,8 +79,10 @@ builder.Services.AddScoped<IMovimientoInventarioRepository, MovimientoInventario
 builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
 builder.Services.AddScoped<ICompraRepository, CompraRepository>();
 builder.Services.AddScoped<IVentaRepository, VentaRepository>();
-
 builder.Services.AddScoped<IFacturaRepository, FacturaRepository>();
+
+// PAGOS
+builder.Services.AddScoped<IPagoRepository, PagoRepository>();
 
 // Catálogos
 
@@ -114,8 +116,10 @@ builder.Services.AddScoped<IMovimientoInventarioService, MovimientoInventarioSer
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<ICompraService, CompraService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
-
 builder.Services.AddScoped<IFacturaService, FacturaService>();
+
+// PAGOS
+builder.Services.AddScoped<IPagoService, PagoService>();
 
 // Catálogos
 
