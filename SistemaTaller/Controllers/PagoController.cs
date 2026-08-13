@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Negocios.DTOs;
 using Negocios.Interfaces;
 using Negocios.Seguridad;
-using Negocios.Services;
 using System.Security.Claims;
 
 namespace SistemaTaller.Controllers;
@@ -12,11 +11,14 @@ namespace SistemaTaller.Controllers;
 public class PagoController : Controller
 {
     private readonly IPagoService _service;
+    private readonly IFacturaService _facturaService;
 
     public PagoController(
-        IPagoService service)
+        IPagoService service,
+        IFacturaService facturaService)
     {
         _service = service;
+        _facturaService = facturaService;
     }
 
     // =====================================================
@@ -52,48 +54,56 @@ public class PagoController : Controller
     }
 
     // =====================================================
-    // CREATE
+    // CREATE GET
     // =====================================================
 
     [Authorize(Policy = Permisos.PagosRegistrar)]
     public async Task<IActionResult> Create(
         int idFactura)
     {
-        var pagos =
-            await _service
-                .ObtenerPorFacturaAsync(
-                    idFactura);
+        var factura =
+            await _facturaService
+                .ObtenerPorIdAsync(idFactura);
 
-        var primerPago =
-            pagos.FirstOrDefault();
+        if (factura == null)
+            return NotFound();
 
-        ViewBag.IdFactura =
-            idFactura;
+        if (factura.Estado == "Anulada")
+        {
+            TempData["Error"] =
+                "No se puede registrar un pago sobre una factura anulada.";
 
-        ViewBag.NumeroFactura =
-            primerPago?.NumeroFactura
-            ?? $"Factura #{idFactura}";
+            return RedirectToAction(
+                "Details",
+                "Factura",
+                new { id = idFactura });
+        }
 
-        ViewBag.TotalFactura =
-            primerPago?.TotalFactura ?? 0m;
+        if (factura.SaldoPendiente <= 0)
+        {
+            TempData["Error"] =
+                "La factura no tiene saldo pendiente.";
 
-        ViewBag.TotalPagado =
-            primerPago?.TotalPagado ?? 0m;
+            return RedirectToAction(
+                "Details",
+                "Factura",
+                new { id = idFactura });
+        }
 
-        ViewBag.SaldoPendiente =
-            primerPago?.SaldoPendiente ?? 0m;
-
-        ViewBag.EstadoFactura =
-            primerPago?.EstadoFactura
-            ?? "Pendiente";
+        CargarDatosFactura(factura);
 
         return View(
             new PagoGuardarDto
             {
                 IdFactura = idFactura,
-                FormaPago = "Efectivo"
+                FormaPago = "Efectivo",
+                Monto = factura.SaldoPendiente
             });
     }
+
+    // =====================================================
+    // CREATE POST
+    // =====================================================
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -103,8 +113,7 @@ public class PagoController : Controller
     {
         if (!ModelState.IsValid)
         {
-            await CargarDatosFactura(
-                dto.IdFactura);
+            await CargarDatosFactura(dto.IdFactura);
 
             return View(dto);
         }
@@ -157,38 +166,44 @@ public class PagoController : Controller
     }
 
     // =====================================================
-    // MÉTODOS AUXILIARES
+    // MÉTODO AUXILIAR
     // =====================================================
 
     private async Task CargarDatosFactura(
         int idFactura)
     {
-        var pagos =
-            await _service
-                .ObtenerPorFacturaAsync(
-                    idFactura);
+        var factura =
+            await _facturaService
+                .ObtenerPorIdAsync(idFactura);
 
-        var pago =
-            pagos.FirstOrDefault();
+        if (factura == null)
+            return;
 
+        CargarDatosFactura(factura);
+    }
+
+    private void CargarDatosFactura(
+        FacturaDto factura)
+    {
         ViewBag.IdFactura =
-            idFactura;
+            factura.IdFactura;
 
         ViewBag.NumeroFactura =
-            pago?.NumeroFactura
-            ?? $"Factura #{idFactura}";
+            factura.NumeroFactura;
+
+        ViewBag.Cliente =
+            factura.Cliente;
 
         ViewBag.TotalFactura =
-            pago?.TotalFactura ?? 0m;
+            factura.Total;
 
         ViewBag.TotalPagado =
-            pago?.TotalPagado ?? 0m;
+            factura.TotalPagado;
 
         ViewBag.SaldoPendiente =
-            pago?.SaldoPendiente ?? 0m;
+            factura.SaldoPendiente;
 
         ViewBag.EstadoFactura =
-            pago?.EstadoFactura
-            ?? "Pendiente";
+            factura.Estado;
     }
 }

@@ -1,0 +1,331 @@
+﻿@model Negocios.DTOs.PagoGuardarDto
+
+@{
+    ViewData["Title"] = "Registrar pago";
+
+    var numeroFactura =
+        ViewBag.NumeroFactura as string
+        ?? $"Factura #{Model.IdFactura}";
+
+    var cliente =
+        ViewBag.Cliente as string
+        ?? "Cliente no disponible";
+
+    decimal totalFactura =
+        ViewBag.TotalFactura ?? 0m;
+
+    decimal totalPagado =
+        ViewBag.TotalPagado ?? 0m;
+
+    decimal saldoPendiente =
+        ViewBag.SaldoPendiente ?? 0m;
+
+    string estadoFactura =
+        ViewBag.EstadoFactura as string
+        ?? "Pendiente";
+}
+
+<div class="page-header">
+    <div>
+        <div class="eyebrow">FACTURACIÓN · PAGOS</div>
+
+        <h1>Registrar pago</h1>
+
+        <p>
+            Registra un pago asociado a una factura.
+        </p>
+    </div>
+
+    <div class="header-actions">
+        <a asp-controller="Factura"
+           asp-action="Details"
+           asp-route-id="@Model.IdFactura"
+           class="btn btn-secondary">
+            ← Volver a factura
+        </a>
+    </div>
+</div>
+
+<div class="form-card">
+
+    <div class="section">
+        <div class="section-title">
+            INFORMACIÓN DE LA FACTURA
+        </div>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Número de factura</label>
+
+                <input type="text"
+                       class="form-control"
+                       value="@numeroFactura"
+                       readonly />
+            </div>
+
+            <div class="form-group">
+                <label>Cliente</label>
+
+                <input type="text"
+                       class="form-control"
+                       value="@cliente"
+                       readonly />
+            </div>
+
+            <div class="form-group">
+                <label>Estado</label>
+
+                <input type="text"
+                       class="form-control"
+                       value="@estadoFactura"
+                       readonly />
+            </div>
+
+            <div class="form-group">
+                <label>Saldo pendiente</label>
+
+                <input type="text"
+                       class="form-control"
+                       value="@saldoPendiente.ToString("C2")"
+                       readonly />
+            </div>
+
+        </div>
+    </div>
+
+    <div class="section">
+
+        <div class="section-title">
+            DATOS DEL PAGO
+        </div>
+
+        <form asp-action="Create"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input asp-for="IdFactura"
+                   type="hidden" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="validation-summary">
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label asp-for="Monto">
+                        Monto
+                    </label>
+
+                    <input asp-for="Monto"
+                           class="form-control"
+                           type="number"
+                           min="0.01"
+                           max="@saldoPendiente"
+                           step="0.01" />
+
+                    <span asp-validation-for="Monto"
+                          class="field-validation">
+                    </span>
+
+                    <small>
+                        Máximo permitido:
+                        @saldoPendiente.ToString("C2")
+                    </small>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label asp-for="FormaPago">
+                        Forma de pago
+                    </label>
+
+                    <select asp-for="FormaPago"
+                            class="form-control">
+
+                        <option value="Efectivo">
+                            Efectivo
+                        </option>
+
+                        <option value="Tarjeta">
+                            Tarjeta
+                        </option>
+
+                        <option value="SINPE">
+                            SINPE
+                        </option>
+
+                        <option value="Transferencia">
+                            Transferencia
+                        </option>
+
+                        <option value="Cheque">
+                            Cheque
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="FormaPago"
+                          class="field-validation">
+                    </span>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label asp-for="NumeroReferencia">
+                        Número de referencia
+                    </label>
+
+                    <input asp-for="NumeroReferencia"
+                           class="form-control"
+                           placeholder="Opcional" />
+
+                    <span asp-validation-for="NumeroReferencia"
+                          class="field-validation">
+                    </span>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Saldo después del pago
+                    </label>
+
+                    <input id="saldoDespues"
+                           type="text"
+                           class="form-control"
+                           value="@Math.Max(0m, saldoPendiente - Model.Monto).ToString("C2")"
+                           readonly />
+
+                </div>
+
+            </div>
+
+            <div class="form-group full-width">
+
+                <label asp-for="Observaciones">
+                    Observaciones
+                </label>
+
+                <textarea asp-for="Observaciones"
+                          class="form-control"
+                          rows="4"
+                          placeholder="Observaciones adicionales del pago"></textarea>
+
+                <span asp-validation-for="Observaciones"
+                      class="field-validation">
+                </span>
+
+            </div>
+
+            <div class="summary-box">
+
+                <div>
+                    <span>Total factura</span>
+                    <strong>
+                        @totalFactura.ToString("C2")
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Total pagado</span>
+                    <strong>
+                        @totalPagado.ToString("C2")
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Saldo pendiente</span>
+                    <strong id="saldoActual">
+                        @saldoPendiente.ToString("C2")
+                    </strong>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+
+                <a asp-controller="Factura"
+                   asp-action="Details"
+                   asp-route-id="@Model.IdFactura"
+                   class="btn btn-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit"
+                        class="btn btn-primary"
+                        id="btnRegistrar">
+                    Registrar pago
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const monto =
+                document.getElementById("Monto");
+
+            const saldoActual =
+                document.getElementById("saldoActual");
+
+            const saldoDespues =
+                document.getElementById("saldoDespues");
+
+            const saldoPendiente =
+                @saldoPendiente.ToString(
+                    System.Globalization.CultureInfo.InvariantCulture);
+
+        function actualizarSaldo() {
+
+            let valor =
+                parseFloat(monto.value) || 0;
+
+            let nuevoSaldo =
+                saldoPendiente - valor;
+
+            if (nuevoSaldo < 0) {
+                nuevoSaldo = 0;
+            }
+
+            saldoActual.textContent =
+                nuevoSaldo.toLocaleString(
+                    "es-CR",
+                    {
+                        style: "currency",
+                        currency: "CRC"
+                    });
+
+            saldoDespues.value =
+                nuevoSaldo.toLocaleString(
+                    "es-CR",
+                    {
+                        style: "currency",
+                        currency: "CRC"
+                    });
+        }
+
+        monto.addEventListener(
+            "input",
+            actualizarSaldo);
+
+        actualizarSaldo();
+    });
+</script>
+}
