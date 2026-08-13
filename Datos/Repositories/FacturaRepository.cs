@@ -23,6 +23,7 @@ public class FacturaRepository
         return await _dbSet
             .AsNoTracking()
             .Include(x => x.Cliente)
+            .Include(x => x.Pagos)
             .OrderByDescending(x => x.FechaEmision)
             .Take(cantidad)
             .ToListAsync();
@@ -56,6 +57,7 @@ public class FacturaRepository
         return await _dbSet
             .AsNoTracking()
             .Include(x => x.Cliente)
+            .Include(x => x.Pagos)
             .Where(x =>
                 x.Estado == "Pendiente" ||
                 x.Estado == "Parcialmente pagada")
