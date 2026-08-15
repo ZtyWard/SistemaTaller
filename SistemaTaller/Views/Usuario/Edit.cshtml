@@ -1,0 +1,220 @@
+﻿@model Negocios.DTOs.UsuarioGuardarDto
+
+@{
+    ViewData["Title"] = "Editar usuario";
+
+    var roles = ViewBag.Roles as IEnumerable<string>
+                 ?? Enumerable.Empty<string>();
+
+    bool puedeAdministrarRoles =
+        ViewBag.PuedeAdministrarRoles != null &&
+        (bool)ViewBag.PuedeAdministrarRoles;
+}
+
+<div class="container py-4">
+
+    <div class="mb-4">
+        <h1 class="fw-bold">Editar usuario</h1>
+        <p class="text-muted">
+            Modifica la información y acceso del usuario.
+        </p>
+    </div>
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body p-4">
+
+            <form asp-action="Edit"
+                  asp-route-id="@ViewBag.IdUsuario"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
+                </div>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+
+                        <label asp-for="NombreCompleto"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="NombreCompleto"
+                               class="form-control" />
+
+                        <span asp-validation-for="NombreCompleto"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Usuario"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="Usuario"
+                               class="form-control" />
+
+                        <span asp-validation-for="Usuario"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Email"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="Email"
+                               class="form-control" />
+
+                        <span asp-validation-for="Email"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Password"
+                               class="form-label">
+                            Nueva contraseña
+                        </label>
+
+                        <input asp-for="Password"
+                               class="form-control" />
+
+                        <span asp-validation-for="Password"
+                              class="text-danger">
+                        </span>
+
+                        <small class="text-muted">
+                            Déjelo vacío para conservar la contraseña actual.
+                        </small>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="ConfirmarPassword"
+                               class="form-label">
+                            Confirmar nueva contraseña
+                        </label>
+
+                        <input asp-for="ConfirmarPassword"
+                               class="form-control" />
+
+                        <span asp-validation-for="ConfirmarPassword"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Roles
+                        </label>
+
+                        @if (puedeAdministrarRoles)
+                        {
+                            <select asp-for="Roles"
+                                    class="form-select"
+                                    multiple
+                                    size="5">
+
+                                @foreach (var rol in roles)
+                                {
+                                    <option value="@rol">
+                                        @rol
+                                    </option>
+                                }
+
+                            </select>
+
+                            <small class="text-muted">
+                                Mantenga Ctrl presionado para seleccionar
+                                varios roles.
+                            </small>
+                        }
+                        else
+                        {
+                            <div class="form-control"
+                                 style="min-height: 100px;">
+
+                                @if (Model.Roles.Any())
+                                {
+                                    foreach (var rol in Model.Roles)
+                                    {
+                                        <span class="badge bg-secondary me-1">
+                                            @rol
+                                        </span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        Sin roles asignados.
+                                    </span>
+                                }
+
+                            </div>
+
+                            <small class="text-muted">
+                                No tiene permiso para administrar roles.
+                            </small>
+                        }
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <div class="form-check">
+
+                            <input asp-for="Activo"
+                                   class="form-check-input" />
+
+                            <label asp-for="Activo"
+                                   class="form-check-label">
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr class="my-4" />
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Guardar cambios
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary">
+                        Cancelar
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

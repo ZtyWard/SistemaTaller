@@ -300,4 +300,20 @@ public static class Permisos
 
     public const string AuditoriaVer =
         "Auditoria.Ver";
+
+    // =====================================================
+    // CITAS
+    // =====================================================
+
+    public const string CitasVer =
+        "Citas.Ver";
+
+    public const string CitasCrear =
+        "Citas.Crear";
+
+    public const string CitasEditar =
+        "Citas.Editar";
+
+    public const string CitasCancelar =
+        "Citas.Cancelar";
 }

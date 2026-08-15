@@ -47,6 +47,9 @@ public class SistemaTallerDbContext
     public DbSet<OrdenTrabajo>
         OrdenesTrabajo => Set<OrdenTrabajo>();
 
+    public DbSet<Cita>
+        Citas => Set<Cita>();
+
     public DbSet<MovimientoInventario>
         MovimientosInventario => Set<MovimientoInventario>();
 
@@ -117,14 +120,8 @@ public class SistemaTallerDbContext
     {
         base.OnModelCreating(builder);
 
-        // ASP.NET Identity
-
         builder.Entity<ApplicationUser>()
             .ToTable("IdentityUsuarios");
-
-        // Cargar automáticamente todas las
-        // configuraciones IEntityTypeConfiguration
-        // del ensamblado.
 
         builder.ApplyConfigurationsFromAssembly(
             typeof(SistemaTallerDbContext).Assembly);

@@ -1,0 +1,440 @@
+﻿@model Negocios.DTOs.CitaFormularioDto
+
+@{
+    ViewData["Title"] = "Editar cita";
+
+    var clientes =
+        ViewBag.Clientes as IEnumerable<Negocios.DTOs.ClienteDto>
+        ?? Enumerable.Empty<Negocios.DTOs.ClienteDto>();
+
+    var vehiculos =
+        ViewBag.Vehiculos as IEnumerable<Negocios.DTOs.VehiculoDto>
+        ?? Enumerable.Empty<Negocios.DTOs.VehiculoDto>();
+
+    var servicios =
+        ViewBag.Servicios as IEnumerable<Negocios.DTOs.ServicioDto>
+        ?? Enumerable.Empty<Negocios.DTOs.ServicioDto>();
+
+    var empleados =
+        ViewBag.Empleados as IEnumerable<Negocios.DTOs.EmpleadoDto>
+        ?? Enumerable.Empty<Negocios.DTOs.EmpleadoDto>();
+
+    var estados =
+        ViewBag.Estados as IEnumerable<string>
+        ?? Enumerable.Empty<string>();
+}
+
+<div class="container py-4">
+
+    <div class="mb-4">
+
+        <span class="text-muted small fw-bold">
+            AXIS · AGENDA
+        </span>
+
+        <h1 class="fw-bold mb-1">
+            Editar cita
+        </h1>
+
+        <p class="text-muted">
+            Reprograma o actualiza la información de la cita.
+        </p>
+
+    </div>
+
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-4">
+
+            <form asp-action="Edit"
+                  asp-route-id="@ViewBag.IdCita"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger">
+                </div>
+
+
+                <div class="row g-4">
+
+
+                    <!-- CLIENTE -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="IdCliente"
+                               class="form-label fw-semibold">
+                            Cliente
+                        </label>
+
+                        <select asp-for="IdCliente"
+                                class="form-select"
+                                id="IdCliente">
+
+                            <option value="">
+                                Seleccione un cliente
+                            </option>
+
+                            @foreach (var cliente in clientes)
+                            {
+                                <option value="@cliente.IdCliente">
+
+                                    @cliente.Nombre
+                                    @cliente.Apellido1
+                                    @cliente.Apellido2
+                                    — @cliente.Cedula
+
+                                </option>
+                            }
+
+                        </select>
+
+                        <span asp-validation-for="IdCliente"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- VEHICULO -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="IdVehiculo"
+                               class="form-label fw-semibold">
+                            Vehículo
+                        </label>
+
+                        <select asp-for="IdVehiculo"
+                                class="form-select"
+                                id="IdVehiculo">
+
+                            <option value="">
+                                Seleccione un vehículo
+                            </option>
+
+                            @foreach (var vehiculo in vehiculos)
+                            {
+                                <option value="@vehiculo.IdVehiculo"
+                                        data-cliente="@vehiculo.IdCliente">
+
+                                    @vehiculo.Placa
+                                    —
+                                    @vehiculo.MarcaNombre
+                                    @vehiculo.ModeloNombre
+
+                                </option>
+                            }
+
+                        </select>
+
+                        <span asp-validation-for="IdVehiculo"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- SERVICIO -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="IdServicio"
+                               class="form-label fw-semibold">
+                            Servicio
+                        </label>
+
+                        <select asp-for="IdServicio"
+                                class="form-select">
+
+                            <option value="">
+                                Seleccione un servicio
+                            </option>
+
+                            @foreach (var servicio in servicios)
+                            {
+                                <option value="@servicio.IdServicio">
+
+                                    @servicio.Nombre
+
+                                    @if (servicio.DuracionEstimada.HasValue)
+                                    {
+                                        <text>
+                                            — @servicio.DuracionEstimada min
+                                        </text>
+                                    }
+
+                                </option>
+                            }
+
+                        </select>
+
+                        <span asp-validation-for="IdServicio"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- MECANICO -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="IdEmpleado"
+                               class="form-label fw-semibold">
+                            Mecánico
+                        </label>
+
+                        <select asp-for="IdEmpleado"
+                                class="form-select">
+
+                            <option value="">
+                                Sin mecánico específico
+                            </option>
+
+                            @foreach (var empleado in empleados)
+                            {
+                                <option value="@empleado.IdEmpleado">
+
+                                    @empleado.NombreCompleto
+
+                                    @if (!string.IsNullOrWhiteSpace(
+                                                                    empleado.Especialidad))
+                                    {
+                                        <text>
+                                            — @empleado.Especialidad
+                                        </text>
+                                    }
+
+                                </option>
+                            }
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- AREA -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Area"
+                               class="form-label fw-semibold">
+                            Área
+                        </label>
+
+                        <select asp-for="Area"
+                                class="form-select">
+
+                            <option value="">
+                                Sin área específica
+                            </option>
+
+                            <option value="Diagnóstico">
+                                Diagnóstico
+                            </option>
+
+                            <option value="Mecánica general">
+                                Mecánica general
+                            </option>
+
+                            <option value="Electricidad">
+                                Electricidad
+                            </option>
+
+                            <option value="Aire acondicionado">
+                                Aire acondicionado
+                            </option>
+
+                            <option value="Suspensión y frenos">
+                                Suspensión y frenos
+                            </option>
+
+                            <option value="Enderezado y pintura">
+                                Enderezado y pintura
+                            </option>
+
+                            <option value="Lavado y detallado">
+                                Lavado y detallado
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ESTADO -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Estado"
+                               class="form-label fw-semibold">
+                            Estado
+                        </label>
+
+                        <select asp-for="Estado"
+                                class="form-select">
+
+                            @foreach (var estado in estados)
+                            {
+                                <option value="@estado">
+                                    @estado
+                                </option>
+                            }
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- INICIO -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="FechaInicio"
+                               class="form-label fw-semibold">
+                            Fecha y hora de inicio
+                        </label>
+
+                        <input asp-for="FechaInicio"
+                               type="datetime-local"
+                               class="form-control" />
+
+                        <span asp-validation-for="FechaInicio"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- FIN -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="FechaFin"
+                               class="form-label fw-semibold">
+                            Fecha y hora de finalización
+                        </label>
+
+                        <input asp-for="FechaFin"
+                               type="datetime-local"
+                               class="form-control" />
+
+                        <span asp-validation-for="FechaFin"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- OBSERVACIONES -->
+
+                    <div class="col-12">
+
+                        <label asp-for="Observaciones"
+                               class="form-label fw-semibold">
+                            Observaciones
+                        </label>
+
+                        <textarea asp-for="Observaciones"
+                                  class="form-control"
+                                  rows="4">
+                        </textarea>
+
+                        <span asp-validation-for="Observaciones"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4" />
+
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        <i class="bi bi-check-lg me-1"></i>
+                        Guardar cambios
+
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary">
+
+                        Cancelar
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const cliente =
+                document.getElementById("IdCliente");
+
+            const vehiculo =
+                document.getElementById("IdVehiculo");
+
+            if (!cliente || !vehiculo)
+                return;
+
+            function filtrarVehiculos() {
+
+                const clienteId =
+                    cliente.value;
+
+                const opciones =
+                    vehiculo.querySelectorAll("option");
+
+                opciones.forEach(function (opcion) {
+
+                    if (!opcion.value)
+                        return;
+
+                    const propietario =
+                        opcion.dataset.cliente;
+
+                    const visible =
+                        !clienteId ||
+                        propietario === clienteId;
+
+                    opcion.hidden = !visible;
+
+                    if (!visible &&
+                        opcion.selected) {
+
+                        vehiculo.value = "";
+                    }
+
+                });
+            }
+
+            cliente.addEventListener(
+                "change",
+                filtrarVehiculos);
+
+            filtrarVehiculos();
+        });
+    </script>
+}

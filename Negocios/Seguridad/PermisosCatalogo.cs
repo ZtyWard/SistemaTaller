@@ -175,6 +175,16 @@ public static class PermisosCatalogo
             // AUDITORÍA
             // =================================================
 
-            Permisos.AuditoriaVer
+            Permisos.AuditoriaVer,
+            
+            // =================================================
+            // CITAS
+            // =================================================
+
+            Permisos.CitasVer,
+            Permisos.CitasCrear,
+            Permisos.CitasEditar,
+            Permisos.CitasCancelar
+
         };
 }

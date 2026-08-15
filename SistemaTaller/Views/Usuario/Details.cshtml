@@ -1,0 +1,139 @@
+﻿@model Negocios.DTOs.UsuarioAdministracionDto
+
+@{
+    ViewData["Title"] = "Detalle de usuario";
+}
+
+<div class="container py-4">
+
+    <div class="mb-4">
+        <h1 class="fw-bold">Detalle de usuario</h1>
+        <p class="text-muted">
+            Información y permisos asociados al usuario.
+        </p>
+    </div>
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body p-4">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+                        Usuario
+                    </label>
+
+                    <h5>
+                        @Model.Usuario
+                    </h5>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+                        Nombre completo
+                    </label>
+
+                    <h5>
+                        @Model.NombreCompleto
+                    </h5>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+                        Correo electrónico
+                    </label>
+
+                    <h5>
+                        @Model.Email
+                    </h5>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+                        Estado
+                    </label>
+
+                    <div>
+
+                        @if (Model.Activo)
+                        {
+                            <span class="badge bg-success">
+                                Activo
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">
+                                Inactivo
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="col-12">
+
+                    <label class="text-muted small">
+                        Roles
+                    </label>
+
+                    <div class="mt-2">
+
+                        @if (Model.Roles.Any())
+                        {
+                            foreach (var rol in Model.Roles)
+                            {
+                                <span class="badge bg-secondary me-1">
+                                    @rol
+                                </span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                Sin roles asignados.
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr class="my-4" />
+
+            <div class="d-flex gap-2">
+
+                @if (User.HasClaim(
+                                "Permiso",
+                                Negocios.Seguridad.Permisos.UsuariosEditar))
+                {
+                    <a asp-action="Edit"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-primary">
+                        Editar usuario
+                    </a>
+                }
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Volver
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

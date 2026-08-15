@@ -1,0 +1,463 @@
+﻿@model Negocios.DTOs.DashboardDto
+
+@{
+    ViewData["Title"] = "Dashboard";
+
+    var maxVenta =
+        Model.VentasPorMes.Any()
+            ? Model.VentasPorMes.Max(v => v.Total)
+            : 0;
+
+    var totalOrdenes =
+        Model.OrdenesPorEstado.Sum(o => o.Cantidad);
+}
+
+<div class="axis-dashboard">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <section class="axis-dashboard-header">
+
+        <div>
+            <span class="axis-dashboard-kicker">
+                SISTEMA DE GESTIÓN · TALLER
+            </span>
+
+            <h1>
+                Dashboard
+            </h1>
+
+            <p>
+                Resumen operativo de AXIS.
+            </p>
+        </div>
+
+        <div class="axis-dashboard-user">
+
+            <span>
+                SESIÓN ACTUAL
+            </span>
+
+            <strong>
+                @User.Identity?.Name
+            </strong>
+
+            <small>
+                @Model.RolUsuario
+            </small>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         KPI CARDS
+         ===================================================== -->
+
+    <section class="axis-dashboard-kpis">
+
+        <div class="axis-kpi">
+
+            <div class="axis-kpi-icon">
+                <i class="bi bi-people"></i>
+            </div>
+
+            <div>
+                <span>
+                    CLIENTES ACTIVOS
+                </span>
+
+                <strong>
+                    @Model.ClientesActivos
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="axis-kpi">
+
+            <div class="axis-kpi-icon">
+                <i class="bi bi-car-front"></i>
+            </div>
+
+            <div>
+                <span>
+                    VEHÍCULOS ACTIVOS
+                </span>
+
+                <strong>
+                    @Model.VehiculosActivos
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="axis-kpi">
+
+            <div class="axis-kpi-icon">
+                <i class="bi bi-tools"></i>
+            </div>
+
+            <div>
+                <span>
+                    OT ABIERTAS
+                </span>
+
+                <strong>
+                    @Model.OrdenesAbiertas
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="axis-kpi">
+
+            <div class="axis-kpi-icon">
+                <i class="bi bi-box-seam"></i>
+            </div>
+
+            <div>
+                <span>
+                    STOCK BAJO
+                </span>
+
+                <strong>
+                    @Model.ProductosStockBajo
+                </strong>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SECONDARY KPIS
+         ===================================================== -->
+
+    <section class="axis-dashboard-secondary">
+
+        <div class="axis-dashboard-mini">
+
+            <span>
+                FACTURAS PENDIENTES
+            </span>
+
+            <strong>
+                @Model.FacturasPendientes
+            </strong>
+
+        </div>
+
+
+        <div class="axis-dashboard-mini">
+
+            <span>
+                VENTAS DEL MES
+            </span>
+
+            <strong>
+                ₡ @Model.VentasMesActual.ToString("N2")
+            </strong>
+
+            <small>
+                @Model.VentasMesActualCantidad
+                venta(s)
+            </small>
+
+        </div>
+
+
+        <div class="axis-dashboard-mini">
+
+            <span>
+                ESTADO OT
+            </span>
+
+            <strong>
+                @totalOrdenes
+            </strong>
+
+            <small>
+                órdenes registradas
+            </small>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN GRID
+         ===================================================== -->
+
+    <section class="axis-dashboard-grid">
+
+
+        <!-- =================================================
+             VENTAS
+             ================================================= -->
+
+        <article class="axis-dashboard-card axis-dashboard-chart">
+
+            <div class="axis-card-header">
+
+                <div>
+                    <span>
+                        ANÁLISIS
+                    </span>
+
+                    <h2>
+                        Ventas últimos 6 meses
+                    </h2>
+                </div>
+
+                <i class="bi bi-bar-chart-line"></i>
+
+            </div>
+
+
+            <div class="axis-bars">
+
+                @foreach (var venta in Model.VentasPorMes)
+                {
+                    var porcentaje =
+                    maxVenta > 0
+                    ? (venta.Total / maxVenta) * 100
+                    : 0;
+
+                    <div class="axis-bar-column">
+
+                        <div class="axis-bar-value">
+                            ₡ @venta.Total.ToString("N0")
+                        </div>
+
+                        <div class="axis-bar-track">
+
+                            <div class="axis-bar"
+                                 style="height:@Math.Max(porcentaje, 3)%;">
+                            </div>
+
+                        </div>
+
+                        <span>
+                            @venta.Mes
+                        </span>
+
+                    </div>
+                }
+
+            </div>
+
+        </article>
+
+
+        <!-- =================================================
+             ORDENES
+             ================================================= -->
+
+        <article class="axis-dashboard-card">
+
+            <div class="axis-card-header">
+
+                <div>
+                    <span>
+                        OPERACIONES
+                    </span>
+
+                    <h2>
+                        Órdenes de trabajo
+                    </h2>
+                </div>
+
+                <i class="bi bi-wrench-adjustable"></i>
+
+            </div>
+
+
+            @if (Model.OrdenesPorEstado.Any())
+            {
+                <div class="axis-status-list">
+
+                    @foreach (var estado in Model.OrdenesPorEstado)
+                    {
+                        var porcentaje =
+                        totalOrdenes > 0
+                        ? (double)estado.Cantidad /
+                        totalOrdenes * 100
+                        : 0;
+
+                        <div class="axis-status-row">
+
+                            <div class="axis-status-title">
+
+                                <span>
+                                    @estado.Estado
+                                </span>
+
+                                <strong>
+                                    @estado.Cantidad
+                                </strong>
+
+                            </div>
+
+                            <div class="axis-progress">
+
+                                <div class="axis-progress-fill"
+                                     style="width:@porcentaje.ToString("0.##")%;">
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <div class="axis-empty">
+                    No hay órdenes registradas.
+                </div>
+            }
+
+        </article>
+
+
+        <!-- =================================================
+             STOCK BAJO
+             ================================================= -->
+
+        <article class="axis-dashboard-card">
+
+            <div class="axis-card-header">
+
+                <div>
+                    <span>
+                        INVENTARIO
+                    </span>
+
+                    <h2>
+                        Productos con stock bajo
+                    </h2>
+                </div>
+
+                <i class="bi bi-exclamation-triangle"></i>
+
+            </div>
+
+
+            @if (Model.ProductosStock.Any())
+            {
+                <div class="axis-stock-list">
+
+                    @foreach (var producto in Model.ProductosStock)
+                    {
+                        <div class="axis-stock-row">
+
+                            <div>
+
+                                <strong>
+                                    @producto.Nombre
+                                </strong>
+
+                                <small>
+                                    @producto.Codigo
+                                </small>
+
+                            </div>
+
+                            <span>
+                                @producto.Stock /
+                                @producto.StockMinimo
+                            </span>
+
+                        </div>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <div class="axis-empty">
+                    No hay productos con stock bajo.
+                </div>
+            }
+
+        </article>
+
+
+        <!-- =================================================
+             ACCESOS
+             ================================================= -->
+
+        <article class="axis-dashboard-card">
+
+            <div class="axis-card-header">
+
+                <div>
+                    <span>
+                        ACCESO RÁPIDO
+                    </span>
+
+                    <h2>
+                        Operaciones
+                    </h2>
+                </div>
+
+                <i class="bi bi-grid"></i>
+
+            </div>
+
+
+            <div class="axis-dashboard-actions">
+
+                <a asp-controller="Cliente"
+                   asp-action="Index">
+                    <i class="bi bi-people"></i>
+                    Clientes
+                </a>
+
+                <a asp-controller="Vehiculo"
+                   asp-action="Index">
+                    <i class="bi bi-car-front"></i>
+                    Vehículos
+                </a>
+
+                <a asp-controller="OrdenTrabajo"
+                   asp-action="Index">
+                    <i class="bi bi-tools"></i>
+                    Órdenes
+                </a>
+
+                <a asp-controller="Producto"
+                   asp-action="Index">
+                    <i class="bi bi-box-seam"></i>
+                    Inventario
+                </a>
+
+                <a asp-controller="Venta"
+                   asp-action="Index">
+                    <i class="bi bi-cart3"></i>
+                    Ventas
+                </a>
+
+                <a asp-controller="Factura"
+                   asp-action="Index">
+                    <i class="bi bi-receipt"></i>
+                    Facturas
+                </a>
+
+            </div>
+
+        </article>
+
+    </section>
+
+</div>

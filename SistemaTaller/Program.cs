@@ -72,6 +72,10 @@ builder.Services.AddScoped<IOrdenTrabajoRepository, OrdenTrabajoRepository>();
 builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
 builder.Services.AddScoped<IServicioRepository, ServicioRepository>();
 
+// CITAS
+
+builder.Services.AddScoped<ICitaRepository, CitaRepository>();
+
 // Inventario, compras, ventas y facturación
 
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
@@ -82,6 +86,7 @@ builder.Services.AddScoped<IVentaRepository, VentaRepository>();
 builder.Services.AddScoped<IFacturaRepository, FacturaRepository>();
 
 // PAGOS
+
 builder.Services.AddScoped<IPagoRepository, PagoRepository>();
 
 // Catálogos
@@ -109,6 +114,10 @@ builder.Services.AddScoped<IOrdenTrabajoService, OrdenTrabajoService>();
 builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
 builder.Services.AddScoped<IServicioService, ServicioService>();
 
+// CITAS
+
+builder.Services.AddScoped<ICitaService, CitaService>();
+
 // Inventario, compras, ventas y facturación
 
 builder.Services.AddScoped<IProductoService, ProductoService>();
@@ -119,6 +128,7 @@ builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<IFacturaService, FacturaService>();
 
 // PAGOS
+
 builder.Services.AddScoped<IPagoService, PagoService>();
 
 // Catálogos
