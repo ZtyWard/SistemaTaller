@@ -50,6 +50,20 @@ public class SistemaTallerDbContext
     public DbSet<Cita>
         Citas => Set<Cita>();
 
+    public DbSet<Entrega>
+        Entregas => Set<Entrega>();
+
+    // =====================================================
+    // GARANTÍAS
+    // =====================================================
+
+    public DbSet<Garantia>
+        Garantias => Set<Garantia>();
+
+    // =====================================================
+    // INVENTARIO
+    // =====================================================
+
     public DbSet<MovimientoInventario>
         MovimientosInventario => Set<MovimientoInventario>();
 

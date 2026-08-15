@@ -4,6 +4,8 @@ public class Cita
 {
     public int IdCita { get; set; }
 
+    public string NumeroCita { get; set; } = string.Empty;
+
     public int IdCliente { get; set; }
 
     public int IdVehiculo { get; set; }

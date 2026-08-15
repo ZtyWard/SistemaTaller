@@ -6,6 +6,8 @@ public class CitaDto
 {
     public int IdCita { get; set; }
 
+    public string NumeroCita { get; set; } = string.Empty;
+
     [Required]
     [Display(Name = "Cliente")]
     public int IdCliente { get; set; }
@@ -74,7 +76,6 @@ public class CitaFormularioDto
     [Display(Name = "Inicio")]
     public DateTime FechaInicio { get; set; }
 
-    [Required(ErrorMessage = "Indique la fecha y hora de finalización.")]
     [Display(Name = "Fin")]
     public DateTime FechaFin { get; set; }
 

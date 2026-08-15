@@ -12,6 +12,13 @@ public class CitaConfiguration : IEntityTypeConfiguration<Cita>
 
         builder.HasKey(x => x.IdCita);
 
+        builder.Property(x => x.NumeroCita)
+            .IsRequired()
+            .HasMaxLength(30);
+
+        builder.HasIndex(x => x.NumeroCita)
+            .IsUnique();
+
         builder.Property(x => x.Area)
             .HasMaxLength(100);
 

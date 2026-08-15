@@ -42,7 +42,6 @@
 
     </div>
 
-
     <div class="card border-0 shadow-sm">
 
         <div class="card-body p-4">
@@ -56,9 +55,7 @@
                      class="alert alert-danger">
                 </div>
 
-
                 <div class="row g-4">
-
 
                     <!-- CLIENTE -->
 
@@ -94,7 +91,6 @@
                         </span>
 
                     </div>
-
 
                     <!-- VEHICULO -->
 
@@ -134,7 +130,6 @@
 
                     </div>
 
-
                     <!-- SERVICIO -->
 
                     <div class="col-md-6">
@@ -145,15 +140,18 @@
                         </label>
 
                         <select asp-for="IdServicio"
-                                class="form-select">
+                                class="form-select"
+                                id="IdServicio">
 
-                            <option value="">
+                            <option value=""
+                                    data-duracion="0">
                                 Seleccione un servicio
                             </option>
 
                             @foreach (var servicio in servicios)
                             {
-                                <option value="@servicio.IdServicio">
+                                <option value="@servicio.IdServicio"
+                                        data-duracion="@(servicio.DuracionEstimada ?? 0)">
 
                                     @servicio.Nombre
 
@@ -174,7 +172,6 @@
                         </span>
 
                     </div>
-
 
                     <!-- MECANICO -->
 
@@ -216,7 +213,6 @@
                         </small>
 
                     </div>
-
 
                     <!-- AREA -->
 
@@ -266,7 +262,6 @@
 
                     </div>
 
-
                     <!-- ESTADO -->
 
                     <div class="col-md-6">
@@ -290,7 +285,6 @@
 
                     </div>
 
-
                     <!-- INICIO -->
 
                     <div class="col-md-6">
@@ -302,7 +296,8 @@
 
                         <input asp-for="FechaInicio"
                                type="datetime-local"
-                               class="form-control" />
+                               class="form-control"
+                               id="FechaInicio" />
 
                         <span asp-validation-for="FechaInicio"
                               class="text-danger">
@@ -310,8 +305,7 @@
 
                     </div>
 
-
-                    <!-- FIN -->
+                    <!-- FIN CALCULADO -->
 
                     <div class="col-md-6">
 
@@ -322,14 +316,19 @@
 
                         <input asp-for="FechaFin"
                                type="datetime-local"
-                               class="form-control" />
+                               class="form-control"
+                               id="FechaFin"
+                               readonly />
+
+                        <small class="text-muted">
+                            Se calcula automáticamente según la duración del servicio.
+                        </small>
 
                         <span asp-validation-for="FechaFin"
                               class="text-danger">
                         </span>
 
                     </div>
-
 
                     <!-- OBSERVACIONES -->
 
@@ -354,9 +353,7 @@
 
                 </div>
 
-
                 <hr class="my-4" />
-
 
                 <div class="d-flex gap-2">
 
@@ -390,6 +387,7 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script>
+
         document.addEventListener("DOMContentLoaded", function () {
 
             const cliente =
@@ -398,8 +396,14 @@
             const vehiculo =
                 document.getElementById("IdVehiculo");
 
-            if (!cliente || !vehiculo)
-                return;
+            const servicio =
+                document.getElementById("IdServicio");
+
+            const fechaInicio =
+                document.getElementById("FechaInicio");
+
+            const fechaFin =
+                document.getElementById("FechaFin");
 
             function filtrarVehiculos() {
 
@@ -421,7 +425,8 @@
                         !clienteId ||
                         propietario === clienteId;
 
-                    opcion.hidden = !visible;
+                    opcion.hidden =
+                        !visible;
 
                     if (!visible &&
                         opcion.selected) {
@@ -432,11 +437,108 @@
                 });
             }
 
-            cliente.addEventListener(
-                "change",
-                filtrarVehiculos);
+            function calcularFechaFin() {
 
-            filtrarVehiculos();
+                if (!servicio ||
+                    !fechaInicio ||
+                    !fechaFin)
+                    return;
+
+                const opcion =
+                    servicio.options[
+                        servicio.selectedIndex
+                    ];
+
+                if (!opcion ||
+                    !opcion.value) {
+
+                    fechaFin.value = "";
+                    return;
+                }
+
+                const duracion =
+                    parseInt(
+                        opcion.dataset.duracion || "0",
+                        10);
+
+                if (!duracion ||
+                    !fechaInicio.value) {
+
+                    fechaFin.value = "";
+                    return;
+                }
+
+                const inicio =
+                    new Date(
+                        fechaInicio.value);
+
+                if (isNaN(inicio.getTime())) {
+
+                    fechaFin.value = "";
+                    return;
+                }
+
+                const fin =
+                    new Date(
+                        inicio.getTime() +
+                        duracion * 60000);
+
+                const year =
+                    fin.getFullYear();
+
+                const month =
+                    String(
+                        fin.getMonth() + 1)
+                    .padStart(2, "0");
+
+                const day =
+                    String(
+                        fin.getDate())
+                    .padStart(2, "0");
+
+                const hours =
+                    String(
+                        fin.getHours())
+                    .padStart(2, "0");
+
+                const minutes =
+                    String(
+                        fin.getMinutes())
+                    .padStart(2, "0");
+
+                fechaFin.value =
+                    `${year}-${month}-${day}T${hours}:${minutes}`;
+            }
+
+            if (cliente) {
+
+                cliente.addEventListener(
+                    "change",
+                    filtrarVehiculos);
+
+                filtrarVehiculos();
+            }
+
+            if (servicio) {
+
+                servicio.addEventListener(
+                    "change",
+                    calcularFechaFin);
+            }
+
+            if (fechaInicio) {
+
+                fechaInicio.addEventListener(
+                    "change",
+                    calcularFechaFin);
+
+                fechaInicio.addEventListener(
+                    "input",
+                    calcularFechaFin);
+            }
+
+            calcularFechaFin();
         });
+
     </script>
 }

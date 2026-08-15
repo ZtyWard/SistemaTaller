@@ -54,8 +54,34 @@ public class CitaService : ICitaService
     public async Task<(bool Exitoso, string Mensaje)>
         CrearAsync(CitaFormularioDto dto)
     {
+        var servicio =
+            await _servicioRepository
+                .ObtenerPorIdAsync(dto.IdServicio);
+
+        if (servicio == null ||
+            !servicio.Activo)
+        {
+            return (
+                false,
+                "El servicio seleccionado no existe o está inactivo.");
+        }
+
+        if (!servicio.DuracionEstimada.HasValue ||
+            servicio.DuracionEstimada.Value <= 0)
+        {
+            return (
+                false,
+                "El servicio seleccionado no tiene una duración configurada.");
+        }
+
+        dto.FechaFin =
+            dto.FechaInicio.AddMinutes(
+                servicio.DuracionEstimada.Value);
+
         var validacion =
-            await ValidarDatosAsync(dto);
+            await ValidarDatosAsync(
+                dto,
+                servicio);
 
         if (!validacion.Exitoso)
             return validacion;
@@ -76,15 +102,28 @@ public class CitaService : ICitaService
 
         var cita = new Cita
         {
+            NumeroCita = GenerarNumeroCita(),
+
             IdCliente = dto.IdCliente,
+
             IdVehiculo = dto.IdVehiculo,
+
             IdServicio = dto.IdServicio,
+
             IdEmpleado = dto.IdEmpleado,
+
             Area = Normalizar(dto.Area),
+
             FechaInicio = dto.FechaInicio,
+
             FechaFin = dto.FechaFin,
-            Estado = dto.Estado,
-            Observaciones = Normalizar(dto.Observaciones)
+
+            Estado = string.IsNullOrWhiteSpace(dto.Estado)
+                ? "Programada"
+                : dto.Estado,
+
+            Observaciones =
+                Normalizar(dto.Observaciones)
         };
 
         await _citaRepository.AgregarAsync(cita);
@@ -93,7 +132,7 @@ public class CitaService : ICitaService
 
         return (
             true,
-            "Cita creada correctamente.");
+            $"Cita {cita.NumeroCita} creada correctamente.");
     }
 
     public async Task<(bool Exitoso, string Mensaje)>
@@ -111,8 +150,34 @@ public class CitaService : ICitaService
                 "La cita no existe.");
         }
 
+        var servicio =
+            await _servicioRepository
+                .ObtenerPorIdAsync(dto.IdServicio);
+
+        if (servicio == null ||
+            !servicio.Activo)
+        {
+            return (
+                false,
+                "El servicio seleccionado no existe o está inactivo.");
+        }
+
+        if (!servicio.DuracionEstimada.HasValue ||
+            servicio.DuracionEstimada.Value <= 0)
+        {
+            return (
+                false,
+                "El servicio seleccionado no tiene una duración configurada.");
+        }
+
+        dto.FechaFin =
+            dto.FechaInicio.AddMinutes(
+                servicio.DuracionEstimada.Value);
+
         var validacion =
-            await ValidarDatosAsync(dto);
+            await ValidarDatosAsync(
+                dto,
+                servicio);
 
         if (!validacion.Exitoso)
             return validacion;
@@ -132,14 +197,32 @@ public class CitaService : ICitaService
                 "Existe un conflicto de horario con el mecánico o área seleccionada.");
         }
 
-        cita.IdCliente = dto.IdCliente;
-        cita.IdVehiculo = dto.IdVehiculo;
-        cita.IdServicio = dto.IdServicio;
-        cita.IdEmpleado = dto.IdEmpleado;
-        cita.Area = Normalizar(dto.Area);
-        cita.FechaInicio = dto.FechaInicio;
-        cita.FechaFin = dto.FechaFin;
-        cita.Estado = dto.Estado;
+        cita.IdCliente =
+            dto.IdCliente;
+
+        cita.IdVehiculo =
+            dto.IdVehiculo;
+
+        cita.IdServicio =
+            dto.IdServicio;
+
+        cita.IdEmpleado =
+            dto.IdEmpleado;
+
+        cita.Area =
+            Normalizar(dto.Area);
+
+        cita.FechaInicio =
+            dto.FechaInicio;
+
+        cita.FechaFin =
+            dto.FechaFin;
+
+        cita.Estado =
+            string.IsNullOrWhiteSpace(dto.Estado)
+                ? "Programada"
+                : dto.Estado;
+
         cita.Observaciones =
             Normalizar(dto.Observaciones);
 
@@ -149,14 +232,15 @@ public class CitaService : ICitaService
 
         return (
             true,
-            "Cita actualizada correctamente.");
+            $"Cita {cita.NumeroCita} actualizada correctamente.");
     }
 
     public async Task<(bool Exitoso, string Mensaje)>
         CancelarAsync(int id)
     {
         var cita =
-            await _citaRepository.ObtenerPorIdAsync(id);
+            await _citaRepository
+                .ObtenerPorIdAsync(id);
 
         if (cita == null)
         {
@@ -185,8 +269,23 @@ public class CitaService : ICitaService
 
     private async Task<(bool Exitoso, string Mensaje)>
         ValidarDatosAsync(
-            CitaFormularioDto dto)
+            CitaFormularioDto dto,
+            Datos.Models.Servicio servicio)
     {
+        if (dto.FechaInicio == default)
+        {
+            return (
+                false,
+                "Debe indicar la fecha y hora de inicio.");
+        }
+
+        if (dto.FechaInicio < DateTime.Now.AddMinutes(-5))
+        {
+            return (
+                false,
+                "La cita no puede programarse en una fecha pasada.");
+        }
+
         if (dto.FechaFin <= dto.FechaInicio)
         {
             return (
@@ -233,10 +332,6 @@ public class CitaService : ICitaService
                 "El vehículo seleccionado no pertenece al cliente indicado.");
         }
 
-        var servicio =
-            await _servicioRepository
-                .ObtenerPorIdAsync(dto.IdServicio);
-
         if (servicio == null ||
             !servicio.Activo)
         {
@@ -261,14 +356,9 @@ public class CitaService : ICitaService
             }
         }
 
-        if (dto.FechaInicio < DateTime.Now.AddMinutes(-5))
-        {
-            return (
-                false,
-                "La cita no puede programarse en una fecha pasada.");
-        }
-
-        return (true, string.Empty);
+        return (
+            true,
+            string.Empty);
     }
 
     private static CitaDto MapearDto(
@@ -286,23 +376,68 @@ public class CitaService : ICitaService
 
         return new CitaDto
         {
-            IdCita = cita.IdCita,
-            IdCliente = cita.IdCliente,
-            IdVehiculo = cita.IdVehiculo,
-            IdServicio = cita.IdServicio,
-            IdEmpleado = cita.IdEmpleado,
-            Area = cita.Area,
-            FechaInicio = cita.FechaInicio,
-            FechaFin = cita.FechaFin,
-            Estado = cita.Estado,
-            Observaciones = cita.Observaciones,
-            ClienteNombre = clienteNombre,
+            IdCita =
+                cita.IdCita,
+
+            NumeroCita =
+                cita.NumeroCita,
+
+            IdCliente =
+                cita.IdCliente,
+
+            IdVehiculo =
+                cita.IdVehiculo,
+
+            IdServicio =
+                cita.IdServicio,
+
+            IdEmpleado =
+                cita.IdEmpleado,
+
+            Area =
+                cita.Area,
+
+            FechaInicio =
+                cita.FechaInicio,
+
+            FechaFin =
+                cita.FechaFin,
+
+            Estado =
+                cita.Estado,
+
+            Observaciones =
+                cita.Observaciones,
+
+            ClienteNombre =
+                clienteNombre,
+
             VehiculoPlaca =
-                cita.Vehiculo?.Placa ?? string.Empty,
+                cita.Vehiculo?.Placa
+                ?? string.Empty,
+
             ServicioNombre =
-                cita.Servicio?.Nombre ?? string.Empty,
-            EmpleadoNombre = empleadoNombre
+                cita.Servicio?.Nombre
+                ?? string.Empty,
+
+            EmpleadoNombre =
+                empleadoNombre
         };
+    }
+
+    private static string GenerarNumeroCita()
+    {
+        var fecha =
+            DateTime.Now.ToString(
+                "yyyyMMddHHmmssfff");
+
+        var codigo =
+            Guid.NewGuid()
+                .ToString("N")
+                .Substring(0, 6)
+                .ToUpperInvariant();
+
+        return $"CIT-{fecha}-{codigo}";
     }
 
     private static string? Normalizar(

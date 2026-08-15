@@ -1,0 +1,334 @@
+﻿@model Negocios.DTOs.EntregaGuardarDto
+
+@{
+    ViewData["Title"] = "Registrar entrega";
+
+    var ordenes =
+        ViewBag.OrdenesFinalizadas
+        as IEnumerable<Negocios.DTOs.OrdenTrabajoDto>
+        ?? Enumerable.Empty<Negocios.DTOs.OrdenTrabajoDto>();
+}
+
+<div class="container py-4">
+
+    <div class="mb-4">
+
+        <span class="text-muted small fw-bold">
+            AXIS · ENTREGA
+        </span>
+
+        <h1 class="fw-bold mb-1">
+            Registrar entrega
+        </h1>
+
+        <p class="text-muted">
+            Registra la salida del vehículo del taller.
+        </p>
+
+    </div>
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-4">
+
+            <form asp-action="Create"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger">
+                </div>
+
+                <div class="row g-4">
+
+                    <!-- OT -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="IdOrdenTrabajo"
+                               class="form-label fw-semibold">
+                            Orden de trabajo
+                        </label>
+
+                        <select asp-for="IdOrdenTrabajo"
+                                class="form-select">
+
+                            <option value="">
+                                Seleccione una OT finalizada
+                            </option>
+
+                            @foreach (var orden in ordenes)
+                            {
+                                <option value="@orden.IdOrdenTrabajo">
+
+                                    OT #@orden.IdOrdenTrabajo
+                                    —
+                                    @orden.Placa
+                                    —
+                                    @orden.ClienteNombre
+
+                                </option>
+                            }
+
+                        </select>
+
+                        <small class="text-muted">
+                            Solo aparecen órdenes de trabajo finalizadas
+                            y sin una entrega registrada.
+                        </small>
+
+                        <span asp-validation-for="IdOrdenTrabajo"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <!-- KILOMETRAJE -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="KilometrajeSalida"
+                               class="form-label fw-semibold">
+                            Kilometraje de salida
+                        </label>
+
+                        <input asp-for="KilometrajeSalida"
+                               type="number"
+                               min="0"
+                               class="form-control"
+                               placeholder="Ej. 85420" />
+
+                        <span asp-validation-for="KilometrajeSalida"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <!-- PERSONA -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="PersonaRecibe"
+                               class="form-label fw-semibold">
+                            Persona que recibe
+                        </label>
+
+                        <input asp-for="PersonaRecibe"
+                               class="form-control"
+                               placeholder="Nombre completo" />
+
+                        <span asp-validation-for="PersonaRecibe"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <!-- ESTADO PAGO -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="EstadoPago"
+                               class="form-label fw-semibold">
+                            Estado de pago
+                        </label>
+
+                        <select asp-for="EstadoPago"
+                                class="form-select">
+
+                            <option value="Pendiente">
+                                Pendiente
+                            </option>
+
+                            <option value="Parcial">
+                                Parcial
+                            </option>
+
+                            <option value="Pagado">
+                                Pagado
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="EstadoPago"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <!-- GARANTÍA -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-check form-switch mt-4">
+
+                            <input asp-for="TieneGarantia"
+                                   class="form-check-input"
+                                   type="checkbox"
+                                   id="TieneGarantia" />
+
+                            <label asp-for="TieneGarantia"
+                                   class="form-check-label fw-semibold">
+                                El servicio tiene garantía
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <!-- ACEPTACIÓN -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-check form-switch mt-4">
+
+                            <input asp-for="Aceptacion"
+                                   class="form-check-input"
+                                   type="checkbox"
+                                   id="Aceptacion" />
+
+                            <label asp-for="Aceptacion"
+                                   class="form-check-label fw-semibold">
+                                Cliente acepta la entrega
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <!-- FIRMA -->
+
+                    <div class="col-md-6"
+                         id="firmaContainer">
+
+                        <label asp-for="FirmaNombre"
+                               class="form-label fw-semibold">
+                            Nombre de quien acepta
+                        </label>
+
+                        <input asp-for="FirmaNombre"
+                               class="form-control"
+                               placeholder="Nombre completo" />
+
+                        <span asp-validation-for="FirmaNombre"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <!-- OBSERVACIONES -->
+
+                    <div class="col-12">
+
+                        <label asp-for="Observaciones"
+                               class="form-label fw-semibold">
+                            Observaciones
+                        </label>
+
+                        <textarea asp-for="Observaciones"
+                                  class="form-control"
+                                  rows="4"
+                                  placeholder="Estado del vehículo al momento de la entrega...">
+                        </textarea>
+
+                        <span asp-validation-for="Observaciones"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <!-- RECOMENDACIONES -->
+
+                    <div class="col-12">
+
+                        <label asp-for="Recomendaciones"
+                               class="form-label fw-semibold">
+                            Recomendaciones
+                        </label>
+
+                        <textarea asp-for="Recomendaciones"
+                                  class="form-control"
+                                  rows="4"
+                                  placeholder="Mantenimientos o recomendaciones para el cliente...">
+                        </textarea>
+
+                        <span asp-validation-for="Recomendaciones"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <hr class="my-4" />
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        <i class="bi bi-check-lg me-1"></i>
+
+                        Registrar entrega
+
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary">
+
+                        Cancelar
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const aceptacion =
+                    document.getElementById(
+                        "Aceptacion");
+
+                const firmaContainer =
+                    document.getElementById(
+                        "firmaContainer");
+
+                function actualizarFirma() {
+
+                    if (aceptacion.checked) {
+
+                        firmaContainer.style.display =
+                            "";
+
+                    }
+                    else {
+
+                        firmaContainer.style.display =
+                            "none";
+                    }
+                }
+
+                aceptacion.addEventListener(
+                    "change",
+                    actualizarFirma);
+
+                actualizarFirma();
+            });
+
+    </script>
+}

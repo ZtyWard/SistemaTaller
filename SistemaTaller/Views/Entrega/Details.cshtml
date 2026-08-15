@@ -1,0 +1,277 @@
+﻿@model Negocios.DTOs.EntregaDto
+
+@{
+    ViewData["Title"] = "Detalle de entrega";
+}
+
+<div class="container py-4">
+
+    <div class="mb-4">
+
+        <span class="text-muted small fw-bold">
+            AXIS · ENTREGA
+        </span>
+
+        <h1 class="fw-bold mb-1">
+            Detalle de entrega
+        </h1>
+
+        <p class="text-muted">
+            Información completa de la salida del vehículo.
+        </p>
+
+    </div>
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-4">
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small">
+                        Orden de trabajo
+                    </div>
+
+                    <div class="fs-5 fw-semibold">
+                        OT #@Model.IdOrdenTrabajo
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small">
+                        Vehículo
+                    </div>
+
+                    <div class="fs-5 fw-semibold">
+                        @Model.Placa
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small">
+                        Cliente
+                    </div>
+
+                    <div class="fs-5 fw-semibold">
+                        @Model.ClienteNombre
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small">
+                        Fecha de entrega
+                    </div>
+
+                    <div>
+                        @Model.FechaEntrega.ToLocalTime()
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small">
+                        Kilometraje de salida
+                    </div>
+
+                    <div>
+                        @Model.KilometrajeSalida.ToString("N0") km
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small">
+                        Persona que recibe
+                    </div>
+
+                    <div>
+                        @Model.PersonaRecibe
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small">
+                        Estado de pago
+                    </div>
+
+                    <div>
+
+                        @if (Model.EstadoPago == "Pagado")
+                        {
+                            <span class="badge text-bg-success">
+                                Pagado
+                            </span>
+                        }
+                        else if (Model.EstadoPago == "Parcial")
+                        {
+                            <span class="badge text-bg-warning">
+                                Parcial
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge text-bg-danger">
+                                Pendiente
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small">
+                        Garantía
+                    </div>
+
+                    <div>
+
+                        @if (Model.TieneGarantia)
+                        {
+                            <span class="badge text-bg-info">
+                                Sí
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                No
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="text-muted small">
+                        Aceptación
+                    </div>
+
+                    <div>
+
+                        @if (Model.Aceptacion)
+                        {
+                            <span class="badge text-bg-success">
+                                Aceptada
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge text-bg-secondary">
+                                Pendiente
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(Model.FirmaNombre))
+                {
+                    <div class="col-md-6">
+
+                        <div class="text-muted small">
+                            Nombre de aceptación
+                        </div>
+
+                        <div>
+                            @Model.FirmaNombre
+                        </div>
+
+                    </div>
+                }
+
+                @if (Model.FechaAceptacion.HasValue)
+                {
+                    <div class="col-md-6">
+
+                        <div class="text-muted small">
+                            Fecha de aceptación
+                        </div>
+
+                        <div>
+                            @Model.FechaAceptacion.Value.ToLocalTime()
+                        </div>
+
+                    </div>
+                }
+
+                <div class="col-12">
+
+                    <div class="text-muted small mb-1">
+                        Observaciones
+                    </div>
+
+                    <div class="p-3 bg-light rounded">
+
+                        @(string.IsNullOrWhiteSpace(
+                                                Model.Observaciones)
+                                                ? "Sin observaciones."
+                                                : Model.Observaciones)
+
+                    </div>
+
+                </div>
+
+                <div class="col-12">
+
+                    <div class="text-muted small mb-1">
+                        Recomendaciones
+                    </div>
+
+                    <div class="p-3 bg-light rounded">
+
+                        @(string.IsNullOrWhiteSpace(
+                                                Model.Recomendaciones)
+                                                ? "Sin recomendaciones."
+                                                : Model.Recomendaciones)
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr class="my-4" />
+
+            <div class="d-flex gap-2">
+
+                <a asp-action="Edit"
+                   asp-route-id="@Model.IdEntrega"
+                   class="btn btn-primary">
+
+                    <i class="bi bi-pencil me-1"></i>
+
+                    Editar
+
+                </a>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+
+                    Volver
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

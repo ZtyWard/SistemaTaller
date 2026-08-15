@@ -72,11 +72,27 @@ builder.Services.AddScoped<IOrdenTrabajoRepository, OrdenTrabajoRepository>();
 builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
 builder.Services.AddScoped<IServicioRepository, ServicioRepository>();
 
+// =====================================================
 // CITAS
+// =====================================================
 
 builder.Services.AddScoped<ICitaRepository, CitaRepository>();
 
-// Inventario, compras, ventas y facturación
+// =====================================================
+// ENTREGA DE VEHÍCULO
+// =====================================================
+
+builder.Services.AddScoped<IEntregaRepository, EntregaRepository>();
+
+// =====================================================
+// GARANTÍAS
+// =====================================================
+
+builder.Services.AddScoped<IGarantiaRepository, GarantiaRepository>();
+
+// =====================================================
+// INVENTARIO, COMPRAS, VENTAS Y FACTURACIÓN
+// =====================================================
 
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<IMovimientoInventarioRepository, MovimientoInventarioRepository>();
@@ -85,11 +101,15 @@ builder.Services.AddScoped<ICompraRepository, CompraRepository>();
 builder.Services.AddScoped<IVentaRepository, VentaRepository>();
 builder.Services.AddScoped<IFacturaRepository, FacturaRepository>();
 
+// =====================================================
 // PAGOS
+// =====================================================
 
 builder.Services.AddScoped<IPagoRepository, PagoRepository>();
 
-// Catálogos
+// =====================================================
+// CATÁLOGOS
+// =====================================================
 
 builder.Services.AddScoped<ICategoriaProductoRepository, CategoriaProductoRepository>();
 builder.Services.AddScoped<IMarcaRepository, MarcaRepository>();
@@ -114,11 +134,27 @@ builder.Services.AddScoped<IOrdenTrabajoService, OrdenTrabajoService>();
 builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
 builder.Services.AddScoped<IServicioService, ServicioService>();
 
+// =====================================================
 // CITAS
+// =====================================================
 
 builder.Services.AddScoped<ICitaService, CitaService>();
 
-// Inventario, compras, ventas y facturación
+// =====================================================
+// ENTREGA DE VEHÍCULO
+// =====================================================
+
+builder.Services.AddScoped<IEntregaService, EntregaService>();
+
+// =====================================================
+// GARANTÍAS
+// =====================================================
+
+builder.Services.AddScoped<IGarantiaService, GarantiaService>();
+
+// =====================================================
+// INVENTARIO, COMPRAS, VENTAS Y FACTURACIÓN
+// =====================================================
 
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IMovimientoInventarioService, MovimientoInventarioService>();
@@ -127,11 +163,15 @@ builder.Services.AddScoped<ICompraService, CompraService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<IFacturaService, FacturaService>();
 
+// =====================================================
 // PAGOS
+// =====================================================
 
 builder.Services.AddScoped<IPagoService, PagoService>();
 
-// Catálogos
+// =====================================================
+// CATÁLOGOS
+// =====================================================
 
 builder.Services.AddScoped<ICategoriaProductoService, CategoriaProductoService>();
 builder.Services.AddScoped<IMarcaService, MarcaService>();
