@@ -45,13 +45,11 @@
 
     <div class="axis-internal-app">
 
-
         <!-- =====================================================
              SIDEBAR
              ===================================================== -->
 
         <aside class="axis-internal-sidebar">
-
 
             <!-- BRAND -->
 
@@ -71,13 +69,41 @@
 
                 </a>
 
-
             </div>
 
 
-            <!-- NAVIGATION -->
+            <!-- =================================================
+                 NAVIGATION
+                 ================================================= -->
 
             <nav class="axis-internal-navigation">
+
+
+                <!-- =================================================
+                     INICIO
+                     ================================================= -->
+
+                <div class="axis-internal-section">
+
+                    <span class="axis-internal-section-title">
+                        INICIO
+                    </span>
+
+                    <a asp-controller="Dashboard"
+                       asp-action="Index"
+                       class="axis-internal-nav-item @(EsModulo("Dashboard") ? "active" : "")">
+
+                        <span class="axis-internal-nav-icon">
+                            ◉
+                        </span>
+
+                        <span>
+                            Dashboard
+                        </span>
+
+                    </a>
+
+                </div>
 
 
                 <!-- =================================================
@@ -89,6 +115,21 @@
                     <span class="axis-internal-section-title">
                         TALLER
                     </span>
+
+
+                    <a asp-controller="Cita"
+                       asp-action="Index"
+                       class="axis-internal-nav-item @(EsModulo("Cita") ? "active" : "")">
+
+                        <span class="axis-internal-nav-icon">
+                            ◷
+                        </span>
+
+                        <span>
+                            Citas
+                        </span>
+
+                    </a>
 
 
                     <a asp-controller="Recepcion"
@@ -150,6 +191,21 @@
 
                     </a>
 
+
+                    <a asp-controller="Entrega"
+                       asp-action="Index"
+                       class="axis-internal-nav-item @(EsModulo("Entrega") ? "active" : "")">
+
+                        <span class="axis-internal-nav-icon">
+                            ↗
+                        </span>
+
+                        <span>
+                            Entregas
+                        </span>
+
+                    </a>
+
                 </div>
 
 
@@ -197,13 +253,13 @@
 
 
                 <!-- =================================================
-                     EMPLEADOS Y SERVICIOS
+                     PERSONAL Y SERVICIOS
                      ================================================= -->
 
                 <div class="axis-internal-section">
 
                     <span class="axis-internal-section-title">
-                        EMPLEADOS Y SERVICIOS
+                        PERSONAL Y SERVICIOS
                     </span>
 
 
@@ -313,11 +369,170 @@
                        class="axis-internal-nav-item @(EsModulo("Compra") ? "active" : "")">
 
                         <span class="axis-internal-nav-icon">
-                            ▣
+                            🛒
                         </span>
 
                         <span>
                             Compras
+                        </span>
+
+                    </a>
+
+
+                    <a asp-controller="Venta"
+                       asp-action="Index"
+                       class="axis-internal-nav-item @(EsModulo("Venta") ? "active" : "")">
+
+                        <span class="axis-internal-nav-icon">
+                            $
+                        </span>
+
+                        <span>
+                            Ventas
+                        </span>
+
+                    </a>
+
+
+                    <a asp-controller="Factura"
+                       asp-action="Index"
+                       class="axis-internal-nav-item @(EsModulo("Factura") ? "active" : "")">
+
+                        <span class="axis-internal-nav-icon">
+                            ▤
+                        </span>
+
+                        <span>
+                            Facturación
+                        </span>
+
+                    </a>
+
+
+                    <a asp-controller="Pago"
+                       asp-action="Index"
+                       class="axis-internal-nav-item @(EsModulo("Pago") ? "active" : "")">
+
+                        <span class="axis-internal-nav-icon">
+                            ◉
+                        </span>
+
+                        <span>
+                            Pagos
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+                <!-- =================================================
+                     POSTVENTA
+                     ================================================= -->
+
+                <div class="axis-internal-section">
+
+                    <span class="axis-internal-section-title">
+                        POSTVENTA
+                    </span>
+
+
+                    <a asp-controller="Garantia"
+                       asp-action="Index"
+                       class="axis-internal-nav-item @(EsModulo("Garantia") ? "active" : "")">
+
+                        <span class="axis-internal-nav-icon">
+                            ◇
+                        </span>
+
+                        <span>
+                            Garantías
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+                <!-- =================================================
+                     REPORTES
+                     ================================================= -->
+
+                <div class="axis-internal-section">
+
+                    <span class="axis-internal-section-title">
+                        ANÁLISIS
+                    </span>
+
+
+                    <a asp-controller="Reportes"
+                       asp-action="Index"
+                       class="axis-internal-nav-item @(EsModulo("Reportes") ? "active" : "")">
+
+                        <span class="axis-internal-nav-icon">
+                            ◒
+                        </span>
+
+                        <span>
+                            Reportes
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+                <!-- =================================================
+                     ADMINISTRACIÓN
+                     ================================================= -->
+
+                <div class="axis-internal-section">
+
+                    <span class="axis-internal-section-title">
+                        ADMINISTRACIÓN
+                    </span>
+
+
+                    <a asp-controller="Usuario"
+                       asp-action="Index"
+                       class="axis-internal-nav-item @(EsModulo("Usuario") ? "active" : "")">
+
+                        <span class="axis-internal-nav-icon">
+                            ♙
+                        </span>
+
+                        <span>
+                            Usuarios
+                        </span>
+
+                    </a>
+
+
+                    <a asp-controller="Rol"
+                       asp-action="Index"
+                       class="axis-internal-nav-item @(EsModulo("Rol") ? "active" : "")">
+
+                        <span class="axis-internal-nav-icon">
+                            ◈
+                        </span>
+
+                        <span>
+                            Roles y permisos
+                        </span>
+
+                    </a>
+
+
+                    <a asp-controller="Auditoria"
+                       asp-action="Index"
+                       class="axis-internal-nav-item @(EsModulo("Auditoria") ? "active" : "")">
+
+                        <span class="axis-internal-nav-icon">
+                            ◌
+                        </span>
+
+                        <span>
+                            Auditoría
                         </span>
 
                     </a>
@@ -345,7 +560,7 @@
                         </span>
 
                         <span>
-                            Productos
+                            Catálogo de productos
                         </span>
 
                     </a>
@@ -360,7 +575,7 @@
                         </span>
 
                         <span>
-                            Vehículos
+                            Catálogo de vehículos
                         </span>
 
                     </a>
@@ -375,7 +590,7 @@
                         </span>
 
                         <span>
-                            Personal
+                            Catálogo de personal
                         </span>
 
                     </a>
@@ -393,9 +608,7 @@
             <div class="axis-internal-user">
 
                 <div class="axis-user-avatar">
-
                     @Inicial
-
                 </div>
 
 
@@ -428,7 +641,6 @@
 
             <header class="axis-internal-topbar">
 
-
                 <a asp-controller="Home"
                    asp-action="Index"
                    class="axis-internal-back">
@@ -450,7 +662,6 @@
 
 
                 <div class="axis-internal-actions">
-
 
                     <button type="button"
                             class="axis-internal-action"
@@ -476,7 +687,6 @@
 
                     </span>
 
-
                 </div>
 
             </header>
@@ -500,6 +710,7 @@
          JAVASCRIPT
          ===================================================== -->
     <!-- jQuery DEBE cargarse antes de jquery.validate -->
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
     <script src="~/js/site.js"
@@ -508,47 +719,6 @@
     @await RenderSectionAsync(
         "Scripts",
         required: false)
-
-
-    <script>
-
-        document.addEventListener(
-            "DOMContentLoaded",
-            function () {
-
-                const button =
-                    document.getElementById(
-                        "axisInternalCollapse"
-                    );
-
-                if (!button)
-                    return;
-
-                button.addEventListener(
-                    "click",
-                    function () {
-
-                        /*
-                         * La estructura visual del
-                         * sidebar ya está preparada
-                         * en site.css.
-                         *
-                         * Por ahora dejamos el botón
-                         * preparado para la siguiente
-                         * fase de interacción.
-                         */
-
-                        button.classList.toggle(
-                            "is-active"
-                        );
-
-                    }
-                );
-
-            }
-        );
-
-    </script>
 
 </body>
 

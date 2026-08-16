@@ -1,0 +1,2148 @@
+﻿/* =========================================================
+   AXIS — PHASE 3 VISUAL SYSTEM
+   Asphalt / iOS / Premium Minimal
+   ========================================================= */
+
+
+/* =========================================================
+   TOKENS
+   ========================================================= */
+
+:root {
+    /* ---------- BACKGROUNDS ---------- */
+
+    --axis-bg-deep: #070708;
+    --axis-bg: #0b0b0d;
+    --axis-surface: #111114;
+    --axis-surface-2: #16161a;
+    --axis-surface-3: #1b1b20;
+    /* ---------- TEXT ---------- */
+
+    --axis-text-primary: #f5f5f7;
+    --axis-text-secondary: #b7b7bd;
+    --axis-text-muted: #77777f;
+    /* ---------- ACCENT ---------- */
+
+    --axis-accent: #c9bdd6;
+    --axis-accent-soft: rgba(201,189,214,.14);
+    --axis-accent-glow: rgba(201,189,214,.20);
+    /* ---------- STATUS ---------- */
+
+    --axis-success: #82d6a4;
+    --axis-warning: #e5c681;
+    --axis-danger: #e58d94;
+    --axis-info: #91bde8;
+    /* ---------- BORDERS ---------- */
+
+    --axis-border-dark: rgba(255,255,255,.055);
+    --axis-border: rgba(255,255,255,.09);
+    --axis-border-strong: rgba(255,255,255,.15);
+    /* ---------- SHADOWS ---------- */
+
+    --axis-shadow-soft: 0 18px 50px rgba(0,0,0,.28);
+    --axis-shadow-card: 0 12px 35px rgba(0,0,0,.22);
+    --axis-shadow-glow: 0 0 35px rgba(201,189,214,.08);
+    /* ---------- RADIUS ---------- */
+
+    --axis-radius-sm: 10px;
+    --axis-radius: 16px;
+    --axis-radius-lg: 22px;
+    --axis-radius-xl: 28px;
+    /* ---------- MOTION ---------- */
+
+    --axis-ease: cubic-bezier(.22,1,.36,1);
+    --axis-transition: .42s var(--axis-ease);
+    --axis-transition-fast: .22s var(--axis-ease);
+}
+
+
+/* =========================================================
+   GLOBAL FOUNDATION
+   ========================================================= */
+
+html,
+body {
+    background: radial-gradient( circle at 12% 10%, rgba(201,189,214,.075), transparent 30% ), radial-gradient( circle at 86% 82%, rgba(125,145,170,.045), transparent 32% ), radial-gradient( circle at 52% 45%, rgba(255,255,255,.018), transparent 42% ), linear-gradient( 145deg, #070708 0%, #0b0b0d 45%, #0e0e11 100% );
+    color: var(--axis-text-primary);
+}
+
+
+/* =========================================================
+   INTERNAL APPLICATION SHELL
+   ========================================================= */
+
+.axis-internal-app {
+    min-height: 100vh;
+    background: radial-gradient( circle at 8% 8%, rgba(201,189,214,.07), transparent 28% ), radial-gradient( circle at 90% 90%, rgba(90,120,145,.04), transparent 32% ), linear-gradient( 135deg, #070708 0%, #0b0b0d 50%, #101014 100% );
+    color: var(--axis-text-primary);
+}
+
+
+/* =========================================================
+   SIDEBAR — COLLAPSED BY DEFAULT
+   ========================================================= */
+
+.axis-internal-sidebar {
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    bottom: 14px;
+    width: 76px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: linear-gradient( 180deg, rgba(22,22,25,.97), rgba(12,12,14,.985) );
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 24px;
+    box-shadow: 0 24px 70px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.035);
+    backdrop-filter: blur(24px) saturate(120%);
+    -webkit-backdrop-filter: blur(24px) saturate(120%);
+    z-index: 2000;
+    transition: width var(--axis-transition), box-shadow var(--axis-transition);
+}
+
+
+    /* =========================================================
+   SIDEBAR HOVER / EXPANDED
+   ========================================================= */
+
+    .axis-internal-sidebar:hover {
+        width: 268px;
+        box-shadow: 0 28px 85px rgba(0,0,0,.58), 0 0 45px rgba(201,189,214,.045), inset 0 1px 0 rgba(255,255,255,.05);
+    }
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.axis-internal-brand {
+    min-height: 86px;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    flex-shrink: 0;
+}
+
+
+.axis-internal-logo {
+    display: flex;
+    flex-direction: column;
+    min-width: 36px;
+    color: var(--axis-text-primary);
+    text-decoration: none;
+    transition: transform var(--axis-transition-fast), filter var(--axis-transition-fast);
+}
+
+
+    .axis-internal-logo:hover {
+        transform: translateY(-1px);
+        filter: drop-shadow( 0 0 12px rgba(255,255,255,.13) );
+    }
+
+
+.axis-internal-logo-name {
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+
+.axis-internal-logo-subtitle {
+    margin-top: 7px;
+    color: rgba(255,255,255,.38);
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-5px);
+    transition: opacity var(--axis-transition-fast), transform var(--axis-transition-fast);
+}
+
+
+.axis-internal-sidebar:hover
+.axis-internal-logo-subtitle {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.axis-internal-navigation {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px 10px 16px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.12) transparent;
+}
+
+
+    .axis-internal-navigation::-webkit-scrollbar {
+        width: 4px;
+    }
+
+
+    .axis-internal-navigation::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,.12);
+        border-radius: 999px;
+    }
+
+
+/* =========================================================
+   SECTIONS
+   ========================================================= */
+
+.axis-internal-section {
+    margin-bottom: 18px;
+}
+
+
+.axis-internal-section-title {
+    display: block;
+    padding: 0 11px 8px;
+    color: rgba(255,255,255,.30);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1.9px;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-5px);
+    transition: opacity var(--axis-transition-fast), transform var(--axis-transition-fast);
+}
+
+
+.axis-internal-sidebar:hover
+.axis-internal-section-title {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+
+/* =========================================================
+   NAV ITEM
+   ========================================================= */
+
+.axis-internal-nav-item {
+    position: relative;
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin: 3px 0;
+    padding: 0 12px;
+    border: 1px solid transparent;
+    border-radius: 13px;
+    color: rgba(245,245,247,.68);
+    text-decoration: none;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: color var(--axis-transition-fast), background var(--axis-transition-fast), border-color var(--axis-transition-fast), transform var(--axis-transition-fast), box-shadow var(--axis-transition-fast);
+}
+
+
+    .axis-internal-nav-item:hover {
+        color: var(--axis-text-primary);
+        background: rgba(255,255,255,.045);
+        border-color: rgba(255,255,255,.07);
+        transform: translateX(2px);
+    }
+
+
+    .axis-internal-nav-item.active {
+        color: #ffffff;
+        background: linear-gradient( 100deg, rgba(201,189,214,.19), rgba(201,189,214,.055) );
+        border-color: rgba(201,189,214,.14);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.035), 0 8px 25px rgba(0,0,0,.16);
+    }
+
+
+        .axis-internal-nav-item.active::before {
+            content: "";
+            position: absolute;
+            left: -1px;
+            top: 9px;
+            bottom: 9px;
+            width: 2px;
+            border-radius: 999px;
+            background: var(--axis-accent);
+            box-shadow: 0 0 12px var(--axis-accent-glow);
+        }
+
+
+/* =========================================================
+   NAV ICON
+   ========================================================= */
+
+.axis-internal-nav-icon {
+    width: 28px;
+    min-width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border-radius: 9px;
+    color: rgba(255,255,255,.58);
+    font-size: 14px;
+    transition: background var(--axis-transition-fast), color var(--axis-transition-fast), transform var(--axis-transition-fast);
+}
+
+
+.axis-internal-nav-item:hover
+.axis-internal-nav-icon {
+    color: rgba(255,255,255,.88);
+    background: rgba(255,255,255,.055);
+    transform: scale(1.04);
+}
+
+
+.axis-internal-nav-item.active
+.axis-internal-nav-icon {
+    color: var(--axis-accent);
+    background: rgba(201,189,214,.10);
+}
+
+
+/* =========================================================
+   NAV TEXT
+   ========================================================= */
+
+.axis-internal-nav-item > span:last-child {
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity var(--axis-transition-fast), transform var(--axis-transition-fast);
+}
+
+
+.axis-internal-sidebar:hover
+.axis-internal-nav-item > span:last-child {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+
+/* =========================================================
+   USER AREA
+   ========================================================= */
+
+.axis-internal-user {
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 10px 10px;
+    padding: 9px;
+    border: 1px solid rgba(255,255,255,.065);
+    border-radius: 15px;
+    background: rgba(255,255,255,.025);
+    flex-shrink: 0;
+    transition: background var(--axis-transition-fast), border-color var(--axis-transition-fast);
+}
+
+
+    .axis-internal-user:hover {
+        background: rgba(255,255,255,.045);
+        border-color: rgba(255,255,255,.10);
+    }
+
+
+.axis-user-avatar {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.28);
+    background: radial-gradient( circle at 30% 25%, #56535d, #222228 68% );
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    box-shadow: 0 0 18px rgba(255,255,255,.035);
+}
+
+
+.axis-internal-user-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity var(--axis-transition-fast), transform var(--axis-transition-fast);
+}
+
+
+.axis-internal-sidebar:hover
+.axis-internal-user-info {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+
+.axis-internal-user-info strong {
+    overflow: hidden;
+    color: var(--axis-text-primary);
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.axis-internal-user-info span {
+    margin-top: 3px;
+    color: var(--axis-text-muted);
+    font-size: 8px;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.axis-internal-content {
+    min-height: 100vh;
+    margin-left: 76px;
+    width: calc(100% - 76px);
+    transition: margin-left var(--axis-transition), width var(--axis-transition);
+}
+
+
+.axis-internal-app:has(.axis-internal-sidebar:hover)
+.axis-internal-content {
+    margin-left: 268px;
+    width: calc(100% - 268px);
+}
+
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.axis-internal-topbar {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 0 30px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(8,8,10,.72);
+    border-bottom: 1px solid rgba(255,255,255,.055);
+    backdrop-filter: blur(22px) saturate(130%);
+    -webkit-backdrop-filter: blur(22px) saturate(130%);
+}
+
+
+/* =========================================================
+   BACK TO HOME
+   ========================================================= */
+
+.axis-internal-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,.48);
+    text-decoration: none;
+    font-size: 11px;
+    transition: color var(--axis-transition-fast), transform var(--axis-transition-fast);
+}
+
+
+    .axis-internal-back:hover {
+        color: white;
+        transform: translateX(-2px);
+    }
+
+
+.axis-internal-page-title {
+    color: rgba(255,255,255,.88);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+.axis-internal-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+.axis-internal-action {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255,255,255,.075);
+    border-radius: 50%;
+    background: rgba(255,255,255,.035);
+    color: rgba(255,255,255,.72);
+    cursor: pointer;
+    transition: transform var(--axis-transition-fast), background var(--axis-transition-fast), border-color var(--axis-transition-fast), box-shadow var(--axis-transition-fast);
+}
+
+
+    .axis-internal-action:hover {
+        transform: translateY(-1px);
+        background: rgba(255,255,255,.075);
+        border-color: rgba(255,255,255,.14);
+        box-shadow: 0 8px 24px rgba(0,0,0,.20);
+    }
+
+
+.axis-internal-user-name {
+    margin-left: 5px;
+    color: rgba(255,255,255,.65);
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.axis-internal-main {
+    min-height: calc(100vh - 70px);
+    padding: 34px;
+    color: var(--axis-text-primary);
+}
+
+
+/* =========================================================
+   GENERIC AXIS CARDS
+   ========================================================= */
+
+.axis-card,
+.axis-dashboard-card,
+.axis-panel,
+.card {
+    background: linear-gradient( 145deg, rgba(25,25,29,.94), rgba(15,15,18,.94) );
+    border: 1px solid rgba(255,255,255,.075);
+    border-radius: var(--axis-radius-lg);
+    box-shadow: var(--axis-shadow-card);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+
+/* =========================================================
+   BUTTON SYSTEM
+   ========================================================= */
+
+.axis-button,
+button[type="submit"],
+input[type="submit"],
+.btn {
+    border-radius: 11px;
+    transition: transform var(--axis-transition-fast), box-shadow var(--axis-transition-fast), background var(--axis-transition-fast), border-color var(--axis-transition-fast);
+}
+
+
+    .axis-button:hover,
+    button[type="submit"]:hover,
+    input[type="submit"]:hover,
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 28px rgba(0,0,0,.24);
+    }
+
+
+/* =========================================================
+   FORM ELEMENTS
+   ========================================================= */
+
+.axis-internal-main input,
+.axis-internal-main select,
+.axis-internal-main textarea {
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.085);
+    color: var(--axis-text-primary);
+    border-radius: 11px;
+    transition: border-color var(--axis-transition-fast), box-shadow var(--axis-transition-fast), background var(--axis-transition-fast);
+}
+
+
+    .axis-internal-main input:focus,
+    .axis-internal-main select:focus,
+    .axis-internal-main textarea:focus {
+        background: rgba(255,255,255,.06);
+        border-color: rgba(201,189,214,.38);
+        box-shadow: 0 0 0 4px rgba(201,189,214,.055);
+        outline: none;
+    }
+
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+.axis-internal-main table {
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.065);
+    border-radius: 18px;
+    background: rgba(16,16,19,.78);
+}
+
+
+.axis-internal-main th {
+    background: rgba(255,255,255,.035);
+    color: rgba(255,255,255,.48);
+    font-size: 9px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+}
+
+
+.axis-internal-main td {
+    color: rgba(255,255,255,.78);
+    border-color: rgba(255,255,255,.055);
+}
+
+
+.axis-internal-main tbody tr {
+    transition: background var(--axis-transition-fast);
+}
+
+
+    .axis-internal-main tbody tr:hover {
+        background: rgba(255,255,255,.025);
+    }
+
+
+/* =========================================================
+   BADGES / STATUS
+   ========================================================= */
+
+.badge,
+.axis-badge {
+    border-radius: 999px;
+    padding: 5px 9px;
+    border: 1px solid rgba(255,255,255,.08);
+    background: rgba(255,255,255,.045);
+    color: rgba(255,255,255,.72);
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   SELECTION
+   ========================================================= */
+
+::selection {
+    background: rgba(201,189,214,.28);
+    color: white;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.12) transparent;
+}
+
+
+    *::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+    }
+
+
+    *::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+
+    *::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,.11);
+        border-radius: 999px;
+    }
+
+
+        *::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,.18);
+        }
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .axis-internal-sidebar {
+        width: 76px;
+        transform: translateX(-110%);
+        transition: transform var(--axis-transition), width var(--axis-transition);
+    }
+
+        .axis-internal-sidebar:hover {
+            width: 76px;
+        }
+
+        .axis-internal-sidebar:focus-within {
+            width: 268px;
+            transform: translateX(0);
+        }
+
+    .axis-internal-content,
+    .axis-internal-app:has(.axis-internal-sidebar:hover)
+    .axis-internal-content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .axis-internal-main {
+        padding: 24px;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .axis-internal-topbar {
+        height: 62px;
+        padding: 0 16px;
+    }
+
+    .axis-internal-back span {
+        display: none;
+    }
+
+    .axis-internal-page-title {
+        font-size: 11px;
+    }
+
+    .axis-internal-user-name {
+        display: none;
+    }
+
+    .axis-internal-main {
+        padding: 18px;
+    }
+}
+
+
+/* =========================================================
+   AXIS PHASE 3.2
+   COMPONENT SYSTEM
+   ========================================================= */
+
+
+/* =========================================================
+   BUTTON SYSTEM
+   ========================================================= */
+
+.axis-button {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 17px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform var(--axis-transition-fast), background var(--axis-transition-fast), border-color var(--axis-transition-fast), box-shadow var(--axis-transition-fast), color var(--axis-transition-fast);
+}
+
+
+/* PRIMARY */
+
+.axis-button-primary {
+    background: linear-gradient( 135deg, #eeeeef, #cfcfd3 );
+    border: 1px solid rgba(255,255,255,.55);
+    color: #111114;
+    box-shadow: 0 8px 25px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.65);
+}
+
+
+    .axis-button-primary:hover {
+        background: linear-gradient( 135deg, #ffffff, #d9d9dd );
+        transform: translateY(-2px);
+        box-shadow: 0 13px 32px rgba(0,0,0,.35), 0 0 24px rgba(201,189,214,.10);
+    }
+
+
+    .axis-button-primary:active {
+        transform: translateY(0) scale(.98);
+    }
+
+
+/* SECONDARY */
+
+.axis-button-secondary {
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.10);
+    color: rgba(255,255,255,.76);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+
+    .axis-button-secondary:hover {
+        background: rgba(255,255,255,.08);
+        border-color: rgba(255,255,255,.17);
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+
+/* DANGER */
+
+.axis-button-danger {
+    background: rgba(229,141,148,.075);
+    border: 1px solid rgba(229,141,148,.18);
+    color: #e5a0a6;
+}
+
+
+    .axis-button-danger:hover {
+        background: rgba(229,141,148,.13);
+        border-color: rgba(229,141,148,.30);
+        box-shadow: 0 0 25px rgba(229,141,148,.07);
+        transform: translateY(-1px);
+    }
+
+
+/* GHOST */
+
+.axis-button-ghost {
+    background: transparent;
+    border: 1px solid transparent;
+    color: rgba(255,255,255,.55);
+}
+
+
+    .axis-button-ghost:hover {
+        background: rgba(255,255,255,.045);
+        border-color: rgba(255,255,255,.07);
+        color: #ffffff;
+    }
+
+
+/* =========================================================
+   ICON BUTTON
+   ========================================================= */
+
+.axis-button-icon {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    padding: 0;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 12px;
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.08);
+    color: rgba(255,255,255,.68);
+    cursor: pointer;
+    transition: transform var(--axis-transition-fast), background var(--axis-transition-fast), border-color var(--axis-transition-fast), color var(--axis-transition-fast);
+}
+
+
+    .axis-button-icon:hover {
+        background: rgba(255,255,255,.085);
+        border-color: rgba(255,255,255,.15);
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+
+/* =========================================================
+   FORM CARDS
+   ========================================================= */
+
+.axis-form-card {
+    background: linear-gradient( 145deg, rgba(25,25,29,.96), rgba(14,14,17,.96) );
+    border: 1px solid rgba(255,255,255,.075);
+    border-radius: 22px;
+    box-shadow: 0 18px 55px rgba(0,0,0,.30);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+
+.axis-form {
+    color: var(--axis-text-primary);
+}
+
+
+.axis-form-section {
+    border-bottom: 1px solid rgba(255,255,255,.065);
+}
+
+
+.axis-form-section-title {
+    color: rgba(255,255,255,.50);
+}
+
+
+/* =========================================================
+   AXIS FIELDS
+   ========================================================= */
+
+.axis-field {
+    gap: 8px;
+}
+
+
+    .axis-field label {
+        color: rgba(255,255,255,.48);
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+    }
+
+
+    .axis-field input,
+    .axis-field textarea,
+    .axis-field select {
+        box-sizing: border-box;
+        background: rgba(255,255,255,.045);
+        border: 1px solid rgba(255,255,255,.085);
+        border-radius: 12px;
+        color: var(--axis-text-primary);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.018);
+        transition: background var(--axis-transition-fast), border-color var(--axis-transition-fast), box-shadow var(--axis-transition-fast), transform var(--axis-transition-fast);
+    }
+
+
+        .axis-field input::placeholder,
+        .axis-field textarea::placeholder {
+            color: rgba(255,255,255,.25);
+        }
+
+
+        .axis-field input:hover,
+        .axis-field textarea:hover,
+        .axis-field select:hover {
+            background: rgba(255,255,255,.06);
+            border-color: rgba(255,255,255,.12);
+        }
+
+
+        .axis-field input:focus,
+        .axis-field textarea:focus,
+        .axis-field select:focus {
+            background: rgba(255,255,255,.065);
+            border-color: rgba(201,189,214,.38);
+            box-shadow: 0 0 0 4px rgba(201,189,214,.055), 0 8px 24px rgba(0,0,0,.18);
+            transform: translateY(-1px);
+        }
+
+
+        /* SELECT OPTIONS */
+
+        .axis-field select option {
+            background: #18181c;
+            color: #f5f5f7;
+        }
+
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.axis-alert {
+    position: relative;
+    padding: 14px 17px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.075);
+    color: rgba(255,255,255,.78);
+    box-shadow: 0 10px 30px rgba(0,0,0,.14);
+    backdrop-filter: blur(12px);
+}
+
+
+.axis-alert-success {
+    background: rgba(130,214,164,.065);
+    border-color: rgba(130,214,164,.16);
+    color: #a4e4bb;
+}
+
+
+.axis-alert-error {
+    background: rgba(229,141,148,.065);
+    border-color: rgba(229,141,148,.18);
+    color: #e9a8ad;
+}
+
+
+/* =========================================================
+   BADGES
+   ========================================================= */
+
+.axis-badge,
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-height: 24px;
+    padding: 0 9px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.08);
+    color: rgba(255,255,255,.68);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .4px;
+}
+
+
+/* =========================================================
+   DETAIL CARDS
+   ========================================================= */
+
+.axis-detail-card {
+    background: linear-gradient( 145deg, rgba(25,25,29,.94), rgba(14,14,17,.94) );
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 20px;
+    box-shadow: 0 14px 45px rgba(0,0,0,.25);
+}
+
+
+    .axis-detail-card h2 {
+        color: #f5f5f7;
+    }
+
+
+.axis-detail-label {
+    color: rgba(255,255,255,.34);
+}
+
+
+.axis-detail-row {
+    border-bottom: 1px solid rgba(255,255,255,.055);
+}
+
+
+    .axis-detail-row span {
+        color: rgba(255,255,255,.38);
+    }
+
+
+    .axis-detail-row strong {
+        color: rgba(255,255,255,.78);
+    }
+
+
+.axis-detail-avatar {
+    background: radial-gradient( circle at 30% 25%, #5a5762, #202026 70% );
+    border: 1px solid rgba(255,255,255,.16);
+    box-shadow: 0 8px 25px rgba(0,0,0,.28);
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.axis-table-search {
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.075);
+    border-radius: 13px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.018);
+    transition: border-color var(--axis-transition-fast), background var(--axis-transition-fast), box-shadow var(--axis-transition-fast);
+}
+
+
+    .axis-table-search:focus-within {
+        background: rgba(255,255,255,.06);
+        border-color: rgba(201,189,214,.30);
+        box-shadow: 0 0 0 4px rgba(201,189,214,.045);
+    }
+
+
+    .axis-table-search span {
+        color: rgba(255,255,255,.40);
+    }
+
+
+    .axis-table-search input {
+        color: rgba(255,255,255,.82);
+    }
+
+
+        .axis-table-search input::placeholder {
+            color: rgba(255,255,255,.27);
+        }
+
+
+    .axis-table-search button {
+        background: rgba(255,255,255,.09);
+        color: rgba(255,255,255,.78);
+        border: 1px solid rgba(255,255,255,.07);
+        border-radius: 9px;
+        transition: background var(--axis-transition-fast), transform var(--axis-transition-fast);
+    }
+
+
+        .axis-table-search button:hover {
+            background: rgba(255,255,255,.15);
+            transform: translateY(-1px);
+        }
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.axis-page-kicker {
+    color: rgba(255,255,255,.35);
+}
+
+
+.axis-page-header h1 {
+    color: #f5f5f7;
+}
+
+
+.axis-page-header p {
+    color: rgba(255,255,255,.43);
+}
+
+
+/* =========================================================
+   DISABLED
+   ========================================================= */
+
+.axis-button:disabled,
+button:disabled,
+input[type="submit"]:disabled {
+    opacity: .40;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+
+/* =========================================================
+   AXIS PHASE 3.3
+   TABLE SYSTEM
+   ========================================================= */
+
+
+/* =========================================================
+   TABLE CARD
+   ========================================================= */
+
+.axis-table-card {
+    overflow: hidden;
+    background: linear-gradient( 145deg, rgba(25,25,29,.96), rgba(13,13,16,.96) );
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 20px;
+    box-shadow: 0 18px 55px rgba(0,0,0,.28);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.axis-table {
+    color: rgba(255,255,255,.72);
+}
+
+
+    /* =========================================================
+   HEADER
+   ========================================================= */
+
+    .axis-table th {
+        padding: 15px 18px;
+        background: rgba(255,255,255,.025);
+        border-bottom: 1px solid rgba(255,255,255,.075);
+        color: rgba(255,255,255,.36);
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.4px;
+    }
+
+
+    /* =========================================================
+   CELLS
+   ========================================================= */
+
+    .axis-table td {
+        padding: 16px 18px;
+        border-bottom: 1px solid rgba(255,255,255,.045);
+        color: rgba(255,255,255,.58);
+        font-size: 12px;
+    }
+
+
+    .axis-table tbody tr {
+        transition: background var(--axis-transition-fast), transform var(--axis-transition-fast);
+    }
+
+
+        .axis-table tbody tr:hover {
+            background: rgba(255,255,255,.035);
+        }
+
+
+        .axis-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+
+/* =========================================================
+   PRIMARY TEXT
+   ========================================================= */
+
+.axis-primary-text {
+    color: rgba(255,255,255,.88);
+}
+
+
+/* =========================================================
+   CLIENT CELL
+   ========================================================= */
+
+.axis-client-cell {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+
+.axis-client-avatar {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: linear-gradient( 145deg, #55565d, #202126 );
+    border: 1px solid rgba(255,255,255,.13);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    box-shadow: 0 5px 15px rgba(0,0,0,.25);
+}
+
+
+.axis-client-cell strong {
+    color: rgba(255,255,255,.88);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   STATUS PILLS
+   ========================================================= */
+
+.axis-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 25px;
+    padding: 0 9px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .3px;
+}
+
+
+    .axis-status::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: currentColor;
+        box-shadow: 0 0 8px currentColor;
+    }
+
+
+.axis-status-active {
+    background: rgba(116,210,157,.075);
+    border: 1px solid rgba(116,210,157,.15);
+    color: #8bd7a7;
+}
+
+
+.axis-status-inactive {
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.075);
+    color: rgba(255,255,255,.40);
+}
+
+
+/* =========================================================
+   ROW ACTIONS
+   ========================================================= */
+
+.axis-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+
+.axis-row-action {
+    min-height: 30px;
+    padding: 0 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,.075);
+    border-radius: 9px;
+    background: rgba(255,255,255,.035);
+    color: rgba(255,255,255,.58);
+    font-size: 9px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--axis-transition-fast), border-color var(--axis-transition-fast), color var(--axis-transition-fast), transform var(--axis-transition-fast);
+}
+
+
+    .axis-row-action:hover {
+        background: rgba(255,255,255,.08);
+        border-color: rgba(255,255,255,.14);
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+
+.axis-row-danger:hover {
+    background: rgba(229,141,148,.07);
+    border-color: rgba(229,141,148,.20);
+    color: #e5a0a6;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.axis-empty {
+    padding: 60px 20px !important;
+    color: rgba(255,255,255,.30) !important;
+    text-align: center;
+}
+
+
+/* =========================================================
+   SECONDARY TABLE TEXT
+   ========================================================= */
+
+.axis-table-secondary-text {
+    color: rgba(255,255,255,.30);
+}
+
+
+/* =========================================================
+   TABLE SCROLLBAR
+   ========================================================= */
+
+.axis-table-wrapper::-webkit-scrollbar {
+    height: 5px;
+}
+
+
+.axis-table-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+.axis-table-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.12);
+    border-radius: 999px;
+}
+
+
+    .axis-table-wrapper::-webkit-scrollbar-thumb:hover {
+        background: rgba(255,255,255,.20);
+    }
+
+
+
+/* =========================================================
+   AXIS PHASE 3.5
+   MODAL SYSTEM
+   ========================================================= */
+
+
+/* =========================================================
+   BACKDROP
+   ========================================================= */
+
+.modal-backdrop {
+    background: rgba(0,0,0,.72) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 1 !important;
+}
+
+
+/* =========================================================
+   MODAL CONTAINER
+   ========================================================= */
+
+.modal {
+    --bs-modal-bg: transparent;
+    --bs-modal-border-color: transparent;
+    --bs-modal-color: var(--axis-text-primary);
+    --bs-modal-box-shadow: none;
+}
+
+
+/* =========================================================
+   MODAL DIALOG
+   ========================================================= */
+
+.modal-dialog {
+    max-width: 620px;
+    margin: 1.75rem auto;
+    transition: transform .35s var(--axis-ease);
+}
+
+
+/* =========================================================
+   MODAL CONTENT
+   ========================================================= */
+
+.modal-content {
+    overflow: hidden;
+    background: linear-gradient( 145deg, rgba(28,28,32,.985), rgba(12,12,15,.985) ) !important;
+    border: 1px solid rgba(255,255,255,.09) !important;
+    border-radius: 22px !important;
+    color: var(--axis-text-primary);
+    box-shadow: 0 30px 90px rgba(0,0,0,.58), 0 0 45px rgba(201,189,214,.035), inset 0 1px 0 rgba(255,255,255,.035);
+    backdrop-filter: blur(25px) saturate(125%);
+    -webkit-backdrop-filter: blur(25px) saturate(125%);
+}
+
+
+/* =========================================================
+   MODAL HEADER
+   ========================================================= */
+
+.modal-header {
+    min-height: 66px;
+    padding: 18px 21px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,.065) !important;
+    background: rgba(255,255,255,.018);
+}
+
+
+.modal-title {
+    margin: 0;
+    color: #f5f5f7 !important;
+    font-size: 15px;
+    font-weight: 650;
+    letter-spacing: -.2px;
+}
+
+
+/* =========================================================
+   CLOSE BUTTON
+   ========================================================= */
+
+.modal-header .btn-close {
+    width: 34px;
+    height: 34px;
+    margin: 0 0 0 auto;
+    padding: 0;
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 10px;
+    background: rgba(255,255,255,.04);
+    opacity: 1;
+    filter: invert(1);
+    transition: background var(--axis-transition-fast), border-color var(--axis-transition-fast), transform var(--axis-transition-fast);
+}
+
+
+    .modal-header .btn-close:hover {
+        background: rgba(255,255,255,.09);
+        border-color: rgba(255,255,255,.14);
+        transform: rotate(3deg);
+    }
+
+
+/* =========================================================
+   MODAL BODY
+   ========================================================= */
+
+.modal-body {
+    padding: 22px;
+    color: rgba(255,255,255,.67);
+}
+
+
+/* =========================================================
+   MODAL FOOTER
+   ========================================================= */
+
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 15px 21px;
+    border-top: 1px solid rgba(255,255,255,.06) !important;
+    background: rgba(255,255,255,.012);
+}
+
+
+/* =========================================================
+   MODAL FORM LABELS
+   ========================================================= */
+
+.modal label {
+    color: rgba(255,255,255,.43);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   MODAL INPUTS
+   ========================================================= */
+
+.modal input,
+.modal select,
+.modal textarea {
+    background: rgba(255,255,255,.045) !important;
+    border: 1px solid rgba(255,255,255,.085) !important;
+    color: #f5f5f7 !important;
+    border-radius: 11px !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.015);
+    transition: background var(--axis-transition-fast), border-color var(--axis-transition-fast), box-shadow var(--axis-transition-fast);
+}
+
+
+    .modal input::placeholder,
+    .modal textarea::placeholder {
+        color: rgba(255,255,255,.24);
+    }
+
+
+    .modal input:focus,
+    .modal select:focus,
+    .modal textarea:focus {
+        background: rgba(255,255,255,.06) !important;
+        border-color: rgba(201,189,214,.36) !important;
+        box-shadow: 0 0 0 4px rgba(201,189,214,.055) !important;
+        outline: none;
+    }
+
+
+    /* =========================================================
+   MODAL SELECT OPTIONS
+   ========================================================= */
+
+    .modal select option {
+        background: #18181c;
+        color: #f5f5f7;
+    }
+
+
+/* =========================================================
+   MODAL TEXT
+   ========================================================= */
+
+.modal p {
+    color: rgba(255,255,255,.47);
+}
+
+
+.modal strong {
+    color: rgba(255,255,255,.82);
+}
+
+
+/* =========================================================
+   MODAL ALERT
+   ========================================================= */
+
+.modal .alert {
+    margin-bottom: 16px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.075);
+    color: rgba(255,255,255,.70);
+}
+
+
+/* =========================================================
+   MODAL SIZES
+   ========================================================= */
+
+.modal-dialog.modal-sm {
+    max-width: 430px;
+}
+
+
+.modal-dialog.modal-lg {
+    max-width: 820px;
+}
+
+
+.modal-dialog.modal-xl {
+    max-width: 1100px;
+}
+
+
+/* =========================================================
+   MODAL ANIMATION
+   ========================================================= */
+
+.modal.fade .modal-dialog {
+    transform: translateY(12px) scale(.985);
+}
+
+
+.modal.show .modal-dialog {
+    transform: translateY(0) scale(1);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+    .modal-dialog {
+        margin: 12px;
+    }
+
+    .modal-content {
+        border-radius: 18px !important;
+    }
+
+    .modal-body {
+        padding: 18px;
+    }
+
+    .modal-header {
+        padding: 15px 17px;
+    }
+
+    .modal-footer {
+        padding: 13px 17px;
+        flex-wrap: wrap;
+    }
+}
+
+/* =========================================================
+   AXIS PHASE 3.6
+   DROPDOWN SYSTEM
+   ========================================================= */
+
+
+/* =========================================================
+   BOOTSTRAP DROPDOWN MENU
+   ========================================================= */
+
+.dropdown-menu {
+    min-width: 190px;
+    padding: 7px;
+    margin-top: 8px !important;
+    background: linear-gradient( 145deg, rgba(28,28,32,.985), rgba(13,13,16,.985) ) !important;
+    border: 1px solid rgba(255,255,255,.085) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 22px 60px rgba(0,0,0,.48), 0 0 30px rgba(201,189,214,.025), inset 0 1px 0 rgba(255,255,255,.03);
+    backdrop-filter: blur(22px) saturate(125%);
+    -webkit-backdrop-filter: blur(22px) saturate(125%);
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   DROPDOWN ITEMS
+   ========================================================= */
+
+.dropdown-item {
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 0 10px;
+    border-radius: 9px;
+    color: rgba(255,255,255,.62) !important;
+    font-size: 10px;
+    transition: background var(--axis-transition-fast), color var(--axis-transition-fast), transform var(--axis-transition-fast);
+}
+
+
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+        background: rgba(255,255,255,.065) !important;
+        color: #ffffff !important;
+        transform: translateX(2px);
+    }
+
+
+    .dropdown-item:active {
+        background: rgba(201,189,214,.10) !important;
+        color: #ffffff !important;
+    }
+
+
+/* =========================================================
+   DROPDOWN DIVIDER
+   ========================================================= */
+
+.dropdown-divider {
+    margin: 7px 5px;
+    border-top: 1px solid rgba(255,255,255,.065);
+}
+
+
+/* =========================================================
+   DROPDOWN HEADER
+   ========================================================= */
+
+.dropdown-header {
+    padding: 7px 10px 6px;
+    color: rgba(255,255,255,.30);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   DROPDOWN TEXT
+   ========================================================= */
+
+.dropdown-item-text {
+    padding: 7px 10px;
+    color: rgba(255,255,255,.42);
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   DROPDOWN TOGGLE
+   ========================================================= */
+
+.dropdown-toggle::after {
+    margin-left: 7px;
+    vertical-align: .18em;
+    border-top: 4px solid rgba(255,255,255,.40);
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+    transition: transform var(--axis-transition-fast);
+}
+
+
+.dropdown.show .dropdown-toggle::after {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   DROPDOWN ANIMATION
+   ========================================================= */
+
+.dropdown-menu {
+    opacity: 0;
+    transform: translateY(-5px) scale(.985);
+    transform-origin: top center;
+    transition: opacity .18s var(--axis-ease), transform .18s var(--axis-ease);
+}
+
+
+    .dropdown-menu.show {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+
+/* =========================================================
+   DROPUP / DROPLEFT / DROPRIGHT
+   ========================================================= */
+
+.dropup .dropdown-menu {
+    transform-origin: bottom center;
+}
+
+
+.dropstart .dropdown-menu {
+    transform-origin: right center;
+}
+
+
+.dropend .dropdown-menu {
+    transform-origin: left center;
+}
+
+
+/* =========================================================
+   DARK SELECT-LIKE DROPDOWN
+   ========================================================= */
+
+.axis-select {
+    position: relative;
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0 13px;
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.085);
+    border-radius: 11px;
+    color: rgba(255,255,255,.72);
+    cursor: pointer;
+    transition: background var(--axis-transition-fast), border-color var(--axis-transition-fast), box-shadow var(--axis-transition-fast);
+}
+
+
+    .axis-select:hover {
+        background: rgba(255,255,255,.06);
+        border-color: rgba(255,255,255,.13);
+    }
+
+
+    .axis-select:focus,
+    .axis-select.active {
+        background: rgba(255,255,255,.065);
+        border-color: rgba(201,189,214,.34);
+        box-shadow: 0 0 0 4px rgba(201,189,214,.045);
+    }
+
+
+/* =========================================================
+   AXIS PHASE 3.10
+   RESPONSIVE + GLOBAL STATES
+   ========================================================= */
+
+
+/* =========================================================
+   GLOBAL FOCUS
+   ========================================================= */
+
+:focus-visible {
+    outline: 2px solid rgba(201,189,214,.42);
+    outline-offset: 3px;
+}
+
+
+/* =========================================================
+   DISABLED GLOBAL
+   ========================================================= */
+
+button:disabled,
+a.disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+    opacity: .42;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   MOBILE SIDEBAR
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .axis-internal-sidebar {
+        top: 10px;
+        left: 10px;
+        bottom: 10px;
+        transform: translateX(-115%);
+        width: 268px;
+        transition: transform var(--axis-transition);
+    }
+
+
+        /*
+       En pantallas pequeñas el sidebar se abre
+       mediante focus-within para mantenerlo accesible.
+    */
+
+        .axis-internal-sidebar:focus-within {
+            transform: translateX(0);
+        }
+
+
+            .axis-internal-sidebar:focus-within
+            .axis-internal-section-title,
+            .axis-internal-sidebar:focus-within
+            .axis-internal-nav-item > span:last-child,
+            .axis-internal-sidebar:focus-within
+            .axis-internal-logo-subtitle,
+            .axis-internal-sidebar:focus-within
+            .axis-internal-user-info {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+
+    .axis-internal-content {
+        width: 100%;
+        margin-left: 0;
+    }
+
+
+    .axis-internal-app:has(.axis-internal-sidebar:hover)
+    .axis-internal-content {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .axis-internal-main {
+        padding: 24px;
+    }
+
+
+    .axis-page-header {
+        gap: 18px;
+    }
+
+
+    .axis-table-search {
+        width: min(100%, 360px);
+    }
+
+
+    .axis-dashboard {
+        padding: 24px;
+    }
+}
+
+
+/* =========================================================
+   SMALL TABLET
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .axis-internal-topbar {
+        padding: 0 18px;
+    }
+
+
+    .axis-internal-main {
+        padding: 20px 16px;
+    }
+
+
+    .axis-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+
+    .axis-page-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+
+    .axis-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+
+    .axis-table-search {
+        width: 100%;
+    }
+
+
+    .axis-form-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+
+    .axis-movement-help {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   PHONE
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+    .axis-internal-topbar {
+        height: 60px;
+        gap: 10px;
+        padding: 0 13px;
+    }
+
+
+    .axis-internal-page-title {
+        overflow: hidden;
+        max-width: 130px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+
+    .axis-internal-actions {
+        gap: 5px;
+    }
+
+
+    .axis-internal-action {
+        width: 32px;
+        height: 32px;
+    }
+
+
+    .axis-internal-main {
+        padding: 16px 12px;
+    }
+
+
+    .axis-page-header h1 {
+        font-size: 29px;
+    }
+
+
+    .axis-page-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+
+        .axis-page-actions .axis-button {
+            width: 100%;
+        }
+
+
+    .axis-form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+
+        .axis-form-actions .axis-button {
+            width: 100%;
+        }
+
+
+    .axis-table-card {
+        border-radius: 15px;
+    }
+
+
+    .axis-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+
+    .axis-table {
+        min-width: 650px;
+    }
+
+
+    .pagination {
+        justify-content: center;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .axis-internal-back span {
+        display: none;
+    }
+
+
+    .axis-internal-user-name {
+        display: none;
+    }
+
+
+    .axis-dashboard {
+        padding: 16px 11px;
+    }
+
+
+    .axis-dashboard-header h1 {
+        font-size: 27px;
+    }
+
+
+    .axis-kpi {
+        min-height: 105px;
+        padding: 14px;
+    }
+
+
+    .axis-kpi-icon {
+        width: 40px;
+        min-width: 40px;
+        height: 40px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

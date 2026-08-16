@@ -111,3 +111,113 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* =========================================================
+   AXIS PHASE 3.4
+   INVENTORY SYSTEM
+   ========================================================= */
+
+
+/* =========================================================
+   FILTERS
+   ========================================================= */
+
+.axis-movement-filters {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+
+.axis-filter-button {
+    min-height: 32px;
+    padding: 0 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,.075);
+    border-radius: 999px;
+    background: rgba(255,255,255,.035);
+    color: rgba(255,255,255,.48);
+    text-decoration: none;
+    font-size: 9px;
+    font-weight: 600;
+    transition: background var(--axis-transition-fast), border-color var(--axis-transition-fast), color var(--axis-transition-fast), transform var(--axis-transition-fast);
+}
+
+
+    .axis-filter-button:hover {
+        background: rgba(255,255,255,.075);
+        border-color: rgba(255,255,255,.14);
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+
+/* =========================================================
+   MOVEMENT BADGES
+   ========================================================= */
+
+.axis-movement-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 25px;
+    padding: 0 9px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+
+.axis-movement-entry {
+    background: rgba(116,210,157,.075);
+    border: 1px solid rgba(116,210,157,.15);
+    color: #8bd7a7;
+}
+
+
+.axis-movement-exit {
+    background: rgba(229,141,148,.075);
+    border: 1px solid rgba(229,141,148,.15);
+    color: #e5a0a6;
+}
+
+
+.axis-movement-adjustment {
+    background: rgba(220,190,120,.075);
+    border: 1px solid rgba(220,190,120,.15);
+    color: #d9c185;
+}
+
+
+/* =========================================================
+   HELP CARDS
+   ========================================================= */
+
+.axis-movement-help {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+
+.axis-movement-help-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px;
+    background: rgba(255,255,255,.025);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 13px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.015);
+}
+
+
+    .axis-movement-help-item small {
+        color: rgba(255,255,255,.38);
+        font-size: 10px;
+        line-height: 1.45;
+    }
