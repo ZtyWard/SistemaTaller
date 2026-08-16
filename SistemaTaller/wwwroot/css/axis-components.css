@@ -1,0 +1,191 @@
+﻿/* =========================================================
+   AXIS INTERNAL PAGES
+   ========================================================= */
+
+.axis-page {
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.axis-page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.axis-page-kicker {
+    display: block;
+    margin-bottom: 9px;
+    color: #89877f;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.2px;
+}
+
+.axis-page-header h1 {
+    margin: 0;
+    color: #252421;
+    font-size: 38px;
+    font-weight: 650;
+    letter-spacing: -1.5px;
+}
+
+.axis-page-header p {
+    margin: 9px 0 0;
+    color: #85827a;
+    font-size: 13px;
+}
+
+.axis-page-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.axis-button {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 17px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 12px;
+    cursor: pointer;
+    transition: .25s ease;
+}
+
+.axis-button-primary {
+    background: #252525;
+    border: 1px solid #252525;
+    color: #f5f2e9;
+    box-shadow: 0 5px 15px rgba(0,0,0,.12);
+}
+
+    .axis-button-primary:hover {
+        background: #111;
+        transform: translateY(-1px);
+    }
+
+.axis-button-secondary {
+    background: rgba(255,255,255,.45);
+    border: 1px solid rgba(0,0,0,.10);
+    color: #4c4a45;
+}
+
+    .axis-button-secondary:hover {
+        border-color: rgba(0,0,0,.22);
+    }
+
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.axis-alert {
+    padding: 13px 16px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.axis-alert-success {
+    background: rgba(80,120,80,.10);
+    border: 1px solid rgba(80,120,80,.20);
+    color: #496349;
+}
+
+.axis-alert-error {
+    background: rgba(160,70,70,.10);
+    border: 1px solid rgba(160,70,70,.20);
+    color: #874848;
+}
+
+
+/* =========================================================
+   TOOLBAR
+   ========================================================= */
+
+.axis-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 14px;
+}
+
+.axis-table-search {
+    width: 380px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 0 8px 0 13px;
+    background: rgba(255,255,255,.52);
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 11px;
+}
+
+    .axis-table-search span {
+        color: #85827a;
+    }
+
+    .axis-table-search input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: #292824;
+        font-size: 12px;
+    }
+
+    .axis-table-search button {
+        height: 30px;
+        padding: 0 11px;
+        border: 0;
+        border-radius: 7px;
+        background: #292927;
+        color: #f3f0e7;
+        font-size: 11px;
+        cursor: pointer;
+    }
+
+.axis-record-count {
+    color: #88857d;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .axis-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .axis-page-actions {
+        width: 100%;
+    }
+
+    .axis-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .axis-table-search {
+        width: 100%;
+    }
+}

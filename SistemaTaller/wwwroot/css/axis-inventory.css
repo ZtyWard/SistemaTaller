@@ -1,0 +1,113 @@
+﻿/* =========================================================
+   AXIS INVENTORY MOVEMENTS
+   ========================================================= */
+
+.axis-movement-filters {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+
+/* =========================================================
+   FILTER BUTTON
+   ========================================================= */
+
+.axis-filter-button {
+    padding: 7px 11px;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 8px;
+    background: rgba(255,255,255,.38);
+    color: #77746d;
+    text-decoration: none;
+    font-size: 10px;
+    transition: .2s ease;
+}
+
+    .axis-filter-button:hover {
+        background: rgba(255,255,255,.72);
+        border-color: rgba(0,0,0,.17);
+        color: #292824;
+    }
+
+
+/* =========================================================
+   SECONDARY TABLE TEXT
+   ========================================================= */
+
+.axis-table-secondary-text {
+    display: block;
+    margin-top: 3px;
+    color: #96938b;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   MOVEMENT BADGES
+   ========================================================= */
+
+.axis-movement-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 9px;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: 650;
+}
+
+.axis-movement-entry {
+    background: rgba(70,120,75,.11);
+    color: #527254;
+}
+
+.axis-movement-exit {
+    background: rgba(150,70,70,.10);
+    color: #8b5555;
+}
+
+.axis-movement-adjustment {
+    background: rgba(130,110,60,.12);
+    color: #806f43;
+}
+
+
+/* =========================================================
+   MOVEMENT HELP
+   ========================================================= */
+
+.axis-movement-help {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.axis-movement-help-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid rgba(0,0,0,.06);
+    border-radius: 10px;
+    background: rgba(0,0,0,.018);
+}
+
+    .axis-movement-help-item small {
+        color: #85827a;
+        font-size: 10px;
+        line-height: 1.4;
+    }
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .axis-movement-help {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,42 @@
+﻿:root {
+    --axis-charcoal: #1e2023;
+    --axis-black: #1e1f22;
+    --axis-asphalt: #302f2c;
+    --axis-gray: #47484c;
+    --axis-gray-light: #4c4e51;
+    --axis-paper: #efede3;
+    --axis-muted: #a7a7a7;
+    --axis-transition: 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    --axis-bg: #eeece3;
+    --axis-sidebar: #202123;
+    --axis-sidebar-light: #292a2c;
+    --axis-white: #ffffff;
+    --axis-text: #252525;
+    --axis-muted-dark: #77766f;
+    --axis-muted-light: #a7a59d;
+    --axis-border: rgba(255, 255, 255, 0.12);
+    --axis-border-light: rgba(255, 255, 255, 0.65);
+    --axis-glow: 0 0 8px rgba(255, 255, 255, 0.25), 0 0 22px rgba(255, 255, 255, 0.08);
+    --axis-transition-fast: 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    background: var(--axis-bg);
+    color: var(--axis-text);
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+}

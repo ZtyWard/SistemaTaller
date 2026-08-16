@@ -1,0 +1,1332 @@
+﻿/* =========================================================
+   AXIS APP SHELL
+   ========================================================= */
+
+.axis-app {
+    min-height: 100vh;
+    display: flex;
+    background: var(--axis-bg);
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.axis-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 276px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient( 180deg, #1d1e20 0%, #222325 100% );
+    border-right: 1px solid rgba(255,255,255,.08);
+    box-shadow: 10px 0 35px rgba(0,0,0,.15);
+    z-index: 1000;
+    transition: width var(--axis-transition);
+}
+
+
+/* =========================================================
+   SIDEBAR BRAND
+   ========================================================= */
+
+.axis-sidebar-brand {
+    position: relative;
+    min-height: 108px;
+    display: flex;
+    align-items: center;
+    padding: 24px 24px 20px;
+}
+
+.axis-logo {
+    display: flex;
+    flex-direction: column;
+    color: var(--axis-paper);
+    text-decoration: none;
+    line-height: 1;
+}
+
+.axis-logo-name {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    text-shadow: 0 0 10px rgba(255,255,255,.18);
+}
+
+.axis-logo-subtitle {
+    margin-top: 6px;
+    color: rgba(241,239,230,.58);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+}
+
+
+/* =========================================================
+   SIDEBAR TOGGLE
+   ========================================================= */
+
+.axis-sidebar-toggle {
+    position: absolute;
+    right: -17px;
+    top: 28px;
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: #252629;
+    color: var(--axis-paper);
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 4px 15px rgba(0,0,0,.25);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+    .axis-sidebar-toggle:hover {
+        box-shadow: 0 0 0 1px rgba(255,255,255,.5), var(--axis-glow);
+    }
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.axis-navigation {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 4px 18px 18px;
+}
+
+    .axis-navigation::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .axis-navigation::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,.15);
+        border-radius: 10px;
+    }
+
+.axis-nav-section {
+    margin-bottom: 20px;
+}
+
+.axis-nav-section-title {
+    display: block;
+    padding: 0 14px 8px;
+    color: rgba(241,239,230,.40);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.8px;
+}
+
+
+/* =========================================================
+   NAV ITEM
+   ========================================================= */
+
+.axis-nav-item {
+    position: relative;
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 3px;
+    padding: 0 13px;
+    color: rgba(241,239,230,.82);
+    border: 1px solid transparent;
+    border-radius: 11px;
+    text-decoration: none;
+    font-size: 13px;
+    transition: color .25s ease, background .25s ease, border .25s ease, box-shadow .25s ease;
+}
+
+    .axis-nav-item:hover {
+        color: var(--axis-white);
+        background: rgba(255,255,255,.055);
+        border-color: rgba(255,255,255,.14);
+    }
+
+    .axis-nav-item.active {
+        color: var(--axis-white);
+        background: linear-gradient( 90deg, rgba(255,255,255,.12), rgba(255,255,255,.04) );
+        border-color: rgba(255,255,255,.65);
+        box-shadow: 0 0 10px rgba(255,255,255,.12), inset 0 0 12px rgba(255,255,255,.035);
+    }
+
+        .axis-nav-item.active::before {
+            content: "";
+            position: absolute;
+            left: -1px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 0 8px rgba(255,255,255,.9);
+        }
+
+
+/* =========================================================
+   NAV ICON
+   ========================================================= */
+
+.axis-nav-icon {
+    width: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(241,239,230,.68);
+    font-size: 16px;
+}
+
+.axis-nav-text {
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   SIDEBAR USER
+   ========================================================= */
+
+.axis-sidebar-user {
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin: 0 17px 18px;
+    padding: 11px;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 14px;
+    background: rgba(255,255,255,.035);
+    box-shadow: 0 0 12px rgba(255,255,255,.04);
+}
+
+.axis-user-avatar,
+.axis-topbar-avatar {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient( 145deg, #55565a, #252629 );
+    border: 1px solid rgba(255,255,255,.55);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.axis-user-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+    .axis-user-info strong {
+        overflow: hidden;
+        color: var(--axis-paper);
+        font-size: 11px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .axis-user-info span {
+        margin-top: 4px;
+        color: rgba(241,239,230,.48);
+        font-size: 9px;
+    }
+
+.axis-user-menu {
+    border: 0;
+    background: transparent;
+    color: rgba(241,239,230,.65);
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.axis-content {
+    width: calc(100% - 276px);
+    min-height: 100vh;
+    margin-left: 276px;
+    transition: margin-left var(--axis-transition), width var(--axis-transition);
+}
+
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.axis-topbar {
+    height: 78px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    padding: 0 34px;
+    background: rgba(238,236,227,.92);
+    border-bottom: 1px solid rgba(35,35,35,.07);
+    backdrop-filter: blur(18px);
+    position: sticky;
+    top: 0;
+    z-index: 900;
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.axis-search {
+    width: min(430px,42vw);
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 13px;
+    background: rgba(255,255,255,.45);
+    border: 1px solid rgba(40,40,40,.08);
+    border-radius: 13px;
+    transition: border .25s ease, box-shadow .25s ease;
+}
+
+    .axis-search:focus-within {
+        border-color: rgba(40,40,40,.22);
+        box-shadow: 0 0 0 4px rgba(0,0,0,.035);
+    }
+
+.axis-search-icon {
+    color: #77756e;
+    font-size: 18px;
+}
+
+.axis-search input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #333;
+    font-size: 12px;
+}
+
+    .axis-search input::placeholder {
+        color: #99978f;
+    }
+
+.axis-search-shortcut {
+    padding: 3px 7px;
+    border-radius: 6px;
+    background: rgba(0,0,0,.06);
+    color: #8c8981;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   TOPBAR ACTIONS
+   ========================================================= */
+
+.axis-topbar-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.axis-topbar-button {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(0,0,0,.07);
+    border-radius: 50%;
+    background: rgba(255,255,255,.45);
+    color: #45443f;
+    font-size: 17px;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+    .axis-topbar-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    }
+
+.axis-notification-count {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 17px;
+    height: 17px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #4b4a47;
+    color: white;
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   TOPBAR USER
+   ========================================================= */
+
+.axis-topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 6px;
+}
+
+.axis-topbar-avatar {
+    width: 38px;
+    height: 38px;
+}
+
+.axis-topbar-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+    .axis-topbar-user-info strong {
+        color: #272622;
+        font-size: 12px;
+    }
+
+    .axis-topbar-user-info span {
+        margin-top: 3px;
+        color: #8b8982;
+        font-size: 10px;
+    }
+
+.axis-user-chevron {
+    margin-left: 5px;
+    color: #77756f;
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   MOBILE MENU
+   ========================================================= */
+
+.axis-mobile-menu {
+    display: none;
+    border: 0;
+    background: transparent;
+    color: #333;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.axis-main {
+    min-height: calc(100vh - 78px);
+    padding: 34px;
+}
+
+
+/* =========================================================
+   SIDEBAR COLLAPSED
+   ========================================================= */
+
+.axis-app.axis-sidebar-collapsed .axis-sidebar {
+    width: 82px;
+}
+
+.axis-app.axis-sidebar-collapsed .axis-content {
+    width: calc(100% - 82px);
+    margin-left: 82px;
+}
+
+.axis-app.axis-sidebar-collapsed .axis-logo {
+    align-items: center;
+}
+
+.axis-app.axis-sidebar-collapsed .axis-logo-name {
+    font-size: 17px;
+    letter-spacing: 2px;
+}
+
+.axis-app.axis-sidebar-collapsed .axis-logo-subtitle {
+    display: none;
+}
+
+.axis-app.axis-sidebar-collapsed
+.axis-nav-section-title,
+.axis-app.axis-sidebar-collapsed
+.axis-nav-text,
+.axis-app.axis-sidebar-collapsed
+.axis-user-info,
+.axis-app.axis-sidebar-collapsed
+.axis-user-menu {
+    display: none;
+}
+
+.axis-app.axis-sidebar-collapsed .axis-nav-item {
+    justify-content: center;
+    padding: 0;
+}
+
+.axis-app.axis-sidebar-collapsed .axis-sidebar-user {
+    justify-content: center;
+    padding: 8px;
+}
+
+.axis-app.axis-sidebar-collapsed .axis-sidebar-toggle {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   APP RESPONSIVE
+   ========================================================= */
+
+@media (max-width:1000px) {
+
+    .axis-sidebar {
+        transform: translateX(-100%);
+    }
+
+        .axis-sidebar.axis-mobile-open {
+            transform: translateX(0);
+        }
+
+    .axis-content {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .axis-mobile-menu {
+        display: block;
+    }
+
+    .axis-topbar {
+        padding: 0 22px;
+    }
+
+    .axis-search {
+        width: min(400px,55vw);
+    }
+
+    .axis-topbar-user-info {
+        display: none;
+    }
+
+    .axis-main {
+        padding: 25px;
+    }
+}
+
+@media (max-width:650px) {
+
+    .axis-topbar {
+        gap: 12px;
+        padding: 0 16px;
+    }
+
+    .axis-search {
+        flex: 1;
+        width: auto;
+    }
+
+    .axis-search-shortcut {
+        display: none;
+    }
+
+    .axis-topbar-button {
+        width: 36px;
+        height: 36px;
+    }
+
+    .axis-topbar-user {
+        display: none;
+    }
+
+    .axis-main {
+        padding: 18px;
+    }
+}
+
+
+/* =========================================================
+   AXIS HOME
+   ========================================================= */
+
+.axis-home {
+    min-height: calc(100vh - 126px);
+    padding: 42px;
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
+}
+
+
+/* =========================================================
+   HOME INTRO
+   ========================================================= */
+
+.axis-intro {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.axis-kicker {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--axis-muted);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+}
+
+.axis-intro h1 {
+    margin: 0;
+    color: var(--axis-paper);
+    font-size: clamp(46px,6vw,82px);
+    font-weight: 700;
+    line-height: .9;
+    letter-spacing: -3px;
+}
+
+.axis-intro p {
+    max-width: 420px;
+    margin: 18px 0 0;
+    color: var(--axis-muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.axis-date {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    color: var(--axis-muted);
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+    .axis-date strong {
+        margin-top: 5px;
+        color: var(--axis-paper);
+        font-size: 18px;
+        letter-spacing: 1px;
+    }
+
+
+/* =========================================================
+   MODULE GALLERY
+   ========================================================= */
+
+.axis-module-gallery {
+    min-height: 430px;
+    height: min(58vh,560px);
+    display: flex;
+    overflow: hidden;
+    border: 1px solid rgba(239,237,227,.1);
+}
+
+
+/* =========================================================
+   MODULE
+   ========================================================= */
+
+.axis-module {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    display: block;
+    color: var(--axis-paper);
+    text-decoration: none;
+    border-right: 1px solid rgba(239,237,227,.14);
+    transition: flex var(--axis-transition), filter var(--axis-transition);
+}
+
+    .axis-module:last-child {
+        border-right: 0;
+    }
+
+
+/* =========================================================
+   MODULE IMAGE
+   ========================================================= */
+
+.axis-module-image {
+    position: absolute;
+    inset: 0;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    filter: grayscale(100%);
+    transform: scale(1.02);
+    transition: transform .8s cubic-bezier(.22,1,.36,1), filter .8s ease;
+}
+
+
+/* =========================================================
+   MODULE IMAGES
+   ========================================================= */
+
+.axis-image-clientes {
+    background-image: url('/imagenes/modules/clienteasesor.jpg');
+}
+
+.axis-image-vehiculos {
+    background-image: url('/imagenes/modules/vehiculo.jpg');
+}
+
+.axis-image-recepcion {
+    background-image: url('/imagenes/modules/recepcion.jpg');
+}
+
+.axis-image-diagnostico {
+    background-image: url('/imagenes/modules/diagnostico.jpg');
+}
+
+.axis-image-cotizacion {
+    background-image: url('/imagenes/modules/cotizacion.jpg');
+}
+
+.axis-image-ordenes {
+    background-image: url('/imagenes/modules/ordenes.jpg');
+}
+
+
+/* =========================================================
+   MODULE OVERLAY
+   ========================================================= */
+
+.axis-module-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient( 180deg, rgba(30,32,35,.25), rgba(30,31,34,.9) );
+    transition: background var(--axis-transition);
+}
+
+
+/* =========================================================
+   MODULE TITLE
+   ========================================================= */
+
+.axis-module-title {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 2;
+    transform: translate(-50%,-50%) rotate(-90deg);
+    white-space: nowrap;
+    color: var(--axis-paper);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    transition: opacity .3s ease, transform var(--axis-transition);
+}
+
+
+/* =========================================================
+   MODULE INFO
+   ========================================================= */
+
+.axis-module-info {
+    position: absolute;
+    left: 28px;
+    right: 28px;
+    bottom: 25px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .35s ease, transform var(--axis-transition);
+}
+
+    .axis-module-info span {
+        margin-bottom: 8px;
+        color: rgba(239,237,227,.55);
+        font-size: 10px;
+        letter-spacing: 2px;
+    }
+
+    .axis-module-info strong {
+        color: var(--axis-paper);
+        font-size: 24px;
+        font-weight: 500;
+    }
+
+    .axis-module-info small {
+        margin-top: 6px;
+        color: rgba(239,237,227,.65);
+        font-size: 11px;
+    }
+
+
+/* =========================================================
+   MODULE HOVER
+   ========================================================= */
+
+.axis-module-gallery:hover .axis-module {
+    flex: .7;
+}
+
+.axis-module-gallery .axis-module:hover {
+    flex: 2.8;
+}
+
+.axis-module:hover .axis-module-image {
+    filter: grayscale(0%);
+    transform: scale(1.08);
+}
+
+.axis-module:hover .axis-module-overlay {
+    background: linear-gradient( 180deg, rgba(30,32,35,.05), rgba(30,31,34,.82) );
+}
+
+.axis-module:hover .axis-module-title {
+    opacity: 0;
+    transform: translate(-50%,-50%) rotate(0deg) scale(1.05);
+}
+
+.axis-module:hover .axis-module-info {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   HOME RESPONSIVE
+   ========================================================= */
+
+@media (max-width:1000px) {
+
+    .axis-home {
+        padding: 30px;
+    }
+
+    .axis-module-gallery {
+        height: 500px;
+        flex-wrap: wrap;
+    }
+
+        .axis-module-gallery:hover .axis-module {
+            flex: 1;
+        }
+
+        .axis-module-gallery .axis-module:hover {
+            flex: 1.8;
+        }
+}
+
+@media (max-width:700px) {
+
+    .axis-home {
+        padding: 22px;
+    }
+
+    .axis-intro {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .axis-date {
+        align-items: flex-start;
+    }
+
+    .axis-module-gallery {
+        height: auto;
+        min-height: 0;
+        flex-direction: column;
+    }
+
+    .axis-module {
+        min-height: 130px;
+        flex: none;
+    }
+
+    .axis-module-gallery:hover .axis-module,
+    .axis-module-gallery .axis-module:hover {
+        flex: none;
+    }
+
+    .axis-module-title {
+        transform: translate(-50%,-50%) rotate(0deg);
+    }
+
+    .axis-module-info {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   AXIS INTERNAL LAYOUT
+   ========================================================= */
+
+
+/* =========================================================
+   INTERNAL APP
+   ========================================================= */
+
+.axis-internal-app {
+    min-height: 100vh;
+    background: var(--axis-paper);
+    color: #252525;
+}
+
+
+/* =========================================================
+   INTERNAL SIDEBAR
+   ========================================================= */
+
+.axis-internal-sidebar {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    bottom: 18px;
+    width: 72px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient( 180deg, #1c1d1f 0%, #252628 100% );
+    border: 1px solid rgba(239,237,227,.14);
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.30), 0 0 25px rgba(239,237,227,.035);
+    z-index: 1000;
+    overflow: hidden;
+    transition: width .45s cubic-bezier(.22,1,.36,1), box-shadow .35s ease;
+}
+
+    .axis-internal-sidebar:hover {
+        width: 278px;
+        box-shadow: 0 25px 60px rgba(0,0,0,.38), 0 0 35px rgba(239,237,227,.06);
+    }
+
+
+/* =========================================================
+   INTERNAL BRAND
+   ========================================================= */
+
+.axis-internal-brand {
+    position: relative;
+    min-height: 92px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    flex-shrink: 0;
+}
+
+.axis-internal-logo {
+    display: flex;
+    flex-direction: column;
+    color: var(--axis-paper);
+    text-decoration: none;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.axis-internal-logo-name {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    transition: font-size .35s ease, letter-spacing .35s ease;
+}
+
+.axis-internal-logo-subtitle {
+    margin-top: 6px;
+    color: rgba(241,239,230,.48);
+    font-size: 7px;
+    letter-spacing: 2px;
+    opacity: 0;
+    transition: opacity .25s ease .05s;
+}
+
+
+/* =========================================================
+   INTERNAL CLOSED BRAND
+   ========================================================= */
+
+.axis-internal-sidebar:not(:hover)
+.axis-internal-brand {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.axis-internal-sidebar:not(:hover)
+.axis-internal-logo {
+    align-items: center;
+}
+
+.axis-internal-sidebar:not(:hover)
+.axis-internal-logo-name {
+    font-size: 15px;
+    letter-spacing: 2px;
+}
+
+.axis-internal-sidebar:not(:hover)
+.axis-internal-logo-subtitle {
+    opacity: 0;
+}
+
+.axis-internal-sidebar:hover
+.axis-internal-logo-subtitle {
+    opacity: 1;
+}
+
+
+/* =========================================================
+   INTERNAL NAVIGATION
+   ========================================================= */
+
+.axis-internal-navigation {
+    flex: 1;
+    padding: 8px 10px 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.15) transparent;
+}
+
+.axis-internal-section {
+    margin-bottom: 18px;
+}
+
+.axis-internal-section-title {
+    display: block;
+    margin: 0 10px 10px;
+    color: rgba(241,239,230,.35);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    white-space: nowrap;
+    transition: opacity .2s ease;
+}
+
+
+/* =========================================================
+   INTERNAL NAV ITEM
+   ========================================================= */
+
+.axis-internal-nav-item {
+    position: relative;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 0 12px;
+    margin-bottom: 4px;
+    border-radius: 11px;
+    color: rgba(241,239,230,.68);
+    text-decoration: none;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: background .25s ease, color .25s ease, box-shadow .25s ease;
+}
+
+    .axis-internal-nav-item:hover {
+        color: var(--axis-paper);
+        background: rgba(239,237,227,.07);
+    }
+
+
+/* =========================================================
+   INTERNAL NAV ICON
+   ========================================================= */
+
+.axis-internal-nav-icon {
+    width: 24px;
+    min-width: 24px;
+    display: grid;
+    place-items: center;
+    color: rgba(239,237,227,.58);
+    font-size: 15px;
+    transition: color .25s ease, transform .25s ease;
+}
+
+.axis-internal-nav-item:hover
+.axis-internal-nav-icon {
+    color: var(--axis-paper);
+    transform: scale(1.05);
+}
+
+
+/* =========================================================
+   INTERNAL ACTIVE ITEM
+   ========================================================= */
+
+.axis-internal-nav-item.active {
+    color: var(--axis-paper);
+    background: linear-gradient( 90deg, rgba(239,237,227,.13), rgba(239,237,227,.045) );
+    box-shadow: inset 0 0 0 1px rgba(239,237,227,.16), 0 0 14px rgba(239,237,227,.035);
+}
+
+    .axis-internal-nav-item.active::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 8px;
+        bottom: 8px;
+        width: 2px;
+        border-radius: 4px;
+        background: var(--axis-paper);
+        box-shadow: 0 0 8px rgba(239,237,227,.75);
+    }
+
+    .axis-internal-nav-item.active
+    .axis-internal-nav-icon {
+        color: var(--axis-paper);
+    }
+
+
+/* =========================================================
+   INTERNAL CLOSED NAV
+   ========================================================= */
+
+.axis-internal-sidebar:not(:hover)
+.axis-internal-section-title,
+.axis-internal-sidebar:not(:hover)
+.axis-internal-nav-item > span:not(.axis-internal-nav-icon),
+.axis-internal-sidebar:not(:hover)
+.axis-internal-user-info {
+    display: none;
+}
+
+.axis-internal-sidebar:not(:hover)
+.axis-internal-nav-item {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+    gap: 0;
+}
+
+.axis-internal-sidebar:not(:hover)
+.axis-internal-nav-icon {
+    margin: 0;
+}
+
+
+/* =========================================================
+   INTERNAL USER
+   ========================================================= */
+
+.axis-internal-user {
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 12px 14px;
+    border-top: 1px solid rgba(255,255,255,.07);
+    flex-shrink: 0;
+}
+
+.axis-user-avatar {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.45);
+    background: #353638;
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.axis-internal-user-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    transition: opacity .2s ease;
+}
+
+    .axis-internal-user-info strong {
+        overflow: hidden;
+        color: var(--axis-paper);
+        font-size: 11px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .axis-internal-user-info span {
+        margin-top: 3px;
+        color: rgba(241,239,230,.45);
+        font-size: 9px;
+        white-space: nowrap;
+    }
+
+.axis-internal-sidebar:not(:hover)
+.axis-internal-user {
+    justify-content: center;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+
+/* =========================================================
+   INTERNAL CONTENT
+   ========================================================= */
+
+.axis-internal-content {
+    width: 100%;
+    min-height: 100vh;
+    margin-left: 0;
+}
+
+
+/* =========================================================
+   INTERNAL TOPBAR
+   ========================================================= */
+
+.axis-internal-topbar {
+    height: 78px;
+    display: flex;
+    align-items: center;
+    padding: 0 38px 0 112px;
+    background: rgba(239,237,227,.90);
+    border-bottom: 1px solid rgba(0,0,0,.07);
+    backdrop-filter: blur(16px);
+}
+
+.axis-internal-back {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #6f6d66;
+    text-decoration: none;
+    font-size: 12px;
+    transition: color .2s ease;
+}
+
+    .axis-internal-back:hover {
+        color: #222;
+    }
+
+.axis-internal-page-title {
+    margin-left: 35px;
+    color: #272622;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.axis-internal-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.axis-internal-action {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(0,0,0,.07);
+    border-radius: 50%;
+    background: rgba(255,255,255,.45);
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease;
+}
+
+    .axis-internal-action:hover {
+        transform: translateY(-1px);
+        background: rgba(255,255,255,.75);
+    }
+
+.axis-internal-user-name {
+    color: #65635d;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   INTERNAL MAIN
+   ========================================================= */
+
+.axis-internal-main {
+    min-height: calc(100vh - 78px);
+    padding: 34px 42px 50px 112px;
+}
+
+
+/* =========================================================
+   INTERNAL RESPONSIVE — 900px
+   ========================================================= */
+
+@media (max-width:900px) {
+
+    .axis-internal-sidebar {
+        top: 12px;
+        left: 12px;
+        bottom: 12px;
+        width: 68px;
+    }
+
+        .axis-internal-sidebar:hover {
+            width: 260px;
+        }
+
+    .axis-internal-topbar {
+        padding-left: 100px;
+    }
+
+    .axis-internal-main {
+        padding-left: 100px;
+    }
+}
+
+
+/* =========================================================
+   INTERNAL RESPONSIVE — 700px
+   ========================================================= */
+
+@media (max-width:700px) {
+
+    .axis-internal-sidebar {
+        top: 10px;
+        left: 10px;
+        bottom: 10px;
+        width: 64px;
+    }
+
+        .axis-internal-sidebar:hover {
+            width: 250px;
+        }
+
+    .axis-internal-topbar {
+        padding: 0 18px 0 88px;
+    }
+
+    .axis-internal-page-title {
+        display: none;
+    }
+
+    .axis-internal-main {
+        padding: 25px 20px 40px 88px;
+    }
+
+    .axis-internal-actions {
+        gap: 8px;
+    }
+
+    .axis-internal-user-name {
+        display: none;
+    }
+}

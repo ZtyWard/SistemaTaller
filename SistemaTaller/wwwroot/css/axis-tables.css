@@ -1,0 +1,204 @@
+﻿/* =========================================================
+   AXIS TABLES
+   ========================================================= */
+
+.axis-table-card {
+    overflow: hidden;
+    background: rgba(255,255,255,.48);
+    border: 1px solid rgba(0,0,0,.09);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.045);
+}
+
+.axis-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.axis-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+
+    /* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+    .axis-table th {
+        padding: 15px 18px;
+        background: rgba(0,0,0,.025);
+        border-bottom: 1px solid rgba(0,0,0,.08);
+        color: #85827a;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        text-align: left;
+        text-transform: uppercase;
+    }
+
+
+    /* =========================================================
+   TABLE CELLS
+   ========================================================= */
+
+    .axis-table td {
+        padding: 16px 18px;
+        border-bottom: 1px solid rgba(0,0,0,.055);
+        color: #68665f;
+        font-size: 12px;
+    }
+
+    .axis-table tbody tr {
+        transition: background .2s ease;
+    }
+
+        .axis-table tbody tr:hover {
+            background: rgba(255,255,255,.45);
+        }
+
+        .axis-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+
+/* =========================================================
+   PRIMARY TEXT
+   ========================================================= */
+
+.axis-primary-text {
+    color: #292824;
+}
+
+
+/* =========================================================
+   CLIENT CELL
+   ========================================================= */
+
+.axis-client-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.axis-client-avatar {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #292927;
+    color: #f1eee5;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.axis-client-cell strong {
+    color: #34322e;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.axis-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.axis-status-active {
+    background: rgba(76,120,76,.12);
+    color: #507050;
+}
+
+.axis-status-inactive {
+    background: rgba(100,100,100,.10);
+    color: #77756e;
+}
+
+
+/* =========================================================
+   ACTIONS COLUMN
+   ========================================================= */
+
+.axis-table-actions-column {
+    width: 210px;
+}
+
+
+/* =========================================================
+   ROW ACTIONS
+   ========================================================= */
+
+.axis-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.axis-row-action {
+    padding: 6px 9px;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 7px;
+    background: rgba(255,255,255,.35);
+    color: #5b5953;
+    font-size: 10px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    .axis-row-action:hover {
+        border-color: rgba(0,0,0,.20);
+        color: #222;
+    }
+
+.axis-row-danger:hover {
+    color: #9a4e4e;
+    border-color: rgba(150,70,70,.25);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.axis-empty {
+    padding: 50px 20px !important;
+    color: #99968e !important;
+    text-align: center;
+}
+
+
+/* =========================================================
+   RESPONSIVE TABLE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .axis-table-card {
+        border-radius: 12px;
+    }
+
+    .axis-table th {
+        padding: 12px 14px;
+    }
+
+    .axis-table td {
+        padding: 13px 14px;
+    }
+
+    .axis-table-actions-column {
+        width: auto;
+    }
+
+    .axis-row-actions {
+        flex-wrap: wrap;
+    }
+}

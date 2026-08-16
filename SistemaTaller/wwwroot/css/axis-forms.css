@@ -1,0 +1,321 @@
+﻿/* =========================================================
+   AXIS FORMS
+   ========================================================= */
+
+.axis-form-card {
+    width: 100%;
+    max-width: 1050px;
+    margin: 0 auto;
+    background: rgba(255,255,255,.48);
+    border: 1px solid rgba(0,0,0,.09);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.045);
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.axis-form {
+    padding: 30px;
+}
+
+
+/* =========================================================
+   FORM SECTIONS
+   ========================================================= */
+
+.axis-form-section {
+    padding-bottom: 28px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid rgba(0,0,0,.07);
+}
+
+    .axis-form-section:last-of-type {
+        margin-bottom: 0;
+        border-bottom: 0;
+    }
+
+.axis-form-section-title {
+    margin-bottom: 20px;
+    color: #34322e;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   FORM GRID
+   ========================================================= */
+
+.axis-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 19px;
+}
+
+
+/* =========================================================
+   FIELD
+   ========================================================= */
+
+.axis-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.axis-field-full {
+    grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.axis-field label {
+    color: #66635c;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   INPUT / TEXTAREA / SELECT
+   ========================================================= */
+
+.axis-field input,
+.axis-field textarea,
+.axis-field select {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid rgba(0,0,0,.10);
+    border-radius: 9px;
+    outline: none;
+    background: rgba(255,255,255,.62);
+    color: #292824;
+    font-family: inherit;
+    font-size: 12px;
+    transition: .2s ease;
+}
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.axis-field input {
+    height: 42px;
+}
+
+
+/* =========================================================
+   TEXTAREA
+   ========================================================= */
+
+.axis-field textarea {
+    min-height: 85px;
+    resize: vertical;
+}
+
+
+    /* =========================================================
+   FIELD FOCUS
+   ========================================================= */
+
+    .axis-field input:focus,
+    .axis-field textarea:focus,
+    .axis-field select:focus {
+        border-color: rgba(40,40,40,.45);
+        background: rgba(255,255,255,.82);
+        box-shadow: 0 0 0 3px rgba(40,40,40,.045);
+    }
+
+
+/* =========================================================
+   VALIDATION
+   ========================================================= */
+
+.axis-field span.field-validation-error {
+    color: #9a4e4e;
+    font-size: 10px;
+}
+
+.axis-form-validation {
+    margin-bottom: 20px;
+    color: #9a4e4e;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+   ========================================================= */
+
+.axis-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 4px;
+}
+
+
+/* =========================================================
+   AXIS DETAILS
+   ========================================================= */
+
+.axis-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.axis-detail-card {
+    padding: 26px;
+    background: rgba(255,255,255,.48);
+    border: 1px solid rgba(0,0,0,.09);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.04);
+}
+
+    .axis-detail-card:first-child {
+        grid-column: 1 / -1;
+    }
+
+
+/* =========================================================
+   DETAIL HEADER
+   ========================================================= */
+
+.axis-detail-card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+
+/* =========================================================
+   DETAIL AVATAR
+   ========================================================= */
+
+.axis-detail-avatar {
+    width: 62px;
+    height: 62px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #292927;
+    color: #f1eee5;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   DETAIL LABEL
+   ========================================================= */
+
+.axis-detail-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #89867e;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+}
+
+
+/* =========================================================
+   DETAIL TITLE
+   ========================================================= */
+
+.axis-detail-card h2 {
+    margin: 0;
+    color: #292824;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   DETAIL STATUS
+   ========================================================= */
+
+.axis-detail-status {
+    margin-top: 20px;
+}
+
+
+/* =========================================================
+   DETAIL LIST
+   ========================================================= */
+
+.axis-detail-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.axis-detail-row {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid rgba(0,0,0,.055);
+}
+
+    .axis-detail-row:last-child {
+        border-bottom: 0;
+    }
+
+    .axis-detail-row span {
+        color: #88857d;
+        font-size: 11px;
+    }
+
+    .axis-detail-row strong {
+        max-width: 65%;
+        color: #35332f;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: right;
+    }
+
+.axis-detail-active-text {
+    color: #507050 !important;
+}
+
+
+/* =========================================================
+   FORM / DETAIL RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 750px) {
+
+    .axis-form-grid,
+    .axis-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .axis-field-full {
+        grid-column: auto;
+    }
+
+    .axis-detail-card:first-child {
+        grid-column: auto;
+    }
+
+    .axis-form {
+        padding: 20px;
+    }
+
+    .axis-detail-card {
+        padding: 20px;
+    }
+}
