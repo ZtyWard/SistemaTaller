@@ -61,8 +61,6 @@ builder.Services.ConfigureApplicationCookie(options =>
 // REPOSITORIES - DATOS
 // =====================================================
 
-// Módulos principales
-
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IVehiculoRepository, VehiculoRepository>();
 builder.Services.AddScoped<IRecepcionRepository, RecepcionRepository>();
@@ -109,6 +107,12 @@ builder.Services.AddScoped<IFacturaRepository, FacturaRepository>();
 builder.Services.AddScoped<IPagoRepository, PagoRepository>();
 
 // =====================================================
+// REPORTES
+// =====================================================
+
+builder.Services.AddScoped<IReportesRepository, ReportesRepository>();
+
+// =====================================================
 // CATÁLOGOS
 // =====================================================
 
@@ -123,8 +127,6 @@ builder.Services.AddScoped<IEspecialidadRepository, EspecialidadRepository>();
 // =====================================================
 // SERVICES - NEGOCIOS
 // =====================================================
-
-// Módulos principales
 
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IVehiculoService, VehiculoService>();
@@ -170,6 +172,12 @@ builder.Services.AddScoped<IFacturaService, FacturaService>();
 // =====================================================
 
 builder.Services.AddScoped<IPagoService, PagoService>();
+
+// =====================================================
+// REPORTES
+// =====================================================
+
+builder.Services.AddScoped<IReportesService, ReportesService>();
 
 // =====================================================
 // CATÁLOGOS
@@ -254,10 +262,6 @@ using (var scope = app.Services.CreateScope())
 
     foreach (var nombreRol in roles)
     {
-        // =================================================
-        // CREAR ROL SI NO EXISTE
-        // =================================================
-
         if (!await roleManager.RoleExistsAsync(nombreRol))
         {
             var resultadoRol =
@@ -273,10 +277,6 @@ using (var scope = app.Services.CreateScope())
                 }
             }
         }
-
-        // =================================================
-        // MIGRACIÓN INICIAL DE PERMISOS A ROLE CLAIMS
-        // =================================================
 
         var rol =
             await roleManager.FindByNameAsync(nombreRol);
@@ -294,9 +294,6 @@ using (var scope = app.Services.CreateScope())
                 c.Type ==
                 RolClaims.PermisosConfigurados);
 
-        // Solo se realiza la migración una vez.
-        // Si el administrador modifica los permisos
-        // posteriormente desde AXIS, no se sobrescriben.
         if (!permisosYaConfigurados)
         {
             var resultadoMarcador =
@@ -347,9 +344,6 @@ using (var scope = app.Services.CreateScope())
                     }
                 }
             }
-
-            Console.WriteLine(
-                $"PERMISOS INICIALES CONFIGURADOS PARA EL ROL: {nombreRol}");
         }
     }
 
@@ -384,11 +378,6 @@ using (var scope = app.Services.CreateScope())
                     $"ERROR CREANDO ADMIN: {error.Description}");
             }
         }
-        else
-        {
-            Console.WriteLine(
-                "USUARIO ADMIN CREADO CORRECTAMENTE.");
-        }
     }
     else
     {
@@ -416,10 +405,6 @@ using (var scope = app.Services.CreateScope())
             }
         }
     }
-
-    // =====================================================
-    // ASIGNAR ADMINISTRADOR AL ROL ADMINISTRADOR
-    // =====================================================
 
     if (!await userManager.IsInRoleAsync(
             usuario,

@@ -1,0 +1,910 @@
+﻿@model Negocios.DTOs.ReportesDto
+
+@{
+    ViewData["Title"] = "Reportes";
+
+    var maxVentas =
+        Model.VentasPorMes.Any()
+            ? Math.Max(
+                1,
+                (double)Model.VentasPorMes.Max(x => x.Total))
+            : 1;
+
+    var maxOrdenes =
+        Model.OrdenesPorEstado.Any()
+            ? Math.Max(
+                1,
+                Model.OrdenesPorEstado.Max(x => x.Cantidad))
+            : 1;
+
+    var maxProductos =
+        Model.ProductosMasVendidos.Any()
+            ? Math.Max(
+                1,
+                Model.ProductosMasVendidos.Max(x => x.Cantidad))
+            : 1;
+
+    var maxServicios =
+        Model.ServiciosMasSolicitados.Any()
+            ? Math.Max(
+                1,
+                Model.ServiciosMasSolicitados.Max(x => x.Cantidad))
+            : 1;
+}
+
+<div class="container-fluid py-4">
+
+    <!-- =====================================================
+         ENCABEZADO
+         ===================================================== -->
+
+    <div class="d-flex justify-content-between
+                align-items-start
+                flex-wrap gap-3 mb-4">
+
+        <div>
+
+            <div class="text-muted small">
+                AXIS · ANÁLISIS
+            </div>
+
+            <h1 class="fw-bold mb-1">
+                Reportes
+            </h1>
+
+            <p class="text-muted mb-0">
+                Indicadores operativos, financieros
+                y de inventario del taller.
+            </p>
+
+        </div>
+
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <!-- =====================================================
+         FILTROS
+         ===================================================== -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <form asp-action="Index"
+                  method="get"
+                  class="row g-3 align-items-end">
+
+                <div class="col-md-3">
+
+                    <label class="form-label fw-semibold">
+                        Desde
+                    </label>
+
+                    <input type="date"
+                           name="desde"
+                           value="@Model.Desde.ToString("yyyy-MM-dd")"
+                           class="form-control" />
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label class="form-label fw-semibold">
+                        Hasta
+                    </label>
+
+                    <input type="date"
+                           name="hasta"
+                           value="@Model.Hasta.ToString("yyyy-MM-dd")"
+                           class="form-control" />
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label class="form-label fw-semibold">
+                        Placa
+                    </label>
+
+                    <input type="text"
+                           name="placa"
+                           value="@Model.Placa"
+                           class="form-control"
+                           placeholder="Ej. ABC123" />
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <button type="submit"
+                            class="btn btn-primary w-100">
+                        Generar reporte
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+         KPIs
+         ===================================================== -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        INGRESOS
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        @Model.Ingresos.ToString("C2")
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        COMPRAS
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        @Model.Compras.ToString("C2")
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        UTILIDAD
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        @Model.Utilidad.ToString("C2")
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        TRABAJOS DEL PERÍODO
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        @Model.TrabajosPeriodo
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        ÓRDENES PENDIENTES
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        @Model.OrdenesPendientes
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        ÓRDENES ATRASADAS
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        @Model.OrdenesAtrasadas
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        ÓRDENES FINALIZADAS
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        @Model.OrdenesFinalizadas
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        FACTURAS PENDIENTES
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        @Model.FacturasPendientes
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+         GRÁFICO 1 — VENTAS
+         ===================================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold">
+                Ventas por período
+            </h5>
+
+            <p class="text-muted small">
+                Total vendido por mes.
+            </p>
+
+            @if (Model.VentasPorMes.Any())
+            {
+                foreach (var item in Model.VentasPorMes)
+                {
+                    var porcentaje =
+                    (double)item.Total /
+                    maxVentas *
+                    100;
+
+                    <div class="mb-3">
+
+                        <div class="d-flex justify-content-between
+                                            small mb-1">
+
+                            <span>
+                                @item.Mes
+                            </span>
+
+                            <strong>
+                                @item.Total.ToString("C2")
+                            </strong>
+
+                        </div>
+
+                        <div style="
+                                    background:#e9ecef;
+                                    height:22px;
+                                    border-radius:8px;
+                                    overflow:hidden;">
+
+                            <div style="
+                                        width:@porcentaje%;
+                                        height:100%;
+                                        background:#1f2937;
+                                        border-radius:8px;">
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-muted">
+                    No hay ventas en el período.
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+         GRÁFICOS 2 Y 3
+         ===================================================== -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold">
+                        Órdenes por estado
+                    </h5>
+
+                    @foreach (var item in Model.OrdenesPorEstado)
+                    {
+                        var porcentaje =
+                        (double)item.Cantidad /
+                        maxOrdenes *
+                        100;
+
+                        <div class="mb-3">
+
+                            <div class="d-flex justify-content-between
+                                            small mb-1">
+
+                                <span>
+                                    @item.Estado
+                                </span>
+
+                                <strong>
+                                    @item.Cantidad
+                                </strong>
+
+                            </div>
+
+                            <div style="
+                                    background:#e9ecef;
+                                    height:20px;
+                                    border-radius:8px;
+                                    overflow:hidden;">
+
+                                <div style="
+                                        width:@porcentaje%;
+                                        height:100%;
+                                        background:#374151;
+                                        border-radius:8px;">
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold">
+                        Productos más vendidos
+                    </h5>
+
+                    @foreach (
+                                        var item
+                                        in Model.ProductosMasVendidos)
+                    {
+                        var porcentaje =
+                        (double)item.Cantidad /
+                        maxProductos *
+                        100;
+
+                        <div class="mb-3">
+
+                            <div class="d-flex justify-content-between
+                                            small mb-1">
+
+                                <span>
+                                    @item.Nombre
+                                </span>
+
+                                <strong>
+                                    @item.Cantidad
+                                </strong>
+
+                            </div>
+
+                            <div style="
+                                    background:#e9ecef;
+                                    height:20px;
+                                    border-radius:8px;
+                                    overflow:hidden;">
+
+                                <div style="
+                                        width:@porcentaje%;
+                                        height:100%;
+                                        background:#111827;
+                                        border-radius:8px;">
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+         SERVICIOS / MECÁNICOS
+         ===================================================== -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold">
+                        Servicios más solicitados
+                    </h5>
+
+                    @foreach (
+                                        var item
+                                        in Model.ServiciosMasSolicitados)
+                    {
+                        var porcentaje =
+                        (double)item.Cantidad /
+                        maxServicios *
+                        100;
+
+                        <div class="mb-3">
+
+                            <div class="d-flex justify-content-between
+                                            small mb-1">
+
+                                <span>
+                                    @item.Servicio
+                                </span>
+
+                                <strong>
+                                    @item.Cantidad
+                                </strong>
+
+                            </div>
+
+                            <div style="
+                                    background:#e9ecef;
+                                    height:18px;
+                                    border-radius:8px;
+                                    overflow:hidden;">
+
+                                <div style="
+                                        width:@porcentaje%;
+                                        height:100%;
+                                        background:#4b5563;
+                                        border-radius:8px;">
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold">
+                        Trabajos por mecánico
+                    </h5>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-sm align-middle">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Mecánico</th>
+                                    <th>Trabajos</th>
+                                    <th>Horas</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (
+                                                                var item
+                                                                in Model.TrabajosPorMecanico)
+                                {
+                                    <tr>
+
+                                        <td>
+                                            @item.Mecanico
+                                        </td>
+
+                                        <td>
+                                            @item.Trabajos
+                                        </td>
+
+                                        <td>
+                                            @item.Horas.ToString("N2")
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+         COMPRAS
+         ===================================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold">
+                Compras por período
+            </h5>
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+                            <th>Mes</th>
+                            <th>Cantidad</th>
+                            <th>Total</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model.ComprasPorMes)
+                        {
+                            <tr>
+
+                                <td>
+                                    @item.Mes
+                                </td>
+
+                                <td>
+                                    @item.Cantidad
+                                </td>
+
+                                <td>
+                                    @item.Total.ToString("C2")
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+         STOCK BAJO
+         ===================================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold">
+                Stock bajo
+            </h5>
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th>Stock</th>
+                            <th>Mínimo</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model.StockBajo)
+                        {
+                            <tr>
+
+                                <td>
+                                    @item.Codigo
+                                </td>
+
+                                <td>
+                                    @item.Nombre
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        @item.Stock
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    @item.StockMinimo
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+         FACTURAS PENDIENTES
+         ===================================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold">
+                Facturas pendientes
+            </h5>
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+                            <th>Factura</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                            <th>Pagado</th>
+                            <th>Saldo</th>
+                            <th>Estado</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (
+                                                var item
+                                                in Model.FacturasPendientesLista)
+                        {
+                            <tr>
+
+                                <td>
+                                    @item.NumeroFactura
+                                </td>
+
+                                <td>
+                                    @item.Cliente
+                                </td>
+
+                                <td>
+                                    @item.FechaEmision
+                                    .ToString("dd/MM/yyyy")
+                                </td>
+
+                                <td>
+                                    @item.Total.ToString("C2")
+                                </td>
+
+                                <td>
+                                    @item.TotalPagado.ToString("C2")
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        @item.SaldoPendiente.ToString("C2")
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    @item.Estado
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+         HISTORIAL DE VEHÍCULOS
+         ===================================================== -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold">
+                Historial de vehículo
+            </h5>
+
+            <p class="text-muted small">
+                Filtra por placa desde el formulario superior.
+            </p>
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Placa</th>
+                            <th>Cliente</th>
+                            <th>OT</th>
+                            <th>Estado</th>
+                            <th>Observaciones</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (
+                                                var item
+                                                in Model.HistorialVehiculos)
+                        {
+                            <tr>
+
+                                <td>
+                                    @item.Fecha
+                                    .ToString("dd/MM/yyyy")
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        @item.Placa
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    @item.Cliente
+                                </td>
+
+                                <td>
+                                    OT #@item.IdOrdenTrabajo
+                                </td>
+
+                                <td>
+                                    @item.Estado
+                                </td>
+
+                                <td>
+                                    @item.Observaciones
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
