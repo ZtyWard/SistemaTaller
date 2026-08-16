@@ -1,0 +1,695 @@
+﻿@model Negocios.DTOs.GarantiaDto
+
+@{
+    ViewData["Title"] = "Detalle de garantía";
+}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <span class="text-muted">
+            AXIS · GARANTÍAS
+        </span>
+
+        <h1 class="mt-2">
+            Detalle de garantía #@Model.IdGarantia
+        </h1>
+
+        <p class="text-muted mb-0">
+            Consulta el estado y administra la garantía.
+        </p>
+
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="row">
+
+        <!-- ================================================= -->
+        <!-- INFORMACIÓN GENERAL -->
+        <!-- ================================================= -->
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm mb-4">
+
+                <div class="card-body">
+
+                    <h5 class="card-title mb-4">
+                        Información de la garantía
+                    </h5>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <strong>
+                                Estado
+                            </strong>
+
+                            <div class="mt-1">
+
+                                @switch (Model.Estado)
+                                {
+                                    case "Vigente":
+                                        <span class="badge bg-success">
+                                            Vigente
+                                        </span>
+                                        break;
+
+                                    case "Vencida":
+                                        <span class="badge bg-danger">
+                                            Vencida
+                                        </span>
+                                        break;
+
+                                    case "Reclamada":
+                                        <span class="badge bg-warning text-dark">
+                                            Reclamada
+                                        </span>
+                                        break;
+
+                                    case "Resuelta":
+                                        <span class="badge bg-primary">
+                                            Resuelta
+                                        </span>
+                                        break;
+
+                                    case "Rechazada":
+                                        <span class="badge bg-dark">
+                                            Rechazada
+                                        </span>
+                                        break;
+
+                                    default:
+                                        <span class="badge bg-secondary">
+                                            @Model.Estado
+                                        </span>
+                                        break;
+                                }
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <strong>
+                                Cobertura
+                            </strong>
+
+                            <div class="mt-1">
+
+                                @if (Model.IdServicio.HasValue)
+                                {
+                                    <span>
+                                        Servicio:
+                                        @(Model.ServicioNombre
+                                                                            ?? $"#{Model.IdServicio}")
+                                </span>
+                                                                }
+                                else if (Model.IdProducto.HasValue)
+                                {
+                                    <span>
+                                        Producto:
+                                        @(Model.ProductoNombre
+                                                                            ?? $"#{Model.IdProducto}")
+                                </span>
+                                                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        Sin cobertura especificada
+                                    </span>
+                                }
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <strong>
+                                Fecha de inicio
+                            </strong>
+
+                            <div>
+                                @Model.FechaInicio.ToString("dd/MM/yyyy")
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <strong>
+                                Fecha de vencimiento
+                            </strong>
+
+                            <div>
+                                @Model.FechaVencimiento.ToString("dd/MM/yyyy")
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ================================================= -->
+            <!-- ORIGEN -->
+            <!-- ================================================= -->
+
+            <div class="card shadow-sm mb-4">
+
+                <div class="card-body">
+
+                    <h5 class="card-title mb-3">
+                        Origen
+                    </h5>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <strong>
+                                Orden de trabajo
+                            </strong>
+
+                            <div>
+                                @if (Model.IdOrdenTrabajo.HasValue)
+                                {
+                                    <span>
+                                        OT #@Model.IdOrdenTrabajo
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        No asociada
+                                    </span>
+                                }
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <strong>
+                                Venta
+                            </strong>
+
+                            <div>
+                                @if (Model.IdVenta.HasValue)
+                                {
+                                    <span>
+                                        Venta #@Model.IdVenta
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        No asociada
+                                    </span>
+                                }
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ================================================= -->
+            <!-- CONDICIONES -->
+            <!-- ================================================= -->
+
+            <div class="card shadow-sm mb-4">
+
+                <div class="card-body">
+
+                    <h5 class="card-title">
+                        Condiciones
+                    </h5>
+
+                    <div class="mt-3">
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Condiciones))
+                        {
+                            <p class="mb-0">
+                                @Model.Condiciones
+                            </p>
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                No se registraron condiciones.
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ================================================= -->
+            <!-- OBSERVACIONES -->
+            <!-- ================================================= -->
+
+            <div class="card shadow-sm mb-4">
+
+                <div class="card-body">
+
+                    <h5 class="card-title">
+                        Observaciones
+                    </h5>
+
+                    <div class="mt-3">
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Observaciones))
+                        {
+                            <p class="mb-0">
+                                @Model.Observaciones
+                            </p>
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                No se registraron observaciones.
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ================================================= -->
+            <!-- RECLAMO -->
+            <!-- ================================================= -->
+            @if (
+                        Model.Estado == "Reclamada" ||
+                        Model.Estado == "Resuelta" ||
+                        Model.Estado == "Rechazada")
+            {
+                <div class="card shadow-sm mb-4">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            Reclamo
+                        </h5>
+
+                        <div class="mt-3">
+
+                            <strong>
+                                Fecha del reclamo
+                            </strong>
+
+                            <p>
+                                @(Model.FechaReclamo.HasValue
+                                                            ? Model.FechaReclamo.Value.ToString("dd/MM/yyyy")
+                                                            : "No registrada")
+                        </p>
+
+                            <strong>
+                                Motivo
+                            </strong>
+
+                            <p class="mb-0">
+
+                            @if (!string.IsNullOrWhiteSpace(
+                                                        Model.MotivoReclamo))
+                                {
+                                    @Model.MotivoReclamo
+                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        No registrado.
+                                    </span>
+                                }
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+            <!-- ================================================= -->
+            <!-- RESOLUCIÓN -->
+            <!-- ================================================= -->
+            @if (
+                        Model.Estado == "Resuelta" ||
+                        Model.Estado == "Rechazada")
+            {
+                <div class="card shadow-sm mb-4">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            Resolución
+                        </h5>
+
+                        <div class="mt-3">
+
+                            <strong>
+                                Fecha
+                            </strong>
+
+                            <p>
+                                @(Model.FechaResolucion.HasValue
+                                                            ? Model.FechaResolucion.Value.ToString("dd/MM/yyyy")
+                                                            : "No registrada")
+                        </p>
+
+                            <strong>
+                                Resultado
+                            </strong>
+
+                            <p class="mb-0">
+
+                            @if (!string.IsNullOrWhiteSpace(
+                                                        Model.Resolucion))
+                                {
+                                    @Model.Resolucion
+                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        No registrada.
+                                    </span>
+                                }
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+        <!-- ================================================= -->
+        <!-- ACCIONES -->
+        <!-- ================================================= -->
+
+        <div class="col-lg-4">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+
+                    <h5 class="card-title mb-3">
+                        Acciones
+                    </h5>
+
+                    @if (Model.Estado == "Vigente")
+                    {
+                        <a asp-action="Edit"
+                           asp-route-id="@Model.IdGarantia"
+                           class="btn btn-outline-primary w-100 mb-2">
+                            Editar garantía
+                        </a>
+
+                        <button type="button"
+                                class="btn btn-warning w-100 mb-2"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalReclamo">
+                            Registrar reclamo
+                        </button>
+                    }
+
+                    @if (Model.Estado == "Reclamada")
+                    {
+                        <button type="button"
+                                class="btn btn-success w-100 mb-2"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalResolver">
+                            Resolver garantía
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-outline-danger w-100 mb-2"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalRechazar">
+                            Rechazar reclamo
+                        </button>
+                    }
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary w-100">
+                        Volver a garantías
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- MODAL RECLAMO -->
+<!-- ===================================================== -->
+@if (Model.Estado == "Vigente")
+{
+    <div class="modal fade"
+         id="modalReclamo"
+         tabindex="-1">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <form asp-action="Reclamar"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="modal-header">
+
+                        <h5 class="modal-title">
+                            Registrar reclamo
+                        </h5>
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal">
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body">
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.IdGarantia" />
+
+                        <label class="form-label">
+                            Motivo del reclamo
+                        </label>
+
+                        <textarea name="motivo"
+                              class="form-control"
+                              rows="5"
+                              required
+                              placeholder="Describe el problema o motivo del reclamo..."></textarea>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button type="submit"
+                                class="btn btn-warning">
+                            Registrar reclamo
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+<!-- ===================================================== -->
+<!-- MODAL RESOLVER -->
+<!-- ===================================================== -->
+@if (Model.Estado == "Reclamada")
+{
+    <div class="modal fade"
+         id="modalResolver"
+         tabindex="-1">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <form asp-action="Resolver"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="modal-header">
+
+                        <h5 class="modal-title">
+                            Resolver garantía
+                        </h5>
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal">
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body">
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.IdGarantia" />
+
+                        <label class="form-label">
+                            Resolución
+                        </label>
+
+                        <textarea name="resolucion"
+                              class="form-control"
+                              rows="5"
+                              required
+                              placeholder="Describe cómo fue resuelto el reclamo..."></textarea>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button type="submit"
+                                class="btn btn-success">
+                            Resolver garantía
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+<!-- ===================================================== -->
+<!-- MODAL RECHAZAR -->
+<!-- ===================================================== -->
+@if (Model.Estado == "Reclamada")
+{
+    <div class="modal fade"
+         id="modalRechazar"
+         tabindex="-1">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <form asp-action="Rechazar"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="modal-header">
+
+                        <h5 class="modal-title">
+                            Rechazar reclamo
+                        </h5>
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal">
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body">
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.IdGarantia" />
+
+                        <label class="form-label">
+                            Motivo del rechazo
+                        </label>
+
+                        <textarea name="motivo"
+                              class="form-control"
+                              rows="5"
+                              required
+                              placeholder="Indica el motivo por el cual se rechaza el reclamo..."></textarea>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button type="submit"
+                                class="btn btn-danger">
+                            Rechazar reclamo
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+}

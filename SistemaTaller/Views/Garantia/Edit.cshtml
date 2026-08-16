@@ -1,0 +1,360 @@
+﻿@model Negocios.DTOs.GarantiaGuardarDto
+
+@{
+    ViewData["Title"] = "Editar garantía";
+
+    var idGarantia = ViewBag.IdGarantia;
+}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <span class="text-muted">
+            AXIS · GARANTÍAS
+        </span>
+
+        <h1 class="mt-2">
+            Editar garantía #@idGarantia
+        </h1>
+
+        <p class="text-muted mb-0">
+            Modifica la información de cobertura y vigencia de la garantía.
+        </p>
+
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+
+            <strong>
+                No fue posible actualizar la garantía.
+            </strong>
+
+            <div asp-validation-summary="All"
+                 class="mt-2">
+            </div>
+
+        </div>
+    }
+
+    <form asp-action="Edit"
+          asp-route-id="@idGarantia"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <div class="row g-4">
+
+            <!-- ================================================= -->
+            <!-- INFORMACIÓN -->
+            <!-- ================================================= -->
+
+            <div class="col-lg-8">
+
+                <div class="card shadow-sm mb-4">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title mb-4">
+                            Origen de la garantía
+                        </h5>
+
+                        <div class="mb-3">
+
+                            <label asp-for="IdOrdenTrabajo"
+                                   class="form-label">
+                                Orden de trabajo
+                            </label>
+
+                            <input asp-for="IdOrdenTrabajo"
+                                   class="form-control"
+                                   type="number"
+                                   min="1"
+                                   placeholder="Ej. 1" />
+
+                            <div class="form-text">
+                                Indica la OT que originó la garantía.
+                            </div>
+
+                            <span asp-validation-for="IdOrdenTrabajo"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label asp-for="IdVenta"
+                                   class="form-label">
+                                Venta
+                            </label>
+
+                            <input asp-for="IdVenta"
+                                   class="form-control"
+                                   type="number"
+                                   min="1"
+                                   placeholder="Ej. 1" />
+
+                            <div class="form-text">
+                                Utiliza este campo si la garantía proviene de una venta.
+                            </div>
+
+                            <span asp-validation-for="IdVenta"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="alert alert-info mb-0">
+
+                            <strong>Importante:</strong>
+                            la garantía debe estar asociada a una
+                            orden de trabajo o a una venta.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ================================================= -->
+                <!-- COBERTURA -->
+                <!-- ================================================= -->
+
+                <div class="card shadow-sm mb-4">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title mb-4">
+                            Cobertura
+                        </h5>
+
+                        <div class="mb-3">
+
+                            <label asp-for="IdServicio"
+                                   class="form-label">
+                                Servicio
+                            </label>
+
+                            <input asp-for="IdServicio"
+                                   class="form-control"
+                                   type="number"
+                                   min="1"
+                                   placeholder="Ej. 2" />
+
+                            <div class="form-text">
+                                Utiliza este campo si la garantía corresponde a un servicio.
+                            </div>
+
+                            <span asp-validation-for="IdServicio"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label asp-for="IdProducto"
+                                   class="form-label">
+                                Producto / repuesto
+                            </label>
+
+                            <input asp-for="IdProducto"
+                                   class="form-control"
+                                   type="number"
+                                   min="1"
+                                   placeholder="Ej. 3" />
+
+                            <div class="form-text">
+                                Utiliza este campo si la garantía corresponde a un producto.
+                            </div>
+
+                            <span asp-validation-for="IdProducto"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="alert alert-warning mb-0">
+
+                            <strong>Importante:</strong>
+                            la garantía debe cubrir un producto
+                            o un servicio, no ambos.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ================================================= -->
+                <!-- VIGENCIA -->
+                <!-- ================================================= -->
+
+                <div class="card shadow-sm mb-4">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title mb-4">
+                            Vigencia
+                        </h5>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label asp-for="FechaInicio"
+                                       class="form-label">
+                                    Fecha de inicio
+                                </label>
+
+                                <input asp-for="FechaInicio"
+                                       type="date"
+                                       class="form-control" />
+
+                                <span asp-validation-for="FechaInicio"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label asp-for="FechaVencimiento"
+                                       class="form-label">
+                                    Fecha de vencimiento
+                                </label>
+
+                                <input asp-for="FechaVencimiento"
+                                       type="date"
+                                       class="form-control" />
+
+                                <span asp-validation-for="FechaVencimiento"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ================================================= -->
+                <!-- CONDICIONES -->
+                <!-- ================================================= -->
+
+                <div class="card shadow-sm mb-4">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title mb-4">
+                            Condiciones
+                        </h5>
+
+                        <div class="mb-3">
+
+                            <label asp-for="Condiciones"
+                                   class="form-label">
+                                Condiciones de garantía
+                            </label>
+
+                            <textarea asp-for="Condiciones"
+                                      class="form-control"
+                                      rows="5"
+                                      placeholder="Condiciones aplicables a la garantía..."></textarea>
+
+                            <span asp-validation-for="Condiciones"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="mb-0">
+
+                            <label asp-for="Observaciones"
+                                   class="form-label">
+                                Observaciones
+                            </label>
+
+                            <textarea asp-for="Observaciones"
+                                      class="form-control"
+                                      rows="5"
+                                      placeholder="Observaciones adicionales..."></textarea>
+
+                            <span asp-validation-for="Observaciones"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ================================================= -->
+            <!-- PANEL LATERAL -->
+            <!-- ================================================= -->
+
+            <div class="col-lg-4">
+
+                <div class="card shadow-sm mb-4">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title mb-3">
+                            Acciones
+                        </h5>
+
+                        <button type="submit"
+                                class="btn btn-primary w-100 mb-2">
+                            Guardar cambios
+                        </button>
+
+                        <a asp-action="Details"
+                           asp-route-id="@idGarantia"
+                           class="btn btn-outline-secondary w-100">
+                            Cancelar
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div class="card border-info">
+
+                    <div class="card-body">
+
+                        <h6 class="card-title">
+                            Nota
+                        </h6>
+
+                        <p class="card-text small mb-0">
+                            El estado de la garantía y la información
+                            de reclamos o resoluciones se administran
+                            mediante sus acciones correspondientes.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
