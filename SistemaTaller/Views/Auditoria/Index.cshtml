@@ -1,0 +1,381 @@
+﻿@model IEnumerable<Negocios.DTOs.AuditoriaDto>
+
+@{
+    ViewData["Title"] = "Auditoría";
+
+    var usuarioId = ViewBag.UsuarioId as string;
+    var modulo = ViewBag.Modulo as string;
+    var accion = ViewBag.Accion as string;
+    var fechaDesde = ViewBag.FechaDesde as string;
+    var fechaHasta = ViewBag.FechaHasta as string;
+    var registroId = ViewBag.RegistroId as string;
+}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <div class="text-muted small">
+            AXIS · SEGURIDAD
+        </div>
+
+        <h1 class="mt-2 mb-1">
+            Bitácora de auditoría
+        </h1>
+
+        <p class="text-muted mb-0">
+            Consulta las operaciones registradas en el sistema.
+        </p>
+
+    </div>
+
+    <!-- ================================================= -->
+    <!-- FILTROS -->
+    <!-- ================================================= -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form asp-action="Index"
+                  method="get">
+
+                <div class="row g-3">
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Usuario
+                        </label>
+
+                        <input type="text"
+                               name="usuarioId"
+                               value="@usuarioId"
+                               class="form-control"
+                               placeholder="ID del usuario" />
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Módulo
+                        </label>
+
+                        <input type="text"
+                               name="modulo"
+                               value="@modulo"
+                               class="form-control"
+                               placeholder="Ej. Cliente" />
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Acción
+                        </label>
+
+                        <input type="text"
+                               name="accion"
+                               value="@accion"
+                               class="form-control"
+                               placeholder="Ej. INSERT" />
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+                            Fecha desde
+                        </label>
+
+                        <input type="date"
+                               name="fechaDesde"
+                               value="@fechaDesde"
+                               class="form-control" />
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+                            Fecha hasta
+                        </label>
+
+                        <input type="date"
+                               name="fechaHasta"
+                               value="@fechaHasta"
+                               class="form-control" />
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+                            Registro afectado
+                        </label>
+
+                        <input type="text"
+                               name="registroId"
+                               value="@registroId"
+                               class="form-control"
+                               placeholder="ID del registro" />
+
+                    </div>
+
+                    <div class="col-md-3 d-flex align-items-end">
+
+                        <div class="d-flex gap-2 w-100">
+
+                            <button type="submit"
+                                    class="btn btn-primary flex-fill">
+                                Filtrar
+                            </button>
+
+                            <a asp-action="Index"
+                               class="btn btn-outline-secondary">
+                                Limpiar
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- ================================================= -->
+    <!-- RESULTADOS -->
+    <!-- ================================================= -->
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <div>
+
+                    <h5 class="mb-1">
+                        Registros
+                    </h5>
+
+                    <span class="text-muted small">
+                        @Model.Count() registros encontrados
+                    </span>
+
+                </div>
+
+                <span class="badge bg-secondary">
+                    Solo lectura
+                </span>
+
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info mb-0">
+
+                    No existen registros de auditoría
+                    que coincidan con los filtros seleccionados.
+
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    #
+                                </th>
+
+                                <th>
+                                    Fecha
+                                </th>
+
+                                <th>
+                                    Usuario
+                                </th>
+
+                                <th>
+                                    Módulo
+                                </th>
+
+                                <th>
+                                    Acción
+                                </th>
+
+                                <th>
+                                    Registro
+                                </th>
+
+                                <th>
+                                    Descripción
+                                </th>
+
+                                <th>
+                                    IP
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var auditoria in Model)
+                            {
+                                <tr>
+
+                                    <td>
+                                        @auditoria.IdAuditoria
+                                    </td>
+
+                                    <td>
+                                        <span class="text-nowrap">
+                                            @auditoria.Fecha.ToString(
+                                            "dd/MM/yyyy HH:mm:ss")
+                                </span>
+                            </td>
+
+                            <td>
+
+                                @if (string.IsNullOrWhiteSpace(
+                                                                auditoria.UsuarioId))
+                                        {
+                                            <span class="text-muted">
+                                                Sistema
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="small">
+                                                @auditoria.UsuarioId
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-secondary">
+                                            @auditoria.Modulo
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        @{
+                                            var accionNormalizada =
+                                            auditoria.Accion?
+                                            .ToUpperInvariant();
+                                        }
+
+                                        @if (accionNormalizada == "INSERT" ||
+                                                                        accionNormalizada == "CREATE")
+                                        {
+                                            <span class="badge bg-success">
+                                                @auditoria.Accion
+                                            </span>
+                                        }
+                                        else if (
+                                        accionNormalizada == "UPDATE" ||
+                                        accionNormalizada == "EDIT")
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                @auditoria.Accion
+                                            </span>
+                                        }
+                                        else if (accionNormalizada == "DELETE")
+                                        {
+                                            <span class="badge bg-danger">
+                                                @auditoria.Accion
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-primary">
+                                                @auditoria.Accion
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+
+                                        @if (string.IsNullOrWhiteSpace(
+                                                                        auditoria.RegistroId))
+                                        {
+                                            <span class="text-muted">
+                                                —
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            @auditoria.RegistroId
+                                        }
+
+                                    </td>
+
+                                    <td>
+
+                                        @if (string.IsNullOrWhiteSpace(
+                                                                        auditoria.Descripcion))
+                                        {
+                                            <span class="text-muted">
+                                                Sin descripción
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span>
+                                                @auditoria.Descripcion
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+
+                                        @if (string.IsNullOrWhiteSpace(
+                                                                        auditoria.Ip))
+                                        {
+                                            <span class="text-muted">
+                                                —
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            @auditoria.Ip
+                                        }
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

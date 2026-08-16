@@ -71,6 +71,7 @@ builder.Services.AddScoped<ICotizacionRepository, CotizacionRepository>();
 builder.Services.AddScoped<IOrdenTrabajoRepository, OrdenTrabajoRepository>();
 builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
 builder.Services.AddScoped<IServicioRepository, ServicioRepository>();
+builder.Services.AddScoped<IAuditoriaRepository, AuditoriaRepository>();
 
 // =====================================================
 // CITAS
@@ -133,6 +134,7 @@ builder.Services.AddScoped<ICotizacionService, CotizacionService>();
 builder.Services.AddScoped<IOrdenTrabajoService, OrdenTrabajoService>();
 builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
 builder.Services.AddScoped<IServicioService, ServicioService>();
+builder.Services.AddScoped<IAuditoriaService, AuditoriaService>();
 
 // =====================================================
 // CITAS
@@ -187,6 +189,12 @@ builder.Services.AddScoped<IEspecialidadService, EspecialidadService>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<PermisoClaimsFactory>();
+
+// =====================================================
+// ROLES - NEGOCIOS
+// =====================================================
+
+builder.Services.AddScoped<IRolService, RolService>();
 
 // =====================================================
 // AUTORIZACIÓN POR PERMISOS
@@ -246,6 +254,10 @@ using (var scope = app.Services.CreateScope())
 
     foreach (var nombreRol in roles)
     {
+        // =================================================
+        // CREAR ROL SI NO EXISTE
+        // =================================================
+
         if (!await roleManager.RoleExistsAsync(nombreRol))
         {
             var resultadoRol =
@@ -261,7 +273,89 @@ using (var scope = app.Services.CreateScope())
                 }
             }
         }
+
+        // =================================================
+        // MIGRACIÓN INICIAL DE PERMISOS A ROLE CLAIMS
+        // =================================================
+
+        var rol =
+            await roleManager.FindByNameAsync(nombreRol);
+
+        if (rol == null)
+        {
+            continue;
+        }
+
+        var claims =
+            await roleManager.GetClaimsAsync(rol);
+
+        var permisosYaConfigurados =
+            claims.Any(c =>
+                c.Type ==
+                RolClaims.PermisosConfigurados);
+
+        // Solo se realiza la migración una vez.
+        // Si el administrador modifica los permisos
+        // posteriormente desde AXIS, no se sobrescriben.
+        if (!permisosYaConfigurados)
+        {
+            var resultadoMarcador =
+                await roleManager.AddClaimAsync(
+                    rol,
+                    new System.Security.Claims.Claim(
+                        RolClaims.PermisosConfigurados,
+                        "true"));
+
+            if (!resultadoMarcador.Succeeded)
+            {
+                foreach (
+                    var error
+                    in resultadoMarcador.Errors)
+                {
+                    Console.WriteLine(
+                        $"ERROR CONFIGURANDO PERMISOS DEL ROL {nombreRol}: {error.Description}");
+                }
+
+                continue;
+            }
+
+            var permisosPorRol =
+                PermisosPorRol.Obtener();
+
+            if (permisosPorRol.TryGetValue(
+                    nombreRol,
+                    out var permisosRol))
+            {
+                foreach (var permiso in permisosRol)
+                {
+                    var resultadoPermiso =
+                        await roleManager.AddClaimAsync(
+                            rol,
+                            new System.Security.Claims.Claim(
+                                RolClaims.Permiso,
+                                permiso));
+
+                    if (!resultadoPermiso.Succeeded)
+                    {
+                        foreach (
+                            var error
+                            in resultadoPermiso.Errors)
+                        {
+                            Console.WriteLine(
+                                $"ERROR ASIGNANDO PERMISO {permiso} AL ROL {nombreRol}: {error.Description}");
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine(
+                $"PERMISOS INICIALES CONFIGURADOS PARA EL ROL: {nombreRol}");
+        }
     }
+
+    // =====================================================
+    // USUARIO ADMINISTRADOR
+    // =====================================================
 
     var usuario =
         await userManager.FindByNameAsync("admin");
@@ -322,6 +416,10 @@ using (var scope = app.Services.CreateScope())
             }
         }
     }
+
+    // =====================================================
+    // ASIGNAR ADMINISTRADOR AL ROL ADMINISTRADOR
+    // =====================================================
 
     if (!await userManager.IsInRoleAsync(
             usuario,
