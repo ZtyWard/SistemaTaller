@@ -181,6 +181,12 @@ builder.Services.AddScoped<IPagoService, PagoService>();
 builder.Services.AddScoped<IReportesService, ReportesService>();
 
 // =====================================================
+// NOTIFICACIONES
+// =====================================================
+
+builder.Services.AddScoped<INotificacionService, NotificacionService>();
+
+// =====================================================
 // CATÁLOGOS
 // =====================================================
 
