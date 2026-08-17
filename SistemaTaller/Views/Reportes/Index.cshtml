@@ -3,848 +3,1572 @@
 @{
     ViewData["Title"] = "Reportes";
 
-    var maxVentas =
-        Model.VentasPorMes.Any()
-            ? Math.Max(
-                1,
-                (double)Model.VentasPorMes.Max(x => x.Total))
-            : 1;
+    var maxVentas = Model.VentasPorMes.Any()
+        ? Math.Max(1, (double)Model.VentasPorMes.Max(x => x.Total))
+        : 1;
 
-    var maxOrdenes =
-        Model.OrdenesPorEstado.Any()
-            ? Math.Max(
-                1,
-                Model.OrdenesPorEstado.Max(x => x.Cantidad))
-            : 1;
+    var maxOrdenes = Model.OrdenesPorEstado.Any()
+        ? Math.Max(1, Model.OrdenesPorEstado.Max(x => x.Cantidad))
+        : 1;
 
-    var maxProductos =
-        Model.ProductosMasVendidos.Any()
-            ? Math.Max(
-                1,
-                Model.ProductosMasVendidos.Max(x => x.Cantidad))
-            : 1;
+    var maxProductos = Model.ProductosMasVendidos.Any()
+        ? Math.Max(1, Model.ProductosMasVendidos.Max(x => x.Cantidad))
+        : 1;
 
-    var maxServicios =
-        Model.ServiciosMasSolicitados.Any()
-            ? Math.Max(
-                1,
-                Model.ServiciosMasSolicitados.Max(x => x.Cantidad))
-            : 1;
+    var maxServicios = Model.ServiciosMasSolicitados.Any()
+        ? Math.Max(1, Model.ServiciosMasSolicitados.Max(x => x.Cantidad))
+        : 1;
 }
 
-<div class="container-fluid py-4">
+<style>
+
+    /* =========================================================
+           AXIS REPORTS
+           ========================================================= */
+
+    .axis-reports {
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 8px 0 50px;
+    }
+
+    /* =========================================================
+           HEADER
+           ========================================================= */
+
+    .axis-report-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 30px;
+        margin-bottom: 28px;
+    }
+
+    .axis-report-kicker {
+        margin-bottom: 8px;
+        color: #8d8992;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 2.4px;
+        text-transform: uppercase;
+    }
+
+    .axis-report-title {
+        margin: 0;
+        color: #f2f0f4;
+        font-size: clamp(32px, 4vw, 44px);
+        font-weight: 650;
+        letter-spacing: -1.8px;
+        line-height: 1;
+    }
+
+    .axis-report-description {
+        max-width: 650px;
+        margin: 10px 0 0;
+        color: #85818a;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .axis-report-period {
+        color: #77737c;
+        font-size: 10px;
+        letter-spacing: .7px;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    /* =========================================================
+           FILTER PANEL
+           ========================================================= */
+
+    .axis-report-filters {
+        position: relative;
+        margin-bottom: 20px;
+        padding: 17px;
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 17px;
+        background: linear-gradient( 135deg, rgba(255,255,255,.055), rgba(255,255,255,.018) );
+        box-shadow: 0 18px 50px rgba(0,0,0,.14), inset 0 1px 0 rgba(255,255,255,.035);
+        backdrop-filter: blur(18px);
+    }
+
+    .axis-filter-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        align-items: end;
+    }
+
+    .axis-field {
+        min-width: 0;
+    }
+
+        .axis-field label {
+            display: block;
+            margin: 0 0 7px 2px;
+            color: #85818a;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+        }
+
+    .axis-input {
+        width: 100%;
+        height: 42px;
+        padding: 0 13px;
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 10px;
+        outline: none;
+        background: rgba(0,0,0,.18);
+        color: #eeeaf0;
+        font-size: 12px;
+        transition: .22s ease;
+    }
+
+        .axis-input:focus {
+            border-color: rgba(206,188,216,.38);
+            background: rgba(255,255,255,.045);
+            box-shadow: 0 0 0 3px rgba(196,166,210,.06);
+        }
+
+        .axis-input::placeholder {
+            color: #68646d;
+        }
+
+    .axis-filter-button {
+        height: 42px;
+        width: 100%;
+        border: 1px solid rgba(255,255,255,.10);
+        border-radius: 10px;
+        background: #eeeaf0;
+        color: #17161a;
+        font-size: 11px;
+        font-weight: 650;
+        cursor: pointer;
+        transition: .22s ease;
+    }
+
+        .axis-filter-button:hover {
+            transform: translateY(-1px);
+            background: #ffffff;
+            box-shadow: 0 8px 25px rgba(255,255,255,.08);
+        }
+
+    /* =========================================================
+           ALERT
+           ========================================================= */
+
+    .axis-report-alert {
+        margin-bottom: 18px;
+        padding: 13px 15px;
+        border: 1px solid rgba(180,90,90,.22);
+        border-radius: 11px;
+        background: rgba(150,60,60,.08);
+        color: #d89b9b;
+        font-size: 12px;
+    }
+
+    /* =========================================================
+           KPI GRID
+           ========================================================= */
+
+    .axis-kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .axis-kpi {
+        position: relative;
+        min-height: 126px;
+        padding: 18px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,.075);
+        border-radius: 16px;
+        background: radial-gradient( circle at 100% 0%, rgba(181,151,194,.08), transparent 42% ), rgba(255,255,255,.025);
+        box-shadow: 0 15px 40px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.025);
+        transition: transform .22s ease, border-color .22s ease;
+    }
+
+        .axis-kpi:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255,255,255,.13);
+        }
+
+    .axis-kpi-label {
+        color: #77737d;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+
+    .axis-kpi-value {
+        margin-top: 12px;
+        color: #f2f0f4;
+        font-size: clamp(22px, 2vw, 29px);
+        font-weight: 620;
+        letter-spacing: -1px;
+        line-height: 1;
+    }
+
+    .axis-kpi-meta {
+        margin-top: 10px;
+        color: #66626b;
+        font-size: 10px;
+    }
+
+    .axis-kpi-accent {
+        position: absolute;
+        right: 17px;
+        bottom: 17px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #cdb8d4;
+        box-shadow: 0 0 15px rgba(205,184,212,.45);
+    }
+
+    /* =========================================================
+           SECTION GRID
+           ========================================================= */
+
+    .axis-report-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .axis-panel {
+        min-width: 0;
+        padding: 20px;
+        border: 1px solid rgba(255,255,255,.075);
+        border-radius: 17px;
+        background: linear-gradient( 145deg, rgba(255,255,255,.035), rgba(255,255,255,.012) );
+        box-shadow: 0 16px 45px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.025);
+    }
+
+    .axis-panel-large {
+        min-height: 330px;
+    }
+
+    .axis-panel-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 22px;
+    }
+
+    .axis-panel-kicker {
+        margin-bottom: 6px;
+        color: #716d76;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 1.7px;
+        text-transform: uppercase;
+    }
+
+    .axis-panel-title {
+        margin: 0;
+        color: #ece9ed;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: -.35px;
+    }
+
+    .axis-panel-subtitle {
+        margin-top: 5px;
+        color: #6e6a72;
+        font-size: 10px;
+    }
+
+    /* =========================================================
+           SALES CHART
+           ========================================================= */
+
+    .axis-sales-chart {
+        min-height: 220px;
+        display: flex;
+        align-items: flex-end;
+        gap: 14px;
+        padding: 18px 6px 0;
+        border-top: 1px solid rgba(255,255,255,.045);
+    }
+
+    .axis-sales-item {
+        flex: 1;
+        min-width: 30px;
+        height: 190px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .axis-sales-value {
+        color: #aaa5ae;
+        font-size: 9px;
+        white-space: nowrap;
+    }
+
+    .axis-sales-track {
+        width: 100%;
+        max-width: 48px;
+        height: 142px;
+        display: flex;
+        align-items: flex-end;
+        border-radius: 9px;
+        background: rgba(255,255,255,.035);
+        overflow: hidden;
+    }
+
+    .axis-sales-bar {
+        width: 100%;
+        min-height: 3px;
+        border-radius: 9px;
+        background: linear-gradient( 180deg, #d7c6dc 0%, #9d86a5 100% );
+        box-shadow: 0 0 18px rgba(178,145,188,.15);
+        transition: height .45s ease;
+    }
+
+    .axis-sales-label {
+        color: #67636b;
+        font-size: 9px;
+        white-space: nowrap;
+    }
+
+    /* =========================================================
+           PROGRESS ITEMS
+           ========================================================= */
+
+    .axis-metric-list {
+        display: flex;
+        flex-direction: column;
+        gap: 17px;
+    }
+
+    .axis-metric-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 7px;
+    }
+
+    .axis-metric-name {
+        min-width: 0;
+        overflow: hidden;
+        color: #b0abb3;
+        font-size: 11px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .axis-metric-value {
+        color: #eeeaf0;
+        font-size: 10px;
+        font-weight: 650;
+        white-space: nowrap;
+    }
+
+    .axis-progress {
+        width: 100%;
+        height: 6px;
+        overflow: hidden;
+        border-radius: 99px;
+        background: rgba(255,255,255,.055);
+    }
+
+    .axis-progress-fill {
+        height: 100%;
+        min-width: 3px;
+        border-radius: inherit;
+        background: linear-gradient( 90deg, #8f7b97, #d6c5db );
+        box-shadow: 0 0 14px rgba(194,165,201,.16);
+    }
+
+    /* =========================================================
+           TABLES
+           ========================================================= */
+
+    .axis-table-wrap {
+        overflow-x: auto;
+    }
+
+    .axis-table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #aaa6ae;
+        font-size: 11px;
+    }
+
+        .axis-table th {
+            padding: 0 12px 11px;
+            border-bottom: 1px solid rgba(255,255,255,.07);
+            color: #67636c;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-align: left;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .axis-table td {
+            padding: 13px 12px;
+            border-bottom: 1px solid rgba(255,255,255,.045);
+            vertical-align: middle;
+        }
+
+        .axis-table tbody tr {
+            transition: background .18s ease;
+        }
+
+            .axis-table tbody tr:hover {
+                background: rgba(255,255,255,.025);
+            }
+
+            .axis-table tbody tr:last-child td {
+                border-bottom: 0;
+            }
+
+        .axis-table strong {
+            color: #e9e6eb;
+            font-weight: 600;
+        }
+
+    /* =========================================================
+           STATUS
+           ========================================================= */
+
+    .axis-status {
+        display: inline-flex;
+        align-items: center;
+        min-height: 23px;
+        padding: 0 8px;
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 99px;
+        background: rgba(255,255,255,.035);
+        color: #aaa5ae;
+        font-size: 9px;
+    }
+
+    /* =========================================================
+           EMPTY STATES
+           ========================================================= */
+
+    .axis-empty {
+        padding: 30px 15px;
+        border: 1px dashed rgba(255,255,255,.07);
+        border-radius: 11px;
+        color: #68646d;
+        font-size: 11px;
+        text-align: center;
+    }
+
+    /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+    @@media (max-width: 1100px) {
+
+        .axis-kpi-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .axis-filter-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 800px) {
+
+        .axis-report-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .axis-report-period {
+            text-align: left;
+        }
+
+        .axis-report-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 560px) {
+
+        .axis-filter-grid,
+        .axis-kpi-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .axis-panel {
+            padding: 16px;
+        }
+
+        .axis-sales-chart {
+            gap: 7px;
+        }
+
+        .axis-sales-value {
+            font-size: 8px;
+        }
+
+        .axis-sales-label {
+            font-size: 8px;
+        }
+    }
+
+</style>
+
+
+<div class="axis-reports">
 
     <!-- =====================================================
-         ENCABEZADO
+         HEADER
          ===================================================== -->
 
-    <div class="d-flex justify-content-between
-                align-items-start
-                flex-wrap gap-3 mb-4">
+    <header class="axis-report-header">
 
         <div>
 
-            <div class="text-muted small">
+            <div class="axis-report-kicker">
                 AXIS · ANÁLISIS
             </div>
 
-            <h1 class="fw-bold mb-1">
+            <h1 class="axis-report-title">
                 Reportes
             </h1>
 
-            <p class="text-muted mb-0">
-                Indicadores operativos, financieros
-                y de inventario del taller.
+            <p class="axis-report-description">
+                Lectura operativa, financiera y de inventario
+                del taller a partir del período seleccionado.
             </p>
 
         </div>
 
-    </div>
+        <div class="axis-report-period">
 
+            @Model.Desde.ToString("dd MMM yyyy")
+            <span> — </span>
+            @Model.Hasta.ToString("dd MMM yyyy")
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         ERROR
+         ===================================================== -->
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger">
+        <div class="axis-report-alert">
             @TempData["Error"]
         </div>
     }
+
 
     <!-- =====================================================
          FILTROS
          ===================================================== -->
 
-    <div class="card shadow-sm border-0 mb-4">
+    <section class="axis-report-filters">
 
-        <div class="card-body">
+        <form asp-action="Index"
+              method="get">
 
-            <form asp-action="Index"
-                  method="get"
-                  class="row g-3 align-items-end">
+            <div class="axis-filter-grid">
 
-                <div class="col-md-3">
+                <div class="axis-field">
 
-                    <label class="form-label fw-semibold">
+                    <label for="desde">
                         Desde
                     </label>
 
-                    <input type="date"
+                    <input id="desde"
+                           type="date"
                            name="desde"
                            value="@Model.Desde.ToString("yyyy-MM-dd")"
-                           class="form-control" />
+                           class="axis-input" />
 
                 </div>
 
-                <div class="col-md-3">
 
-                    <label class="form-label fw-semibold">
+                <div class="axis-field">
+
+                    <label for="hasta">
                         Hasta
                     </label>
 
-                    <input type="date"
+                    <input id="hasta"
+                           type="date"
                            name="hasta"
                            value="@Model.Hasta.ToString("yyyy-MM-dd")"
-                           class="form-control" />
+                           class="axis-input" />
 
                 </div>
 
-                <div class="col-md-3">
 
-                    <label class="form-label fw-semibold">
-                        Placa
+                <div class="axis-field">
+
+                    <label for="placa">
+                        Vehículo · Placa
                     </label>
 
-                    <input type="text"
+                    <input id="placa"
+                           type="text"
                            name="placa"
                            value="@Model.Placa"
-                           class="form-control"
+                           class="axis-input"
                            placeholder="Ej. ABC123" />
 
                 </div>
 
-                <div class="col-md-3">
+
+                <div>
 
                     <button type="submit"
-                            class="btn btn-primary w-100">
-                        Generar reporte
+                            class="axis-filter-button">
+                        Actualizar reporte
                     </button>
 
                 </div>
 
-            </form>
+            </div>
 
-        </div>
+        </form>
 
-    </div>
+    </section>
+
 
     <!-- =====================================================
-         KPIs
+         KPIs FINANCIEROS / OPERATIVOS
          ===================================================== -->
 
-    <div class="row g-3 mb-4">
+    <section class="axis-kpi-grid">
 
-        <div class="col-md-3">
+        <article class="axis-kpi">
 
-            <div class="card border-0 shadow-sm h-100">
-
-                <div class="card-body">
-
-                    <div class="text-muted small">
-                        INGRESOS
-                    </div>
-
-                    <div class="fs-3 fw-bold">
-                        @Model.Ingresos.ToString("C2")
-                    </div>
-
-                </div>
-
+            <div class="axis-kpi-label">
+                Ingresos
             </div>
 
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="card border-0 shadow-sm h-100">
-
-                <div class="card-body">
-
-                    <div class="text-muted small">
-                        COMPRAS
-                    </div>
-
-                    <div class="fs-3 fw-bold">
-                        @Model.Compras.ToString("C2")
-                    </div>
-
-                </div>
-
+            <div class="axis-kpi-value">
+                @Model.Ingresos.ToString("C2")
             </div>
 
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="card border-0 shadow-sm h-100">
-
-                <div class="card-body">
-
-                    <div class="text-muted small">
-                        UTILIDAD
-                    </div>
-
-                    <div class="fs-3 fw-bold">
-                        @Model.Utilidad.ToString("C2")
-                    </div>
-
-                </div>
-
+            <div class="axis-kpi-meta">
+                Ventas del período
             </div>
 
-        </div>
+            <span class="axis-kpi-accent"></span>
 
-        <div class="col-md-3">
+        </article>
 
-            <div class="card border-0 shadow-sm h-100">
 
-                <div class="card-body">
+        <article class="axis-kpi">
 
-                    <div class="text-muted small">
-                        TRABAJOS DEL PERÍODO
-                    </div>
-
-                    <div class="fs-3 fw-bold">
-                        @Model.TrabajosPeriodo
-                    </div>
-
-                </div>
-
+            <div class="axis-kpi-label">
+                Compras
             </div>
 
-        </div>
-
-    </div>
-
-    <div class="row g-3 mb-4">
-
-        <div class="col-md-3">
-
-            <div class="card border-0 shadow-sm">
-
-                <div class="card-body">
-
-                    <div class="text-muted small">
-                        ÓRDENES PENDIENTES
-                    </div>
-
-                    <div class="fs-3 fw-bold">
-                        @Model.OrdenesPendientes
-                    </div>
-
-                </div>
-
+            <div class="axis-kpi-value">
+                @Model.Compras.ToString("C2")
             </div>
 
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="card border-0 shadow-sm">
-
-                <div class="card-body">
-
-                    <div class="text-muted small">
-                        ÓRDENES ATRASADAS
-                    </div>
-
-                    <div class="fs-3 fw-bold">
-                        @Model.OrdenesAtrasadas
-                    </div>
-
-                </div>
-
+            <div class="axis-kpi-meta">
+                Compras registradas
             </div>
 
-        </div>
+            <span class="axis-kpi-accent"></span>
 
-        <div class="col-md-3">
+        </article>
 
-            <div class="card border-0 shadow-sm">
 
-                <div class="card-body">
+        <article class="axis-kpi">
 
-                    <div class="text-muted small">
-                        ÓRDENES FINALIZADAS
-                    </div>
-
-                    <div class="fs-3 fw-bold">
-                        @Model.OrdenesFinalizadas
-                    </div>
-
-                </div>
-
+            <div class="axis-kpi-label">
+                Utilidad
             </div>
 
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="card border-0 shadow-sm">
-
-                <div class="card-body">
-
-                    <div class="text-muted small">
-                        FACTURAS PENDIENTES
-                    </div>
-
-                    <div class="fs-3 fw-bold">
-                        @Model.FacturasPendientes
-                    </div>
-
-                </div>
-
+            <div class="axis-kpi-value">
+                @Model.Utilidad.ToString("C2")
             </div>
 
-        </div>
+            <div class="axis-kpi-meta">
+                Resultado del período
+            </div>
 
-    </div>
+            <span class="axis-kpi-accent"></span>
+
+        </article>
+
+
+        <article class="axis-kpi">
+
+            <div class="axis-kpi-label">
+                Trabajos
+            </div>
+
+            <div class="axis-kpi-value">
+                @Model.TrabajosPeriodo
+            </div>
+
+            <div class="axis-kpi-meta">
+                Trabajos del período
+            </div>
+
+            <span class="axis-kpi-accent"></span>
+
+        </article>
+
+    </section>
+
 
     <!-- =====================================================
-         GRÁFICO 1 — VENTAS
+         KPIs OPERATIVOS
          ===================================================== -->
 
-    <div class="card border-0 shadow-sm mb-4">
+    <section class="axis-kpi-grid">
 
-        <div class="card-body">
+        <article class="axis-kpi">
 
-            <h5 class="fw-bold">
-                Ventas por período
-            </h5>
+            <div class="axis-kpi-label">
+                Órdenes pendientes
+            </div>
 
-            <p class="text-muted small">
-                Total vendido por mes.
-            </p>
+            <div class="axis-kpi-value">
+                @Model.OrdenesPendientes
+            </div>
+
+            <div class="axis-kpi-meta">
+                Requieren seguimiento
+            </div>
+
+        </article>
+
+
+        <article class="axis-kpi">
+
+            <div class="axis-kpi-label">
+                Órdenes atrasadas
+            </div>
+
+            <div class="axis-kpi-value">
+                @Model.OrdenesAtrasadas
+            </div>
+
+            <div class="axis-kpi-meta">
+                Fuera de plazo
+            </div>
+
+        </article>
+
+
+        <article class="axis-kpi">
+
+            <div class="axis-kpi-label">
+                Órdenes finalizadas
+            </div>
+
+            <div class="axis-kpi-value">
+                @Model.OrdenesFinalizadas
+            </div>
+
+            <div class="axis-kpi-meta">
+                Trabajos completados
+            </div>
+
+        </article>
+
+
+        <article class="axis-kpi">
+
+            <div class="axis-kpi-label">
+                Facturas pendientes
+            </div>
+
+            <div class="axis-kpi-value">
+                @Model.FacturasPendientes
+            </div>
+
+            <div class="axis-kpi-meta">
+                Requieren cobro
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         VENTAS + ÓRDENES
+         ===================================================== -->
+
+    <section class="axis-report-grid">
+
+        <!-- VENTAS -->
+
+        <article class="axis-panel axis-panel-large">
+
+            <div class="axis-panel-header">
+
+                <div>
+
+                    <div class="axis-panel-kicker">
+                        Rendimiento
+                    </div>
+
+                    <h2 class="axis-panel-title">
+                        Ventas por período
+                    </h2>
+
+                    <div class="axis-panel-subtitle">
+                        Total vendido por mes
+                    </div>
+
+                </div>
+
+            </div>
+
 
             @if (Model.VentasPorMes.Any())
             {
-                foreach (var item in Model.VentasPorMes)
-                {
-                    var porcentaje =
-                    (double)item.Total /
-                    maxVentas *
-                    100;
 
-                    <div class="mb-3">
+                <div class="axis-sales-chart">
 
-                        <div class="d-flex justify-content-between
-                                            small mb-1">
+                    @foreach (var item in Model.VentasPorMes)
+                    {
 
-                            <span>
+                        var porcentaje =
+                        Math.Max(
+                        0,
+                        Math.Min(
+                        100,
+                        ((double)item.Total / maxVentas) * 100
+                        )
+                        );
+
+                        <div class="axis-sales-item">
+
+                            <div class="axis-sales-value">
+                                @item.Total.ToString("C0")
+                            </div>
+
+                            <div class="axis-sales-track">
+
+                                <div class="axis-sales-bar"
+                                     style="height:@porcentaje%;"
+                                     title="@item.Total.ToString("C2")">
+                                </div>
+
+                            </div>
+
+                            <div class="axis-sales-label">
                                 @item.Mes
-                            </span>
-
-                            <strong>
-                                @item.Total.ToString("C2")
-                            </strong>
-
-                        </div>
-
-                        <div style="
-                                    background:#e9ecef;
-                                    height:22px;
-                                    border-radius:8px;
-                                    overflow:hidden;">
-
-                            <div style="
-                                        width:@porcentaje%;
-                                        height:100%;
-                                        background:#1f2937;
-                                        border-radius:8px;">
                             </div>
 
                         </div>
 
-                    </div>
-                }
+                    }
+
+                </div>
+
             }
             else
             {
-                <div class="text-muted">
-                    No hay ventas en el período.
+
+                <div class="axis-empty">
+                    No hay ventas registradas en el período seleccionado.
                 </div>
+
             }
 
-        </div>
+        </article>
 
-    </div>
 
-    <!-- =====================================================
-         GRÁFICOS 2 Y 3
-         ===================================================== -->
+        <!-- ÓRDENES -->
 
-    <div class="row g-4 mb-4">
+        <article class="axis-panel axis-panel-large">
 
-        <div class="col-lg-6">
+            <div class="axis-panel-header">
 
-            <div class="card border-0 shadow-sm h-100">
+                <div>
 
-                <div class="card-body">
+                    <div class="axis-panel-kicker">
+                        Operaciones
+                    </div>
 
-                    <h5 class="fw-bold">
+                    <h2 class="axis-panel-title">
                         Órdenes por estado
-                    </h5>
+                    </h2>
 
-                    @foreach (var item in Model.OrdenesPorEstado)
-                    {
-                        var porcentaje =
-                        (double)item.Cantidad /
-                        maxOrdenes *
-                        100;
-
-                        <div class="mb-3">
-
-                            <div class="d-flex justify-content-between
-                                            small mb-1">
-
-                                <span>
-                                    @item.Estado
-                                </span>
-
-                                <strong>
-                                    @item.Cantidad
-                                </strong>
-
-                            </div>
-
-                            <div style="
-                                    background:#e9ecef;
-                                    height:20px;
-                                    border-radius:8px;
-                                    overflow:hidden;">
-
-                                <div style="
-                                        width:@porcentaje%;
-                                        height:100%;
-                                        background:#374151;
-                                        border-radius:8px;">
-                                </div>
-
-                            </div>
-
-                        </div>
-                    }
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-lg-6">
-
-            <div class="card border-0 shadow-sm h-100">
-
-                <div class="card-body">
-
-                    <h5 class="fw-bold">
-                        Productos más vendidos
-                    </h5>
-
-                    @foreach (
-                                        var item
-                                        in Model.ProductosMasVendidos)
-                    {
-                        var porcentaje =
-                        (double)item.Cantidad /
-                        maxProductos *
-                        100;
-
-                        <div class="mb-3">
-
-                            <div class="d-flex justify-content-between
-                                            small mb-1">
-
-                                <span>
-                                    @item.Nombre
-                                </span>
-
-                                <strong>
-                                    @item.Cantidad
-                                </strong>
-
-                            </div>
-
-                            <div style="
-                                    background:#e9ecef;
-                                    height:20px;
-                                    border-radius:8px;
-                                    overflow:hidden;">
-
-                                <div style="
-                                        width:@porcentaje%;
-                                        height:100%;
-                                        background:#111827;
-                                        border-radius:8px;">
-                                </div>
-
-                            </div>
-
-                        </div>
-                    }
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- =====================================================
-         SERVICIOS / MECÁNICOS
-         ===================================================== -->
-
-    <div class="row g-4 mb-4">
-
-        <div class="col-lg-6">
-
-            <div class="card border-0 shadow-sm">
-
-                <div class="card-body">
-
-                    <h5 class="fw-bold">
-                        Servicios más solicitados
-                    </h5>
-
-                    @foreach (
-                                        var item
-                                        in Model.ServiciosMasSolicitados)
-                    {
-                        var porcentaje =
-                        (double)item.Cantidad /
-                        maxServicios *
-                        100;
-
-                        <div class="mb-3">
-
-                            <div class="d-flex justify-content-between
-                                            small mb-1">
-
-                                <span>
-                                    @item.Servicio
-                                </span>
-
-                                <strong>
-                                    @item.Cantidad
-                                </strong>
-
-                            </div>
-
-                            <div style="
-                                    background:#e9ecef;
-                                    height:18px;
-                                    border-radius:8px;
-                                    overflow:hidden;">
-
-                                <div style="
-                                        width:@porcentaje%;
-                                        height:100%;
-                                        background:#4b5563;
-                                        border-radius:8px;">
-                                </div>
-
-                            </div>
-
-                        </div>
-                    }
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-lg-6">
-
-            <div class="card border-0 shadow-sm">
-
-                <div class="card-body">
-
-                    <h5 class="fw-bold">
-                        Trabajos por mecánico
-                    </h5>
-
-                    <div class="table-responsive">
-
-                        <table class="table table-sm align-middle">
-
-                            <thead>
-
-                                <tr>
-                                    <th>Mecánico</th>
-                                    <th>Trabajos</th>
-                                    <th>Horas</th>
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                @foreach (
-                                                                var item
-                                                                in Model.TrabajosPorMecanico)
-                                {
-                                    <tr>
-
-                                        <td>
-                                            @item.Mecanico
-                                        </td>
-
-                                        <td>
-                                            @item.Trabajos
-                                        </td>
-
-                                        <td>
-                                            @item.Horas.ToString("N2")
-                                        </td>
-
-                                    </tr>
-                                }
-
-                            </tbody>
-
-                        </table>
-
+                    <div class="axis-panel-subtitle">
+                        Distribución de órdenes registradas
                     </div>
 
                 </div>
 
             </div>
 
-        </div>
 
-    </div>
+            @if (Model.OrdenesPorEstado.Any())
+            {
 
-    <!-- =====================================================
-         COMPRAS
-         ===================================================== -->
+                <div class="axis-metric-list">
 
-    <div class="card border-0 shadow-sm mb-4">
+                    @foreach (var item in Model.OrdenesPorEstado)
+                    {
 
-        <div class="card-body">
+                        var porcentaje =
+                        Math.Max(
+                        0,
+                        Math.Min(
+                        100,
+                        ((double)item.Cantidad / maxOrdenes) * 100
+                        )
+                        );
 
-            <h5 class="fw-bold">
-                Compras por período
-            </h5>
+                        <div>
 
-            <div class="table-responsive">
+                            <div class="axis-metric-head">
 
-                <table class="table align-middle">
-
-                    <thead>
-
-                        <tr>
-                            <th>Mes</th>
-                            <th>Cantidad</th>
-                            <th>Total</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        @foreach (var item in Model.ComprasPorMes)
-                        {
-                            <tr>
-
-                                <td>
-                                    @item.Mes
-                                </td>
-
-                                <td>
-                                    @item.Cantidad
-                                </td>
-
-                                <td>
-                                    @item.Total.ToString("C2")
-                                </td>
-
-                            </tr>
-                        }
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- =====================================================
-         STOCK BAJO
-         ===================================================== -->
-
-    <div class="card border-0 shadow-sm mb-4">
-
-        <div class="card-body">
-
-            <h5 class="fw-bold">
-                Stock bajo
-            </h5>
-
-            <div class="table-responsive">
-
-                <table class="table align-middle">
-
-                    <thead>
-
-                        <tr>
-                            <th>Código</th>
-                            <th>Producto</th>
-                            <th>Stock</th>
-                            <th>Mínimo</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        @foreach (var item in Model.StockBajo)
-                        {
-                            <tr>
-
-                                <td>
-                                    @item.Codigo
-                                </td>
-
-                                <td>
-                                    @item.Nombre
-                                </td>
-
-                                <td>
-                                    <strong>
-                                        @item.Stock
-                                    </strong>
-                                </td>
-
-                                <td>
-                                    @item.StockMinimo
-                                </td>
-
-                            </tr>
-                        }
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- =====================================================
-         FACTURAS PENDIENTES
-         ===================================================== -->
-
-    <div class="card border-0 shadow-sm mb-4">
-
-        <div class="card-body">
-
-            <h5 class="fw-bold">
-                Facturas pendientes
-            </h5>
-
-            <div class="table-responsive">
-
-                <table class="table align-middle">
-
-                    <thead>
-
-                        <tr>
-                            <th>Factura</th>
-                            <th>Cliente</th>
-                            <th>Fecha</th>
-                            <th>Total</th>
-                            <th>Pagado</th>
-                            <th>Saldo</th>
-                            <th>Estado</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        @foreach (
-                                                var item
-                                                in Model.FacturasPendientesLista)
-                        {
-                            <tr>
-
-                                <td>
-                                    @item.NumeroFactura
-                                </td>
-
-                                <td>
-                                    @item.Cliente
-                                </td>
-
-                                <td>
-                                    @item.FechaEmision
-                                    .ToString("dd/MM/yyyy")
-                                </td>
-
-                                <td>
-                                    @item.Total.ToString("C2")
-                                </td>
-
-                                <td>
-                                    @item.TotalPagado.ToString("C2")
-                                </td>
-
-                                <td>
-                                    <strong>
-                                        @item.SaldoPendiente.ToString("C2")
-                                    </strong>
-                                </td>
-
-                                <td>
+                                <span class="axis-metric-name">
                                     @item.Estado
-                                </td>
+                                </span>
 
+                                <span class="axis-metric-value">
+                                    @item.Cantidad
+                                </span>
+
+                            </div>
+
+                            <div class="axis-progress">
+
+                                <div class="axis-progress-fill"
+                                     style="width:@porcentaje%;">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    }
+
+                </div>
+
+            }
+            else
+            {
+
+                <div class="axis-empty">
+                    No hay órdenes registradas en el período.
+                </div>
+
+            }
+
+        </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         PRODUCTOS + SERVICIOS
+         ===================================================== -->
+
+    <section class="axis-report-grid">
+
+        <!-- PRODUCTOS -->
+
+        <article class="axis-panel">
+
+            <div class="axis-panel-header">
+
+                <div>
+
+                    <div class="axis-panel-kicker">
+                        Inventario
+                    </div>
+
+                    <h2 class="axis-panel-title">
+                        Productos más vendidos
+                    </h2>
+
+                    <div class="axis-panel-subtitle">
+                        Productos con mayor movimiento
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            @if (Model.ProductosMasVendidos.Any())
+            {
+
+                <div class="axis-metric-list">
+
+                    @foreach (var item in Model.ProductosMasVendidos)
+                    {
+
+                        var porcentaje =
+                        Math.Max(
+                        0,
+                        Math.Min(
+                        100,
+                        ((double)item.Cantidad / maxProductos) * 100
+                        )
+                        );
+
+                        <div>
+
+                            <div class="axis-metric-head">
+
+                                <span class="axis-metric-name">
+                                    @item.Nombre
+                                </span>
+
+                                <span class="axis-metric-value">
+                                    @item.Cantidad
+                                </span>
+
+                            </div>
+
+                            <div class="axis-progress">
+
+                                <div class="axis-progress-fill"
+                                     style="width:@porcentaje%;">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    }
+
+                </div>
+
+            }
+            else
+            {
+
+                <div class="axis-empty">
+                    No hay productos vendidos en el período.
+                </div>
+
+            }
+
+        </article>
+
+
+        <!-- SERVICIOS -->
+
+        <article class="axis-panel">
+
+            <div class="axis-panel-header">
+
+                <div>
+
+                    <div class="axis-panel-kicker">
+                        Servicios
+                    </div>
+
+                    <h2 class="axis-panel-title">
+                        Servicios más solicitados
+                    </h2>
+
+                    <div class="axis-panel-subtitle">
+                        Servicios con mayor demanda
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            @if (Model.ServiciosMasSolicitados.Any())
+            {
+
+                <div class="axis-metric-list">
+
+                    @foreach (var item in Model.ServiciosMasSolicitados)
+                    {
+
+                        var porcentaje =
+                        Math.Max(
+                        0,
+                        Math.Min(
+                        100,
+                        ((double)item.Cantidad / maxServicios) * 100
+                        )
+                        );
+
+                        <div>
+
+                            <div class="axis-metric-head">
+
+                                <span class="axis-metric-name">
+                                    @item.Servicio
+                                </span>
+
+                                <span class="axis-metric-value">
+                                    @item.Cantidad
+                                </span>
+
+                            </div>
+
+                            <div class="axis-progress">
+
+                                <div class="axis-progress-fill"
+                                     style="width:@porcentaje%;">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    }
+
+                </div>
+
+            }
+            else
+            {
+
+                <div class="axis-empty">
+                    No hay servicios registrados en el período.
+                </div>
+
+            }
+
+        </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         MECÁNICOS + COMPRAS
+         ===================================================== -->
+
+    <section class="axis-report-grid">
+
+        <!-- MECÁNICOS -->
+
+        <article class="axis-panel">
+
+            <div class="axis-panel-header">
+
+                <div>
+
+                    <div class="axis-panel-kicker">
+                        Personal
+                    </div>
+
+                    <h2 class="axis-panel-title">
+                        Trabajos por mecánico
+                    </h2>
+
+                    <div class="axis-panel-subtitle">
+                        Distribución de trabajos realizados
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            @if (Model.TrabajosPorMecanico.Any())
+            {
+
+                <div class="axis-table-wrap">
+
+                    <table class="axis-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>Mecánico</th>
+                                <th>Trabajos</th>
+                                <th>Horas</th>
                             </tr>
-                        }
 
-                    </tbody>
+                        </thead>
 
-                </table>
+                        <tbody>
+
+                            @foreach (var item in Model.TrabajosPorMecanico)
+                            {
+
+                                <tr>
+
+                                    <td>
+                                        <strong>
+                                            @item.Mecanico
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        @item.Trabajos
+                                    </td>
+
+                                    <td>
+                                        @item.Horas.ToString("N2")
+                                    </td>
+
+                                </tr>
+
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            }
+            else
+            {
+
+                <div class="axis-empty">
+                    No hay trabajos registrados para el período.
+                </div>
+
+            }
+
+        </article>
+
+
+        <!-- COMPRAS -->
+
+        <article class="axis-panel">
+
+            <div class="axis-panel-header">
+
+                <div>
+
+                    <div class="axis-panel-kicker">
+                        Abastecimiento
+                    </div>
+
+                    <h2 class="axis-panel-title">
+                        Compras por período
+                    </h2>
+
+                    <div class="axis-panel-subtitle">
+                        Compras registradas por mes
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            @if (Model.ComprasPorMes.Any())
+            {
+
+                <div class="axis-table-wrap">
+
+                    <table class="axis-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>Mes</th>
+                                <th>Cantidad</th>
+                                <th>Total</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var item in Model.ComprasPorMes)
+                            {
+
+                                <tr>
+
+                                    <td>
+                                        <strong>
+                                            @item.Mes
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        @item.Cantidad
+                                    </td>
+
+                                    <td>
+                                        @item.Total.ToString("C2")
+                                    </td>
+
+                                </tr>
+
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            }
+            else
+            {
+
+                <div class="axis-empty">
+                    No hay compras registradas en el período.
+                </div>
+
+            }
+
+        </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         INVENTARIO + FACTURAS
+         ===================================================== -->
+
+    <section class="axis-report-grid">
+
+        <!-- STOCK BAJO -->
+
+        <article class="axis-panel">
+
+            <div class="axis-panel-header">
+
+                <div>
+
+                    <div class="axis-panel-kicker">
+                        Inventario
+                    </div>
+
+                    <h2 class="axis-panel-title">
+                        Stock bajo
+                    </h2>
+
+                    <div class="axis-panel-subtitle">
+                        Productos que requieren atención
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            @if (Model.StockBajo.Any())
+            {
+
+                <div class="axis-table-wrap">
+
+                    <table class="axis-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>Código</th>
+                                <th>Producto</th>
+                                <th>Stock</th>
+                                <th>Mínimo</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var item in Model.StockBajo)
+                            {
+
+                                <tr>
+
+                                    <td>
+                                        @item.Codigo
+                                    </td>
+
+                                    <td>
+                                        <strong>
+                                            @item.Nombre
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        @item.Stock
+                                    </td>
+
+                                    <td>
+                                        @item.StockMinimo
+                                    </td>
+
+                                </tr>
+
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            }
+            else
+            {
+
+                <div class="axis-empty">
+                    No hay productos con stock bajo.
+                </div>
+
+            }
+
+        </article>
+
+
+        <!-- FACTURAS -->
+
+        <article class="axis-panel">
+
+            <div class="axis-panel-header">
+
+                <div>
+
+                    <div class="axis-panel-kicker">
+                        Finanzas
+                    </div>
+
+                    <h2 class="axis-panel-title">
+                        Facturas pendientes
+                    </h2>
+
+                    <div class="axis-panel-subtitle">
+                        Saldos pendientes de cobro
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            @if (Model.FacturasPendientesLista.Any())
+            {
+
+                <div class="axis-table-wrap">
+
+                    <table class="axis-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>Factura</th>
+                                <th>Cliente</th>
+                                <th>Total</th>
+                                <th>Saldo</th>
+                                <th>Estado</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var item in Model.FacturasPendientesLista)
+                            {
+
+                                <tr>
+
+                                    <td>
+                                        <strong>
+                                            @item.NumeroFactura
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        @item.Cliente
+                                    </td>
+
+                                    <td>
+                                        @item.Total.ToString("C2")
+                                    </td>
+
+                                    <td>
+                                        <strong>
+                                            @item.SaldoPendiente.ToString("C2")
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        <span class="axis-status">
+                                            @item.Estado
+                                        </span>
+                                    </td>
+
+                                </tr>
+
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            }
+            else
+            {
+
+                <div class="axis-empty">
+                    No hay facturas pendientes.
+                </div>
+
+            }
+
+        </article>
+
+    </section>
+
+
+    <!-- =====================================================
+         HISTORIAL DE VEHÍCULO
+         ===================================================== -->
+
+    <section class="axis-panel">
+
+        <div class="axis-panel-header">
+
+            <div>
+
+                <div class="axis-panel-kicker">
+                    Vehículos
+                </div>
+
+                <h2 class="axis-panel-title">
+                    Historial de vehículo
+                </h2>
+
+                <div class="axis-panel-subtitle">
+                    @(string.IsNullOrWhiteSpace(Model.Placa)
+                                        ? "Selecciona una placa para consultar el historial."
+                                        : $"Historial registrado para {Model.Placa}.")
+                </div>
 
             </div>
 
         </div>
 
-    </div>
 
-    <!-- =====================================================
-         HISTORIAL DE VEHÍCULOS
-         ===================================================== -->
+        @if (Model.HistorialVehiculos.Any())
+        {
 
-    <div class="card border-0 shadow-sm">
+            <div class="axis-table-wrap">
 
-        <div class="card-body">
-
-            <h5 class="fw-bold">
-                Historial de vehículo
-            </h5>
-
-            <p class="text-muted small">
-                Filtra por placa desde el formulario superior.
-            </p>
-
-            <div class="table-responsive">
-
-                <table class="table align-middle">
+                <table class="axis-table">
 
                     <thead>
 
@@ -861,15 +1585,13 @@
 
                     <tbody>
 
-                        @foreach (
-                                                var item
-                                                in Model.HistorialVehiculos)
+                        @foreach (var item in Model.HistorialVehiculos)
                         {
+
                             <tr>
 
                                 <td>
-                                    @item.Fecha
-                                    .ToString("dd/MM/yyyy")
+                                    @item.Fecha.ToString("dd/MM/yyyy")
                                 </td>
 
                                 <td>
@@ -887,7 +1609,9 @@
                                 </td>
 
                                 <td>
-                                    @item.Estado
+                                    <span class="axis-status">
+                                        @item.Estado
+                                    </span>
                                 </td>
 
                                 <td>
@@ -895,6 +1619,7 @@
                                 </td>
 
                             </tr>
+
                         }
 
                     </tbody>
@@ -903,8 +1628,16 @@
 
             </div>
 
-        </div>
+        }
+        else
+        {
 
-    </div>
+            <div class="axis-empty">
+                No hay historial de vehículo para mostrar.
+            </div>
+
+        }
+
+    </section>
 
 </div>
