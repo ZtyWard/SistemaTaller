@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Negocios.DTOs;
 using Negocios.Interfaces;
 using Negocios.Seguridad;
@@ -10,10 +11,26 @@ namespace SistemaTaller.Controllers;
 public class VehiculoController : Controller
 {
     private readonly IVehiculoService _service;
+    private readonly IClienteService _clienteService;
+    private readonly IMarcaService _marcaService;
+    private readonly IModeloService _modeloService;
+    private readonly ITipoVehiculoService _tipoVehiculoService;
+    private readonly ITipoCombustibleService _tipoCombustibleService;
 
-    public VehiculoController(IVehiculoService service)
+    public VehiculoController(
+        IVehiculoService service,
+        IClienteService clienteService,
+        IMarcaService marcaService,
+        IModeloService modeloService,
+        ITipoVehiculoService tipoVehiculoService,
+        ITipoCombustibleService tipoCombustibleService)
     {
         _service = service;
+        _clienteService = clienteService;
+        _marcaService = marcaService;
+        _modeloService = modeloService;
+        _tipoVehiculoService = tipoVehiculoService;
+        _tipoCombustibleService = tipoCombustibleService;
     }
 
     // =====================================================
@@ -89,13 +106,79 @@ public class VehiculoController : Controller
     }
 
     // =====================================================
+    // CARGAR CATÁLOGOS PARA FORMULARIOS
+    // =====================================================
+
+    private async Task CargarClasificacionesAsync()
+    {
+        var clientes =
+            await _clienteService.ObtenerActivosAsync();
+
+        var marcas =
+            await _marcaService.ObtenerActivasAsync();
+
+        var modelos =
+            await _modeloService.ObtenerActivasAsync();
+
+        var tiposVehiculo =
+            await _tipoVehiculoService.ObtenerActivasAsync();
+
+        var tiposCombustible =
+            await _tipoCombustibleService.ObtenerActivasAsync();
+
+        ViewBag.Clientes = clientes
+            .Select(x => new SelectListItem
+            {
+                Value = x.IdCliente.ToString(),
+                Text =
+                    $"{x.IdCliente} — {x.Nombre} {x.Apellido1} {x.Apellido2}"
+                    .Trim()
+            })
+            .ToList();
+
+        ViewBag.Marcas = marcas
+            .Select(x => new SelectListItem
+            {
+                Value = x.IdMarca.ToString(),
+                Text = x.Nombre
+            })
+            .ToList();
+
+        ViewBag.Modelos = modelos
+            .Select(x => new SelectListItem
+            {
+                Value = x.IdModelo.ToString(),
+                Text = x.Nombre
+            })
+            .ToList();
+
+        ViewBag.TiposVehiculo = tiposVehiculo
+            .Select(x => new SelectListItem
+            {
+                Value = x.IdTipoVehiculo.ToString(),
+                Text = x.Nombre
+            })
+            .ToList();
+
+        ViewBag.TiposCombustible = tiposCombustible
+            .Select(x => new SelectListItem
+            {
+                Value = x.IdTipoCombustible.ToString(),
+                Text = x.Nombre
+            })
+            .ToList();
+    }
+
+    // =====================================================
     // CREAR VEHÍCULO
     // =====================================================
 
     // GET: Vehiculo/Create
     [Authorize(Policy = Permisos.VehiculosCrear)]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
+        await CargarClasificacionesAsync();
+
         return View();
     }
 
@@ -107,7 +190,11 @@ public class VehiculoController : Controller
         VehiculoGuardarDto dto)
     {
         if (!ModelState.IsValid)
+        {
+            await CargarClasificacionesAsync();
+
             return View(dto);
+        }
 
         try
         {
@@ -123,6 +210,8 @@ public class VehiculoController : Controller
             ModelState.AddModelError(
                 string.Empty,
                 ex.Message);
+
+            await CargarClasificacionesAsync();
 
             return View(dto);
         }
@@ -149,7 +238,9 @@ public class VehiculoController : Controller
             IdModelo = vehiculo.IdModelo,
             IdTipoVehiculo = vehiculo.IdTipoVehiculo,
             IdTipoCombustible = vehiculo.IdTipoCombustible,
+
             Placa = vehiculo.Placa,
+            VIN = vehiculo.VIN,
             Anio = vehiculo.Anio,
             Color = vehiculo.Color,
             Kilometraje = vehiculo.Kilometraje
@@ -157,6 +248,8 @@ public class VehiculoController : Controller
 
         ViewBag.IdVehiculo =
             vehiculo.IdVehiculo;
+
+        await CargarClasificacionesAsync();
 
         return View(dto);
     }
@@ -172,6 +265,8 @@ public class VehiculoController : Controller
         if (!ModelState.IsValid)
         {
             ViewBag.IdVehiculo = id;
+
+            await CargarClasificacionesAsync();
 
             return View(dto);
         }
@@ -198,6 +293,8 @@ public class VehiculoController : Controller
                 ex.Message);
 
             ViewBag.IdVehiculo = id;
+
+            await CargarClasificacionesAsync();
 
             return View(dto);
         }

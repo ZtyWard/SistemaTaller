@@ -664,7 +664,6 @@
         border-right: 0;
     }
 
-
 /* =========================================================
    MODULE IMAGE
    ========================================================= */
@@ -672,44 +671,47 @@
 .axis-module-image {
     position: absolute;
     inset: 0;
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    background-position: center !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
     filter: grayscale(100%);
     transform: scale(1.02);
     transition: transform .8s cubic-bezier(.22,1,.36,1), filter .8s ease;
+    z-index: 0;
 }
 
 
 /* =========================================================
-   MODULE IMAGES
+   ASPHALT
    ========================================================= */
 
-.axis-image-clientes {
-    background-image: url('/imagenes/modules/clienteasesor.jpg');
-}
-
-.axis-image-vehiculos {
-    background-image: url('/imagenes/modules/vehiculo.jpg');
-}
-
-.axis-image-recepcion {
-    background-image: url('/imagenes/modules/recepcion.jpg');
-}
-
-.axis-image-diagnostico {
-    background-image: url('/imagenes/modules/diagnostico.jpg');
-}
-
-.axis-image-cotizacion {
-    background-image: url('/imagenes/modules/cotizacion.jpg');
-}
-
-.axis-image-ordenes {
-    background-image: url('/imagenes/modules/ordenes.jpg');
+.axis-module .axis-image-asphalt {
+    background-image: url('/imagenes/modules/axis-asphalt.jpg') !important;
 }
 
 
+/* =========================================================
+   ACERCA DE
+   ========================================================= */
+
+.axis-module .axis-image-about {
+    background-image: url('/imagenes/modules/axis-about-car.jpg') !important;
+}
+
+
+/* =========================================================
+   MODULE OVERLAY
+   ========================================================= */
+
+.axis-module-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient( 180deg, rgba(30,32,35,.20), rgba(30,31,34,.75) );
+    transition: background var(--axis-transition);
+}
 /* =========================================================
    MODULE OVERLAY
    ========================================================= */

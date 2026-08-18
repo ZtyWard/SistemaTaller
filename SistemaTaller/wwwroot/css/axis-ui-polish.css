@@ -1,0 +1,768 @@
+﻿/* =========================================================
+   AXIS UI POLISH
+   Formularios, seguridad y catálogo
+   ========================================================= */
+
+.axis-modern-page {
+    color: #f1efe6;
+    max-width: 1480px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.axis-modern-header {
+    align-items: flex-end;
+    margin-bottom: 28px;
+}
+
+    .axis-modern-header .axis-page-kicker {
+        color: rgba(241,239,230,.45);
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 2.5px;
+    }
+
+    .axis-modern-header h1 {
+        color: #f1efe6;
+        font-size: clamp(34px, 4vw, 48px);
+        letter-spacing: -1.8px;
+    }
+
+    .axis-modern-header p {
+        color: rgba(241,239,230,.55);
+        margin-top: 9px;
+    }
+
+
+/* =========================================================
+   CARD PRINCIPAL
+   ========================================================= */
+
+.axis-modern-card {
+    width: 100%;
+    max-width: none;
+    background: linear-gradient( 145deg, rgba(24,25,28,.98), rgba(17,18,20,.98) );
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 20px;
+    box-shadow: 0 25px 70px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+
+.axis-modern-form {
+    padding: 32px;
+}
+
+
+/* =========================================================
+   SECCIONES
+   ========================================================= */
+
+.axis-modern-section {
+    border-bottom-color: rgba(255,255,255,.08);
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+}
+
+    .axis-modern-section:last-of-type {
+        border-bottom: 0;
+    }
+
+
+    .axis-modern-section
+    .axis-form-section-title {
+        color: #f1efe6;
+        font-size: 11px;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+    }
+
+
+/* =========================================================
+   CAMPOS
+   ========================================================= */
+
+.axis-modern-form .axis-form-grid {
+    gap: 20px;
+}
+
+
+.axis-modern-form .axis-field {
+    gap: 8px;
+}
+
+
+    .axis-modern-form .axis-field label {
+        color: rgba(241,239,230,.72);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .8px;
+        text-transform: uppercase;
+    }
+
+
+    .axis-modern-form .axis-field input,
+    .axis-modern-form .axis-field textarea,
+    .axis-modern-form .axis-field select {
+        width: 100%;
+        min-height: 44px;
+        padding: 11px 13px;
+        border: 1px solid rgba(255,255,255,.11) !important;
+        border-radius: 11px;
+        outline: none;
+        background: rgba(255,255,255,.055) !important;
+        color: #f1efe6 !important;
+        font-family: inherit;
+        font-size: 12px;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.02);
+        transition: border .2s ease, background .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+
+
+        .axis-modern-form
+        .axis-field select option {
+            background: #1d1e21;
+            color: #f1efe6;
+        }
+
+
+        .axis-modern-form
+        .axis-field input:focus,
+        .axis-modern-form
+        .axis-field textarea:focus,
+        .axis-modern-form
+        .axis-field select:focus {
+            border-color: rgba(241,239,230,.48) !important;
+            background: rgba(255,255,255,.075) !important;
+            box-shadow: 0 0 0 3px rgba(255,255,255,.055), 0 0 22px rgba(255,255,255,.035);
+        }
+
+
+        .axis-modern-form
+        .axis-field input[readonly] {
+            color: rgba(241,239,230,.62) !important;
+            background: rgba(255,255,255,.035) !important;
+        }
+
+
+    .axis-modern-form
+    .axis-field textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+
+    .axis-modern-form
+    .axis-field small {
+        color: rgba(241,239,230,.40);
+        font-size: 10px;
+        line-height: 1.5;
+    }
+
+
+    /* =========================================================
+   VALIDACIÓN
+   ========================================================= */
+
+    .axis-modern-form
+    .axis-field
+    span.field-validation-error {
+        color: #c77b7b;
+        font-size: 10px;
+    }
+
+
+.axis-modern-form
+.axis-form-validation {
+    color: #d18a8a;
+    background: rgba(150,70,70,.08);
+    border: 1px solid rgba(180,80,80,.18);
+    border-radius: 10px;
+    padding: 11px 13px;
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+.axis-modern-actions {
+    justify-content: flex-end;
+    padding-top: 4px;
+}
+
+
+.axis-modern-form .axis-button {
+    min-height: 42px;
+    padding: 0 17px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 650;
+    letter-spacing: .2px;
+}
+
+
+.axis-modern-form
+.axis-button-primary {
+    background: #f1efe6;
+    border-color: #f1efe6;
+    color: #202124;
+    box-shadow: 0 8px 25px rgba(0,0,0,.25);
+}
+
+
+    .axis-modern-form
+    .axis-button-primary:hover {
+        background: #fff;
+        border-color: #fff;
+        color: #161719;
+    }
+
+
+.axis-modern-form
+.axis-button-secondary {
+    background: rgba(255,255,255,.045);
+    border-color: rgba(255,255,255,.13);
+    color: rgba(241,239,230,.78);
+}
+
+
+    .axis-modern-form
+    .axis-button-secondary:hover {
+        background: rgba(255,255,255,.08);
+        border-color: rgba(255,255,255,.25);
+        color: #fff;
+    }
+
+
+/* =========================================================
+   AVISOS
+   ========================================================= */
+
+.axis-modern-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 13px 15px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 11px;
+    background: rgba(255,255,255,.035);
+    color: rgba(241,239,230,.68);
+    font-size: 11px;
+    line-height: 1.55;
+}
+
+
+    .axis-modern-note i {
+        color: rgba(241,239,230,.75);
+        margin-top: 1px;
+    }
+
+
+.axis-modern-note-warning {
+    border-color: rgba(180,150,80,.20);
+    background: rgba(180,150,80,.055);
+}
+
+
+    .axis-modern-note-warning i {
+        color: #c5a76b;
+    }
+
+
+/* =========================================================
+   SWITCHES
+   ========================================================= */
+
+.axis-modern-switch {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 64px;
+    padding: 12px 14px;
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 12px;
+    background: rgba(255,255,255,.035);
+}
+
+
+    .axis-modern-switch input {
+        width: 18px !important;
+        min-height: 18px !important;
+        margin: 0;
+        accent-color: #f1efe6;
+    }
+
+
+    .axis-modern-switch label {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        cursor: pointer;
+        text-transform: none !important;
+        letter-spacing: 0 !important;
+    }
+
+
+        .axis-modern-switch label strong {
+            color: #f1efe6;
+            font-size: 11px;
+        }
+
+
+        .axis-modern-switch label small {
+            color: rgba(241,239,230,.42);
+        }
+
+
+/* =========================================================
+   CHECK CARDS
+   ========================================================= */
+
+.axis-role-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 4px 0 10px;
+}
+
+
+.axis-check-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 68px;
+    padding: 12px 13px;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 12px;
+    background: rgba(255,255,255,.025);
+    cursor: pointer;
+    transition: border .2s ease, background .2s ease, transform .2s ease;
+}
+
+
+    .axis-check-card:hover {
+        border-color: rgba(255,255,255,.22);
+        background: rgba(255,255,255,.05);
+        transform: translateY(-1px);
+    }
+
+
+    .axis-check-card > input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+
+.axis-check-box {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255,255,255,.30);
+    border-radius: 5px;
+    background: rgba(0,0,0,.18);
+}
+
+
+.axis-check-card >
+input:checked +
+.axis-check-box {
+    background: #f1efe6;
+    border-color: #f1efe6;
+    box-shadow: 0 0 12px rgba(241,239,230,.12);
+}
+
+
+    .axis-check-card >
+    input:checked +
+    .axis-check-box::after {
+        content: "✓";
+        color: #202124;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+
+.axis-check-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+
+    .axis-check-content strong {
+        color: #f1efe6;
+        font-size: 11px;
+        font-weight: 650;
+    }
+
+
+    .axis-check-content small {
+        color: rgba(241,239,230,.38);
+        font-size: 9px;
+    }
+
+
+.axis-check-card-inline {
+    width: 100%;
+}
+
+
+/* =========================================================
+   PERMISOS
+   ========================================================= */
+
+.axis-role-form-card {
+    max-width: 1180px;
+}
+
+
+.axis-permission-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 18px;
+}
+
+
+    .axis-permission-heading
+    .axis-form-section-title {
+        margin-bottom: 6px;
+    }
+
+
+    .axis-permission-heading p {
+        margin: 0;
+        color: rgba(241,239,230,.45);
+        font-size: 11px;
+    }
+
+
+.axis-permission-count {
+    flex: 0 0 auto;
+    padding: 6px 9px;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 8px;
+    color: rgba(241,239,230,.52);
+    font-size: 9px;
+    letter-spacing: .5px;
+}
+
+
+.axis-permission-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+.axis-permission-group {
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 14px;
+    background: rgba(0,0,0,.12);
+}
+
+
+.axis-permission-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 15px;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    background: rgba(255,255,255,.025);
+}
+
+
+    .axis-permission-group-header > div {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+    }
+
+
+    .axis-permission-group-header strong {
+        color: #f1efe6;
+        font-size: 11px;
+        letter-spacing: .8px;
+        text-transform: uppercase;
+    }
+
+
+    .axis-permission-group-header > span {
+        color: rgba(241,239,230,.35);
+        font-size: 9px;
+    }
+
+
+.axis-permission-icon {
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    background: rgba(255,255,255,.06);
+    color: rgba(241,239,230,.72);
+}
+
+
+.axis-permission-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 10px;
+}
+
+
+.axis-permission-card {
+    min-height: 58px;
+    background: rgba(255,255,255,.018);
+}
+
+
+/* =========================================================
+   CATEGORÍAS
+   ========================================================= */
+
+.axis-category-form-card {
+    max-width: 900px;
+}
+
+
+.axis-btn {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 0 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+
+.axis-btn-primary {
+    background: #f1efe6;
+    border: 1px solid #f1efe6;
+    color: #202124;
+}
+
+
+    .axis-btn-primary:hover {
+        background: #fff;
+        color: #111;
+        transform: translateY(-1px);
+    }
+
+
+.axis-btn-secondary {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.13);
+    color: rgba(241,239,230,.78);
+}
+
+
+    .axis-btn-secondary:hover {
+        background: rgba(255,255,255,.08);
+        color: #fff;
+    }
+
+
+/* =========================================================
+   TABLAS DE CATEGORÍAS
+   ========================================================= */
+
+.axis-toolbar-info {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+
+    .axis-toolbar-info span {
+        color: rgba(241,239,230,.40);
+        font-size: 9px;
+        letter-spacing: 1.5px;
+    }
+
+
+    .axis-toolbar-info strong {
+        color: #f1efe6;
+        font-size: 18px;
+    }
+
+
+.axis-toolbar-actions {
+    display: flex;
+    gap: 7px;
+}
+
+
+.axis-filter {
+    padding: 7px 11px;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 8px;
+    background: rgba(255,255,255,.035);
+    color: rgba(241,239,230,.55);
+    text-decoration: none;
+    font-size: 10px;
+}
+
+
+    .axis-filter.active,
+    .axis-filter:hover {
+        color: #fff;
+        border-color: rgba(255,255,255,.24);
+        background: rgba(255,255,255,.07);
+    }
+
+
+.axis-table-card {
+    background: rgba(17,18,20,.82);
+    border-color: rgba(255,255,255,.09);
+    box-shadow: 0 20px 50px rgba(0,0,0,.22);
+}
+
+
+.axis-table th {
+    background: rgba(255,255,255,.025);
+    border-bottom-color: rgba(255,255,255,.08);
+    color: rgba(241,239,230,.38);
+}
+
+
+.axis-table td {
+    border-bottom-color: rgba(255,255,255,.055);
+    color: rgba(241,239,230,.62);
+}
+
+
+.axis-table tbody tr:hover {
+    background: rgba(255,255,255,.035);
+}
+
+
+.axis-table-id {
+    color: rgba(241,239,230,.38);
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+
+.axis-table-primary {
+    color: #f1efe6;
+    font-size: 12px;
+}
+
+
+.axis-action {
+    display: inline-flex;
+    align-items: center;
+    min-height: 29px;
+    padding: 0 9px;
+    margin-right: 4px;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 7px;
+    background: rgba(255,255,255,.035);
+    color: rgba(241,239,230,.66);
+    font-size: 9px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+    .axis-action:hover {
+        color: #fff;
+        border-color: rgba(255,255,255,.24);
+        background: rgba(255,255,255,.07);
+    }
+
+
+.axis-inline-form {
+    display: inline;
+}
+
+
+.axis-action-button {
+    font-family: inherit;
+}
+
+
+.axis-status-active {
+    background: rgba(80,150,90,.12);
+    color: #7db481;
+}
+
+
+.axis-status-inactive {
+    background: rgba(150,150,150,.08);
+    color: rgba(241,239,230,.45);
+}
+
+
+.axis-empty h2 {
+    color: #f1efe6;
+}
+
+
+.axis-empty p {
+    color: rgba(241,239,230,.45);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .axis-modern-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+
+    .axis-role-grid,
+    .axis-permission-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .axis-modern-form {
+        padding: 22px;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .axis-modern-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+
+        .axis-modern-actions
+        .axis-button {
+            width: 100%;
+        }
+
+
+    .axis-permission-heading {
+        flex-direction: column;
+    }
+}

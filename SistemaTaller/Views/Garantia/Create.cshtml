@@ -4,264 +4,293 @@
     ViewData["Title"] = "Nueva garantía";
 }
 
-<div class="container-fluid">
+<div class="axis-page axis-modern-page">
 
-    <div class="mb-4">
-        <span class="text-muted">AXIS · GARANTÍAS</span>
+    <div class="axis-page-header axis-modern-header">
 
-        <h1 class="mt-2">
-            Nueva garantía
-        </h1>
+        <div>
 
-        <p class="text-muted">
-            Registra una garantía para un servicio o producto.
-        </p>
+            <span class="axis-page-kicker">
+                AXIS · GARANTÍAS
+            </span>
+
+            <h1>
+                Nueva garantía
+            </h1>
+
+            <p>
+                Registra una garantía para un servicio o producto.
+            </p>
+
+        </div>
+
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Volver
+
+            </a>
+
+        </div>
+
     </div>
 
-    <div class="card shadow-sm">
 
-        <div class="card-body">
+    <div class="axis-form-card axis-modern-card">
 
-            <form asp-action="Create" method="post">
+        <form asp-action="Create"
+              method="post"
+              class="axis-form axis-modern-form">
 
-                @Html.AntiForgeryToken()
+            @Html.AntiForgeryToken()
 
-                <div asp-validation-summary="ModelOnly"
-                     class="text-danger mb-3">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-form-validation">
+            </div>
+
+
+            <!-- ORIGEN -->
+
+            <section class="axis-form-section axis-modern-section">
+
+                <div class="axis-form-section-title">
+                    Origen de la garantía
                 </div>
 
-                <!-- ================================================= -->
-                <!-- ORIGEN -->
-                <!-- ================================================= -->
 
-                <h5 class="mb-3">
-                    Origen de la garantía
-                </h5>
+                <div class="axis-modern-note">
 
-                <div class="row">
+                    <i class="bi bi-info-circle"></i>
 
-                    <div class="col-md-6 mb-3">
+                    <span>
+                        La garantía debe estar asociada
+                        a una orden de trabajo o a una venta.
+                    </span>
 
-                        <label asp-for="IdOrdenTrabajo"
-                               class="form-label">
+                </div>
+
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdOrdenTrabajo">
                             Orden de trabajo
                         </label>
 
                         <input asp-for="IdOrdenTrabajo"
                                type="number"
                                min="1"
-                               class="form-control"
                                placeholder="Ej. 1" />
 
-                        <div class="form-text">
+                        <small>
                             Indica la OT que originó la garantía.
-                        </div>
+                        </small>
+
+                        <span asp-validation-for="IdOrdenTrabajo"></span>
 
                     </div>
 
-                    <div class="col-md-6 mb-3">
 
-                        <label asp-for="IdVenta"
-                               class="form-label">
+                    <div class="axis-field">
+
+                        <label asp-for="IdVenta">
                             Venta
                         </label>
 
                         <input asp-for="IdVenta"
                                type="number"
                                min="1"
-                               class="form-control"
                                placeholder="Ej. 1" />
 
-                        <div class="form-text">
+                        <small>
                             Alternativamente puedes indicar una venta.
-                        </div>
+                        </small>
+
+                        <span asp-validation-for="IdVenta"></span>
 
                     </div>
 
                 </div>
 
-                <div class="alert alert-info">
-                    <strong>Importante:</strong>
-                    la garantía debe estar asociada a una
-                    orden de trabajo o a una venta.
+            </section>
+
+
+            <!-- COBERTURA -->
+
+            <section class="axis-form-section axis-modern-section">
+
+                <div class="axis-form-section-title">
+                    Cobertura
                 </div>
 
-                <hr />
 
-                <!-- ================================================= -->
-                <!-- COBERTURA -->
-                <!-- ================================================= -->
+                <div class="axis-modern-note axis-modern-note-warning">
 
-                <h5 class="mb-3">
-                    Cobertura
-                </h5>
+                    <i class="bi bi-exclamation-triangle"></i>
 
-                <div class="row">
+                    <span>
+                        La garantía debe cubrir un producto
+                        o un servicio, no ambos.
+                    </span>
 
-                    <div class="col-md-6 mb-3">
+                </div>
 
-                        <label asp-for="IdServicio"
-                               class="form-label">
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field">
+
+                        <label asp-for="IdServicio">
                             Servicio
                         </label>
 
                         <input asp-for="IdServicio"
                                type="number"
                                min="1"
-                               class="form-control"
                                placeholder="Ej. 1" />
 
-                        <div class="form-text">
-                            Utiliza este campo si la garantía
-                            corresponde a un servicio.
-                        </div>
+                        <small>
+                            Utiliza este campo si corresponde
+                            a un servicio.
+                        </small>
+
+                        <span asp-validation-for="IdServicio"></span>
 
                     </div>
 
-                    <div class="col-md-6 mb-3">
 
-                        <label asp-for="IdProducto"
-                               class="form-label">
+                    <div class="axis-field">
+
+                        <label asp-for="IdProducto">
                             Producto / repuesto
                         </label>
 
                         <input asp-for="IdProducto"
                                type="number"
                                min="1"
-                               class="form-control"
                                placeholder="Ej. 1" />
 
-                        <div class="form-text">
-                            Utiliza este campo si la garantía
-                            corresponde a un producto.
-                        </div>
+                        <small>
+                            Utiliza este campo si corresponde
+                            a un producto.
+                        </small>
+
+                        <span asp-validation-for="IdProducto"></span>
 
                     </div>
 
                 </div>
 
-                <div class="alert alert-warning">
-                    <strong>Importante:</strong>
-                    la garantía debe cubrir un producto
-                    o un servicio, no ambos.
+            </section>
+
+
+            <!-- VIGENCIA -->
+
+            <section class="axis-form-section axis-modern-section">
+
+                <div class="axis-form-section-title">
+                    Vigencia
                 </div>
 
-                <hr />
 
-                <!-- ================================================= -->
-                <!-- VIGENCIA -->
-                <!-- ================================================= -->
+                <div class="axis-form-grid">
 
-                <h5 class="mb-3">
-                    Vigencia
-                </h5>
+                    <div class="axis-field">
 
-                <div class="row">
-
-                    <div class="col-md-6 mb-3">
-
-                        <label asp-for="FechaInicio"
-                               class="form-label">
+                        <label asp-for="FechaInicio">
                             Fecha de inicio
                         </label>
 
                         <input asp-for="FechaInicio"
-                               type="date"
-                               class="form-control" />
+                               type="date" />
 
-                        <span asp-validation-for="FechaInicio"
-                              class="text-danger">
-                        </span>
+                        <span asp-validation-for="FechaInicio"></span>
 
                     </div>
 
-                    <div class="col-md-6 mb-3">
 
-                        <label asp-for="FechaVencimiento"
-                               class="form-label">
+                    <div class="axis-field">
+
+                        <label asp-for="FechaVencimiento">
                             Fecha de vencimiento
                         </label>
 
                         <input asp-for="FechaVencimiento"
-                               type="date"
-                               class="form-control" />
+                               type="date" />
 
-                        <span asp-validation-for="FechaVencimiento"
-                              class="text-danger">
-                        </span>
+                        <span asp-validation-for="FechaVencimiento"></span>
+
+                    </div>
+
+
+                    <div class="axis-field axis-field-full">
+
+                        <label asp-for="Condiciones">
+                            Condiciones de garantía
+                        </label>
+
+                        <textarea asp-for="Condiciones"
+                                  rows="4"
+                                  placeholder="Condiciones aplicables a la garantía...">
+                        </textarea>
+
+                    </div>
+
+
+                    <div class="axis-field axis-field-full">
+
+                        <label asp-for="Observaciones">
+                            Observaciones
+                        </label>
+
+                        <textarea asp-for="Observaciones"
+                                  rows="4"
+                                  placeholder="Observaciones adicionales...">
+                        </textarea>
 
                     </div>
 
                 </div>
 
-                <!-- ================================================= -->
-                <!-- CONDICIONES -->
-                <!-- ================================================= -->
+            </section>
 
-                <div class="mb-3">
 
-                    <label asp-for="Condiciones"
-                           class="form-label">
-                        Condiciones de garantía
-                    </label>
+            <div class="axis-form-actions axis-modern-actions">
 
-                    <textarea asp-for="Condiciones"
-                              class="form-control"
-                              rows="4"
-                              placeholder="Condiciones aplicables a la garantía...">
-                    </textarea>
+                <a asp-action="Index"
+                   class="axis-button axis-button-secondary">
 
-                </div>
+                    Cancelar
 
-                <!-- ================================================= -->
-                <!-- OBSERVACIONES -->
-                <!-- ================================================= -->
+                </a>
 
-                <div class="mb-4">
+                <button type="submit"
+                        class="axis-button axis-button-primary">
 
-                    <label asp-for="Observaciones"
-                           class="form-label">
-                        Observaciones
-                    </label>
+                    <i class="bi bi-shield-check"></i>
 
-                    <textarea asp-for="Observaciones"
-                              class="form-control"
-                              rows="4"
-                              placeholder="Observaciones adicionales...">
-                    </textarea>
+                    Registrar garantía
 
-                </div>
+                </button>
 
-                <!-- ================================================= -->
-                <!-- BOTONES -->
-                <!-- ================================================= -->
+            </div>
 
-                <div class="d-flex gap-2">
-
-                    <button type="submit"
-                            class="btn btn-primary">
-                        Registrar garantía
-                    </button>
-
-                    <a asp-action="Index"
-                       class="btn btn-outline-secondary">
-                        Cancelar
-                    </a>
-
-                </div>
-
-            </form>
-
-        </div>
+        </form>
 
     </div>
 
 </div>
 
-@section Scripts
-{
-    @{
-        await Html.RenderPartialAsync(
-            "_ValidationScriptsPartial");
-    }
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
 }

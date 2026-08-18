@@ -4,55 +4,81 @@
     ViewData["Title"] = "Registrar entrega";
 
     var ordenes =
-        ViewBag.OrdenesFinalizadas
-        as IEnumerable<Negocios.DTOs.OrdenTrabajoDto>
+        ViewBag.OrdenesFinalizadas as IEnumerable<Negocios.DTOs.OrdenTrabajoDto>
         ?? Enumerable.Empty<Negocios.DTOs.OrdenTrabajoDto>();
 }
 
-<div class="container py-4">
+<div class="axis-page axis-modern-page">
 
-    <div class="mb-4">
+    <div class="axis-page-header axis-modern-header">
 
-        <span class="text-muted small fw-bold">
-            AXIS · ENTREGA
-        </span>
+        <div>
 
-        <h1 class="fw-bold mb-1">
-            Registrar entrega
-        </h1>
+            <span class="axis-page-kicker">
+                AXIS · ENTREGA
+            </span>
 
-        <p class="text-muted">
-            Registra la salida del vehículo del taller.
-        </p>
+            <h1>
+                Registrar entrega
+            </h1>
+
+            <p>
+                Registra la salida del vehículo del taller.
+            </p>
+
+        </div>
+
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Volver
+
+            </a>
+
+        </div>
 
     </div>
 
-    <div class="card border-0 shadow-sm">
 
-        <div class="card-body p-4">
+    <div class="axis-form-card axis-modern-card">
 
-            <form asp-action="Create"
-                  method="post">
+        <form asp-action="Create"
+              method="post"
+              class="axis-form axis-modern-form">
 
-                @Html.AntiForgeryToken()
+            @Html.AntiForgeryToken()
 
-                <div asp-validation-summary="ModelOnly"
-                     class="alert alert-danger">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-form-validation">
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- SALIDA -->
+            <!-- ================================================= -->
+
+            <section class="axis-form-section axis-modern-section">
+
+                <div class="axis-form-section-title">
+                    Salida del vehículo
                 </div>
 
-                <div class="row g-4">
 
-                    <!-- OT -->
+                <div class="axis-form-grid">
 
-                    <div class="col-md-6">
+                    <div class="axis-field">
 
-                        <label asp-for="IdOrdenTrabajo"
-                               class="form-label fw-semibold">
+                        <label asp-for="IdOrdenTrabajo">
                             Orden de trabajo
                         </label>
 
-                        <select asp-for="IdOrdenTrabajo"
-                                class="form-select">
+                        <select asp-for="IdOrdenTrabajo">
 
                             <option value="">
                                 Seleccione una OT finalizada
@@ -73,68 +99,53 @@
 
                         </select>
 
-                        <small class="text-muted">
-                            Solo aparecen órdenes de trabajo finalizadas
+                        <small>
+                            Solo aparecen órdenes finalizadas
                             y sin una entrega registrada.
                         </small>
 
-                        <span asp-validation-for="IdOrdenTrabajo"
-                              class="text-danger">
-                        </span>
+                        <span asp-validation-for="IdOrdenTrabajo"></span>
 
                     </div>
 
-                    <!-- KILOMETRAJE -->
 
-                    <div class="col-md-6">
+                    <div class="axis-field">
 
-                        <label asp-for="KilometrajeSalida"
-                               class="form-label fw-semibold">
+                        <label asp-for="KilometrajeSalida">
                             Kilometraje de salida
                         </label>
 
                         <input asp-for="KilometrajeSalida"
                                type="number"
                                min="0"
-                               class="form-control"
                                placeholder="Ej. 85420" />
 
-                        <span asp-validation-for="KilometrajeSalida"
-                              class="text-danger">
-                        </span>
+                        <span asp-validation-for="KilometrajeSalida"></span>
 
                     </div>
 
-                    <!-- PERSONA -->
 
-                    <div class="col-md-6">
+                    <div class="axis-field">
 
-                        <label asp-for="PersonaRecibe"
-                               class="form-label fw-semibold">
+                        <label asp-for="PersonaRecibe">
                             Persona que recibe
                         </label>
 
                         <input asp-for="PersonaRecibe"
-                               class="form-control"
                                placeholder="Nombre completo" />
 
-                        <span asp-validation-for="PersonaRecibe"
-                              class="text-danger">
-                        </span>
+                        <span asp-validation-for="PersonaRecibe"></span>
 
                     </div>
 
-                    <!-- ESTADO PAGO -->
 
-                    <div class="col-md-6">
+                    <div class="axis-field">
 
-                        <label asp-for="EstadoPago"
-                               class="form-label fw-semibold">
+                        <label asp-for="EstadoPago">
                             Estado de pago
                         </label>
 
-                        <select asp-for="EstadoPago"
-                                class="form-select">
+                        <select asp-for="EstadoPago">
 
                             <option value="Pendiente">
                                 Pendiente
@@ -150,145 +161,158 @@
 
                         </select>
 
-                        <span asp-validation-for="EstadoPago"
-                              class="text-danger">
-                        </span>
+                        <span asp-validation-for="EstadoPago"></span>
 
                     </div>
 
-                    <!-- GARANTÍA -->
+                </div>
 
-                    <div class="col-md-6">
+            </section>
 
-                        <div class="form-check form-switch mt-4">
+
+            <!-- ================================================= -->
+            <!-- CONFIRMACIÓN -->
+            <!-- ================================================= -->
+
+            <section class="axis-form-section axis-modern-section">
+
+                <div class="axis-form-section-title">
+                    Confirmación
+                </div>
+
+
+                <div class="axis-form-grid">
+
+
+                    <div class="axis-field">
+
+                        <div class="axis-modern-switch">
 
                             <input asp-for="TieneGarantia"
-                                   class="form-check-input"
                                    type="checkbox"
                                    id="TieneGarantia" />
 
-                            <label asp-for="TieneGarantia"
-                                   class="form-check-label fw-semibold">
-                                El servicio tiene garantía
+                            <label asp-for="TieneGarantia">
+
+                                <strong>
+                                    El servicio tiene garantía
+                                </strong>
+
+                                <small>
+                                    Indica si la entrega queda
+                                    cubierta por garantía.
+                                </small>
+
                             </label>
 
                         </div>
 
                     </div>
 
-                    <!-- ACEPTACIÓN -->
 
-                    <div class="col-md-6">
+                    <div class="axis-field">
 
-                        <div class="form-check form-switch mt-4">
+                        <div class="axis-modern-switch">
 
                             <input asp-for="Aceptacion"
-                                   class="form-check-input"
                                    type="checkbox"
                                    id="Aceptacion" />
 
-                            <label asp-for="Aceptacion"
-                                   class="form-check-label fw-semibold">
-                                Cliente acepta la entrega
+                            <label asp-for="Aceptacion">
+
+                                <strong>
+                                    Cliente acepta la entrega
+                                </strong>
+
+                                <small>
+                                    Al aceptar, se solicita
+                                    el nombre de quien recibe.
+                                </small>
+
                             </label>
 
                         </div>
 
                     </div>
 
-                    <!-- FIRMA -->
 
-                    <div class="col-md-6"
+                    <div class="axis-field"
                          id="firmaContainer">
 
-                        <label asp-for="FirmaNombre"
-                               class="form-label fw-semibold">
+                        <label asp-for="FirmaNombre">
                             Nombre de quien acepta
                         </label>
 
                         <input asp-for="FirmaNombre"
-                               class="form-control"
                                placeholder="Nombre completo" />
 
-                        <span asp-validation-for="FirmaNombre"
-                              class="text-danger">
-                        </span>
+                        <span asp-validation-for="FirmaNombre"></span>
 
                     </div>
 
-                    <!-- OBSERVACIONES -->
 
-                    <div class="col-12">
+                    <div class="axis-field axis-field-full">
 
-                        <label asp-for="Observaciones"
-                               class="form-label fw-semibold">
+                        <label asp-for="Observaciones">
                             Observaciones
                         </label>
 
                         <textarea asp-for="Observaciones"
-                                  class="form-control"
                                   rows="4"
                                   placeholder="Estado del vehículo al momento de la entrega...">
                         </textarea>
 
-                        <span asp-validation-for="Observaciones"
-                              class="text-danger">
-                        </span>
+                        <span asp-validation-for="Observaciones"></span>
 
                     </div>
 
-                    <!-- RECOMENDACIONES -->
 
-                    <div class="col-12">
+                    <div class="axis-field axis-field-full">
 
-                        <label asp-for="Recomendaciones"
-                               class="form-label fw-semibold">
+                        <label asp-for="Recomendaciones">
                             Recomendaciones
                         </label>
 
                         <textarea asp-for="Recomendaciones"
-                                  class="form-control"
                                   rows="4"
                                   placeholder="Mantenimientos o recomendaciones para el cliente...">
                         </textarea>
 
-                        <span asp-validation-for="Recomendaciones"
-                              class="text-danger">
-                        </span>
+                        <span asp-validation-for="Recomendaciones"></span>
 
                     </div>
 
                 </div>
 
-                <hr class="my-4" />
+            </section>
 
-                <div class="d-flex gap-2">
 
-                    <button type="submit"
-                            class="btn btn-primary">
+            <div class="axis-form-actions axis-modern-actions">
 
-                        <i class="bi bi-check-lg me-1"></i>
+                <a asp-action="Index"
+                   class="axis-button axis-button-secondary">
 
-                        Registrar entrega
+                    Cancelar
 
-                    </button>
+                </a>
 
-                    <a asp-action="Index"
-                       class="btn btn-outline-secondary">
+                <button type="submit"
+                        class="axis-button axis-button-primary">
 
-                        Cancelar
+                    <i class="bi bi-check-lg"></i>
 
-                    </a>
+                    Registrar entrega
 
-                </div>
+                </button>
 
-            </form>
+            </div>
 
-        </div>
+        </form>
 
     </div>
 
 </div>
+
 
 @section Scripts {
 
@@ -301,34 +325,38 @@
             function () {
 
                 const aceptacion =
-                    document.getElementById(
-                        "Aceptacion");
+                    document.getElementById("Aceptacion");
 
                 const firmaContainer =
-                    document.getElementById(
-                        "firmaContainer");
+                    document.getElementById("firmaContainer");
+
 
                 function actualizarFirma() {
 
-                    if (aceptacion.checked) {
+                    if (
+                        !aceptacion ||
+                        !firmaContainer
+                    )
+                        return;
 
-                        firmaContainer.style.display =
-                            "";
+                    firmaContainer.style.display =
+                        aceptacion.checked
+                            ? ""
+                            : "none";
 
-                    }
-                    else {
-
-                        firmaContainer.style.display =
-                            "none";
-                    }
                 }
 
-                aceptacion.addEventListener(
+
+                aceptacion?.addEventListener(
                     "change",
-                    actualizarFirma);
+                    actualizarFirma
+                );
 
                 actualizarFirma();
-            });
+
+            }
+        );
 
     </script>
+
 }

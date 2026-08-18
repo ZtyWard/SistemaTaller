@@ -3,7 +3,6 @@
 // =====================================================
 
 using System.Diagnostics;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SistemaTaller.Models;
 
@@ -24,6 +23,15 @@ public class HomeController : Controller
     // =====================================================
 
     public IActionResult Index()
+    {
+        return View();
+    }
+
+    // =====================================================
+    // ACERCA DE
+    // =====================================================
+
+    public IActionResult About()
     {
         return View();
     }

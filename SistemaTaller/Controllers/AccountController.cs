@@ -155,9 +155,11 @@ public class AccountController : Controller
             return Redirect(returnUrl);
         }
 
+        // Después del login normal,
+        // entrar directamente al Dashboard.
         return RedirectToAction(
             "Index",
-            "Home");
+            "Dashboard");
     }
 
     // =====================================================

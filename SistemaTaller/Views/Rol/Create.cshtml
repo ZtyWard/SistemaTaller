@@ -2,148 +2,700 @@
 
 @{
     ViewData["Title"] = "Nuevo rol";
+
     var puedeAdministrarPermisos =
         ViewBag.PuedeAdministrarPermisos as bool?
         ?? false;
+
+    string NombreModulo(string modulo)
+    {
+        return modulo switch
+        {
+            "Auditoria" => "Auditoría",
+            "Citas" => "Citas",
+            "Clientes" => "Clientes",
+            "Compras" => "Compras",
+            "Cotizaciones" => "Cotizaciones",
+            "Descuentos" => "Descuentos",
+            "Diagnosticos" => "Diagnósticos",
+            "Empleados" => "Empleados",
+            "Facturacion" => "Facturación",
+            "MovimientosInventario" => "Movimientos de inventario",
+            "Ordenes" => "Órdenes de trabajo",
+            "Pagos" => "Pagos",
+            "Permisos" => "Permisos",
+            "Productos" => "Productos",
+            "Proveedores" => "Proveedores",
+            "Recepciones" => "Recepciones",
+            "Reportes" => "Reportes",
+            "Roles" => "Roles",
+            "Servicios" => "Servicios",
+            "Usuarios" => "Usuarios",
+            "Vehiculos" => "Vehículos",
+            "Ventas" => "Ventas",
+            _ => modulo
+        };
+    }
+
+    string NombreAccion(string permiso)
+    {
+        var partes = permiso.Split('.', 2);
+
+        if (partes.Length < 2)
+            return permiso;
+
+        return partes[1] switch
+        {
+            "Ver" => "Consultar",
+            "Crear" => "Crear",
+            "Editar" => "Modificar",
+            "Eliminar" => "Eliminar",
+            "Desactivar" => "Desactivar",
+            "Activar" => "Activar",
+            "Aprobar" => "Aprobar",
+            "Cancelar" => "Cancelar",
+            "Aplicar" => "Aplicar",
+            "Asignar" => "Asignar",
+            "Administrar" => "Administrar",
+            "Registrar" => "Registrar",
+            "Anular" => "Anular",
+            "Exportar" => "Exportar",
+            "Importar" => "Importar",
+            _ => partes[1]
+        };
+    }
+
+    string InicialModulo(string modulo)
+    {
+        var nombre = NombreModulo(modulo);
+
+        return nombre.Length >= 2
+            ? nombre[..2].ToUpper()
+            : nombre.ToUpper();
+    }
+
+    string InicialAccion(string permiso)
+    {
+        var accion = NombreAccion(permiso);
+
+        return accion.Length >= 1
+            ? accion[..1].ToUpper()
+            : "?";
+    }
 }
 
-<div class="container-fluid py-4">
+<div class="axis-role-page">
 
-    <div class="mb-4">
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
 
-        <div class="text-muted small">
-            AXIS · SEGURIDAD
+    <header class="axis-role-header">
+
+        <div class="axis-role-header-copy">
+
+            <span class="axis-role-kicker">
+                AXIS · SEGURIDAD
+            </span>
+
+            <h1>
+                Nuevo rol
+            </h1>
+
+            <p>
+                Define qué puede hacer este rol dentro de AXIS.
+            </p>
+
         </div>
 
-        <h1 class="fw-bold mb-1">
-            Nuevo rol
-        </h1>
+        <a asp-action="Index"
+           class="axis-role-button">
 
-        <p class="text-muted mb-0">
-            Crea un rol y configura sus permisos.
-        </p>
+            ← Volver
 
-    </div>
+        </a>
 
-    <div class="card shadow-sm border-0">
+    </header>
 
-        <div class="card-body">
 
-            <form asp-action="Create"
-                  method="post">
+    <!-- =====================================================
+         CARD
+         ===================================================== -->
 
-                @Html.AntiForgeryToken()
+    <div class="axis-role-card">
 
-                <div asp-validation-summary="ModelOnly"
-                     class="text-danger mb-3">
+        <form asp-action="Create"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-role-validation">
+            </div>
+
+
+            <!-- =================================================
+                 IDENTIDAD
+                 ================================================= -->
+
+            <section class="axis-role-identity">
+
+                <div class="axis-role-section-label">
+                    Identidad del rol
                 </div>
 
-                <div class="mb-4">
+                <div class="axis-role-field">
 
-                    <label asp-for="Nombre"
-                           class="form-label fw-semibold">
+                    <label asp-for="Nombre">
                         Nombre del rol
                     </label>
 
                     <input asp-for="Nombre"
-                           class="form-control"
+                           type="text"
                            maxlength="256"
                            placeholder="Ej. Jefe de Taller" />
 
                     <span asp-validation-for="Nombre"
-                          class="text-danger">
+                          class="axis-role-validation">
                     </span>
 
                 </div>
 
-                @if (puedeAdministrarPermisos)
-                {
-                    <hr />
+            </section>
 
-                    <h5 class="mb-3">
-                        Permisos
-                    </h5>
 
-                    <p class="text-muted">
-                        Selecciona los permisos que tendrá
-                        este rol.
-                    </p>
+            @if (puedeAdministrarPermisos)
+            {
 
-                    @foreach (
-                                    var grupo in Model.PermisosDisponibles
-                                    .GroupBy(p => p.Split('.')[0])
-                                    .OrderBy(g => g.Key))
-                    {
-                        <div class="mb-4">
+                <!-- =================================================
+                     PERMISOS
+                     ================================================= -->
 
-                            <h6 class="fw-bold">
-                                @grupo.Key
-                            </h6>
+                <section class="axis-role-permissions">
 
-                            <div class="row">
+                    <div class="axis-role-permissions-top">
 
-                                @foreach (var permiso in grupo)
-                                {
-                                    <div class="col-md-4 mb-2">
+                        <div>
 
-                                        <div class="form-check">
+                            <h2 class="axis-role-permissions-title">
+                                Permisos
+                            </h2>
 
-                                            <input class="form-check-input"
-                                                   type="checkbox"
-                                                   name="Permisos"
-                                                   value="@permiso"
-                                                   id="permiso_@permiso.Replace(".", "_")" />
-
-                                            <label class="form-check-label"
-                                                   for="permiso_@permiso.Replace(".", "_")">
-                                                @permiso
-                                            </label>
-
-                                        </div>
-
-                                    </div>
-                                }
-
-                            </div>
+                            <p class="axis-role-permissions-subtitle">
+                                Selecciona las funciones que este rol
+                                podrá utilizar.
+                            </p>
 
                         </div>
-                    }
-                }
-                else
-                {
-                    <div class="alert alert-info">
-                        El rol se creará sin permisos.
-                        Un administrador con permiso para
-                        administrar permisos podrá configurarlos
-                        posteriormente.
+
+
+                        <div class="axis-role-counter">
+
+                            <strong id="axisRoleSelected">
+                                0
+                            </strong>
+
+                            <span>
+                                de @Model.PermisosDisponibles.Count
+                            </span>
+
+                        </div>
+
                     </div>
-                }
 
-                <div class="d-flex gap-2">
 
-                    <a asp-action="Index"
-                       class="btn btn-outline-secondary">
-                        Cancelar
-                    </a>
+                    <!-- =================================================
+                         SEARCH
+                         ================================================= -->
 
-                    <button type="submit"
-                            class="btn btn-primary">
-                        Crear rol
-                    </button>
+                    <div class="axis-role-toolbar">
+
+                        <div class="axis-role-search">
+
+                            <input type="text"
+                                   id="axisRoleSearch"
+                                   autocomplete="off"
+                                   placeholder="Buscar permisos..." />
+
+                        </div>
+
+                        <button type="button"
+                                id="axisRoleClear"
+                                class="axis-role-clear">
+
+                            Limpiar selección
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         MODULES
+                         ================================================= -->
+
+                    <div class="axis-role-modules">
+
+                        @foreach (
+                                            var grupo in Model.PermisosDisponibles
+                                            .GroupBy(p => p.Split('.')[0])
+                                            .OrderBy(g => g.Key))
+                        {
+
+                            var modulo = grupo.Key;
+
+                            var moduleId =
+                            "axis-module-" +
+                            modulo.Replace(" ", "-");
+
+
+                            <section class="axis-role-module"
+                                     data-module="@modulo">
+
+                                <!-- MODULE HEADER -->
+
+                                <div class="axis-role-module-header">
+
+                                    <button type="button"
+                                            class="axis-role-module-trigger"
+                                            data-module-target="@moduleId">
+
+                                        <span class="axis-role-module-icon">
+                                            @InicialModulo(modulo)
+                                        </span>
+
+                                        <span class="axis-role-module-info">
+
+                                            <span class="axis-role-module-name">
+                                                @NombreModulo(modulo)
+                                            </span>
+
+                                            <span class="axis-role-module-count">
+                                                @grupo.Count()
+                                                @(grupo.Count() == 1
+                                                                                        ? "permiso"
+                                                                                        : "permisos")
+                                    </span>
+
+                                        </span>
+
+                                        <span class="axis-role-module-arrow">
+                                            ↓
+                                        </span>
+
+                                    </button>
+
+
+                                    <button type="button"
+                                            class="axis-role-select-module"
+                                            data-module-select="@moduleId">
+
+                                        Seleccionar todos
+
+                                    </button>
+
+                                </div>
+
+
+                                <!-- MODULE BODY -->
+
+                                <div class="axis-role-module-body"
+                                     id="@moduleId">
+
+                            @foreach (var permiso in grupo)
+                                    {
+
+                                        var permisoId =
+                                        "axis-permiso-" +
+                                        permiso
+                                        .Replace(".", "-")
+                                        .Replace(" ", "-");
+
+
+                                        <label class="axis-role-permission"
+                                               data-permission="@permiso"
+                                               for="@permisoId">
+
+                                            <input type="checkbox"
+                                                   id="@permisoId"
+                                                   name="Permisos"
+                                                   value="@permiso"
+                                                   class="axis-role-checkbox" />
+
+
+                                            <span class="axis-role-check">
+                                            </span>
+
+
+                                            <span class="axis-role-permission-icon">
+                                                @InicialAccion(permiso)
+                                            </span>
+
+
+                                            <span class="axis-role-permission-text">
+
+                                                <span class="axis-role-permission-action">
+                                                    @NombreAccion(permiso)
+                                                </span>
+
+                                                <span class="axis-role-permission-description">
+                                                    @NombreModulo(modulo)
+                                                </span>
+
+                                            </span>
+
+                                        </label>
+
+                                    }
+
+                                </div>
+
+                            </section>
+
+                        }
+
+                    </div>
+
+                </section>
+
+            }
+            else
+            {
+
+                <div class="axis-role-permissions">
+
+                    <div class="axis-role-empty">
+
+                        El rol se creará sin permisos.
+                        Un administrador podrá configurarlos
+                        posteriormente.
+
+                    </div>
 
                 </div>
 
-            </form>
+            }
 
-        </div>
+
+            <!-- =================================================
+                 ACTIONS
+                 ================================================= -->
+
+            <div class="axis-role-actions">
+
+                <a asp-action="Index"
+                   class="axis-role-button">
+
+                    Cancelar
+
+                </a>
+
+                <button type="submit"
+                        class="axis-role-button axis-role-button-primary">
+
+                    Crear rol
+
+                </button>
+
+            </div>
+
+        </form>
 
     </div>
 
 </div>
 
+
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync(
-            "_ValidationScriptsPartial");
-    }
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const checkboxes =
+                    document.querySelectorAll(
+                        ".axis-role-checkbox"
+                    );
+
+                const counter =
+                    document.getElementById(
+                        "axisRoleSelected"
+                    );
+
+                const search =
+                    document.getElementById(
+                        "axisRoleSearch"
+                    );
+
+                const clear =
+                    document.getElementById(
+                        "axisRoleClear"
+                    );
+
+
+                /* =============================================
+                   COUNTER
+                   ============================================= */
+
+                function updateCounter() {
+
+                    const selected =
+                        document.querySelectorAll(
+                            ".axis-role-checkbox:checked"
+                        ).length;
+
+                    if (counter) {
+
+                        counter.textContent =
+                            selected;
+
+                    }
+
+                }
+
+
+                /* =============================================
+                   OPEN / CLOSE MODULE
+                   ============================================= */
+
+                document
+                    .querySelectorAll(
+                        ".axis-role-module-trigger"
+                    )
+                    .forEach(
+                        function (button) {
+
+                            button.addEventListener(
+                                "click",
+                                function () {
+
+                                    const id =
+                                        button.dataset.moduleTarget;
+
+                                    const module =
+                                        document.getElementById(id);
+
+                                    if (!module)
+                                        return;
+
+                                    const wrapper =
+                                        button.closest(
+                                            ".axis-role-module"
+                                        );
+
+                                    wrapper.classList.toggle(
+                                        "open"
+                                    );
+
+                                }
+                            );
+
+                        }
+                    );
+
+
+                /* =============================================
+                   SELECT ALL MODULE
+                   ============================================= */
+
+                document
+                    .querySelectorAll(
+                        ".axis-role-select-module"
+                    )
+                    .forEach(
+                        function (button) {
+
+                            button.addEventListener(
+                                "click",
+                                function () {
+
+                                    const id =
+                                        button.dataset.moduleSelect;
+
+                                    const body =
+                                        document.getElementById(id);
+
+                                    if (!body)
+                                        return;
+
+                                    const items =
+                                        body.querySelectorAll(
+                                            ".axis-role-checkbox"
+                                        );
+
+                                    const allSelected =
+                                        Array.from(items)
+                                            .every(
+                                                checkbox =>
+                                                    checkbox.checked
+                                            );
+
+
+                                    items.forEach(
+                                        function (checkbox) {
+
+                                            checkbox.checked =
+                                                !allSelected;
+
+                                        }
+                                    );
+
+
+                                    button.textContent =
+                                        allSelected
+                                            ? "Seleccionar todos"
+                                            : "Quitar selección";
+
+
+                                    updateCounter();
+
+                                }
+                            );
+
+                        }
+                    );
+
+
+                /* =============================================
+                   CHECKBOX CHANGE
+                   ============================================= */
+
+                checkboxes.forEach(
+                    function (checkbox) {
+
+                        checkbox.addEventListener(
+                            "change",
+                            updateCounter
+                        );
+
+                    }
+                );
+
+
+                /* =============================================
+                   CLEAR
+                   ============================================= */
+
+                clear?.addEventListener(
+                    "click",
+                    function () {
+
+                        checkboxes.forEach(
+                            function (checkbox) {
+
+                                checkbox.checked =
+                                    false;
+
+                            }
+                        );
+
+
+                        document
+                            .querySelectorAll(
+                                ".axis-role-select-module"
+                            )
+                            .forEach(
+                                function (button) {
+
+                                    button.textContent =
+                                        "Seleccionar todos";
+
+                                }
+                            );
+
+
+                        updateCounter();
+
+                    }
+                );
+
+
+                /* =============================================
+                   SEARCH
+                   ============================================= */
+
+                search?.addEventListener(
+                    "input",
+                    function () {
+
+                        const query =
+                            search.value
+                                .trim()
+                                .toLowerCase();
+
+
+                        document
+                            .querySelectorAll(
+                                ".axis-role-module"
+                            )
+                            .forEach(
+                                function (module) {
+
+                                    const permissions =
+                                        module.querySelectorAll(
+                                            ".axis-role-permission"
+                                        );
+
+                                    let visible =
+                                        0;
+
+
+                                    permissions.forEach(
+                                        function (permission) {
+
+                                            const text =
+                                                permission.textContent
+                                                    .toLowerCase();
+
+                                            const match =
+                                                !query ||
+                                                text.includes(query);
+
+                                            permission.style.display =
+                                                match
+                                                    ? ""
+                                                    : "none";
+
+                                            if (match)
+                                                visible++;
+
+                                        }
+                                    );
+
+
+                                    module.style.display =
+                                        visible > 0
+                                            ? ""
+                                            : "none";
+
+
+                                    if (
+                                        query &&
+                                        visible > 0
+                                    ) {
+
+                                        module.classList.add(
+                                            "open"
+                                        );
+
+                                    }
+
+                                }
+                            );
+
+                    }
+                );
+
+
+                updateCounter();
+
+            }
+        );
+
+    </script>
 }

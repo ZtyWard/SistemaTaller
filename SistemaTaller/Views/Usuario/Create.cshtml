@@ -2,176 +2,275 @@
 
 @{
     ViewData["Title"] = "Nuevo usuario";
-    var roles = ViewBag.Roles as IEnumerable<string>
-                 ?? Enumerable.Empty<string>();
+
+    var roles =
+        ViewBag.Roles as IEnumerable<string>
+        ?? Enumerable.Empty<string>();
 }
 
-<div class="container py-4">
+<div class="axis-page axis-modern-page">
 
-    <div class="mb-4">
-        <h1 class="fw-bold">Nuevo usuario</h1>
-        <p class="text-muted">
-            Registra un nuevo usuario para acceder a AXIS.
-        </p>
-    </div>
+    <div class="axis-page-header axis-modern-header">
 
-    <div class="card shadow-sm border-0">
+        <div>
 
-        <div class="card-body p-4">
+            <span class="axis-page-kicker">
+                AXIS · SEGURIDAD
+            </span>
 
-            <form asp-action="Create" method="post">
+            <h1>
+                Nuevo usuario
+            </h1>
 
-                @Html.AntiForgeryToken()
+            <p>
+                Registra un nuevo usuario para acceder a AXIS.
+            </p>
 
-                <div asp-validation-summary="ModelOnly"
-                     class="text-danger mb-3">
-                </div>
+        </div>
 
-                <div class="row g-3">
 
-                    <div class="col-md-6">
+        <div class="axis-page-actions">
 
-                        <label asp-for="NombreCompleto"
-                               class="form-label">
-                        </label>
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
 
-                        <input asp-for="NombreCompleto"
-                               class="form-control" />
+                <i class="bi bi-arrow-left"></i>
 
-                        <span asp-validation-for="NombreCompleto"
-                              class="text-danger">
-                        </span>
+                Volver
 
-                    </div>
-
-                    <div class="col-md-6">
-
-                        <label asp-for="Usuario"
-                               class="form-label">
-                        </label>
-
-                        <input asp-for="Usuario"
-                               class="form-control" />
-
-                        <span asp-validation-for="Usuario"
-                              class="text-danger">
-                        </span>
-
-                    </div>
-
-                    <div class="col-md-6">
-
-                        <label asp-for="Email"
-                               class="form-label">
-                        </label>
-
-                        <input asp-for="Email"
-                               class="form-control" />
-
-                        <span asp-validation-for="Email"
-                              class="text-danger">
-                        </span>
-
-                    </div>
-
-                    <div class="col-md-6">
-
-                        <label asp-for="Password"
-                               class="form-label">
-                        </label>
-
-                        <input asp-for="Password"
-                               class="form-control" />
-
-                        <span asp-validation-for="Password"
-                              class="text-danger">
-                        </span>
-
-                    </div>
-
-                    <div class="col-md-6">
-
-                        <label asp-for="ConfirmarPassword"
-                               class="form-label">
-                        </label>
-
-                        <input asp-for="ConfirmarPassword"
-                               class="form-control" />
-
-                        <span asp-validation-for="ConfirmarPassword"
-                              class="text-danger">
-                        </span>
-
-                    </div>
-
-                    <div class="col-md-6">
-
-                        <label class="form-label">
-                            Roles
-                        </label>
-
-                        <select asp-for="Roles"
-                                class="form-select"
-                                multiple
-                                size="5">
-
-                            @foreach (var rol in roles)
-                            {
-                                <option value="@rol">
-                                    @rol
-                                </option>
-                            }
-
-                        </select>
-
-                        <small class="text-muted">
-                            Mantenga Ctrl presionado para seleccionar
-                            varios roles.
-                        </small>
-
-                    </div>
-
-                    <div class="col-12">
-
-                        <div class="form-check">
-
-                            <input asp-for="Activo"
-                                   class="form-check-input" />
-
-                            <label asp-for="Activo"
-                                   class="form-check-label">
-                            </label>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <hr class="my-4" />
-
-                <div class="d-flex gap-2">
-
-                    <button type="submit"
-                            class="btn btn-primary">
-                        Crear usuario
-                    </button>
-
-                    <a asp-action="Index"
-                       class="btn btn-outline-secondary">
-                        Cancelar
-                    </a>
-
-                </div>
-
-            </form>
+            </a>
 
         </div>
 
     </div>
 
+
+    <div class="axis-form-card axis-modern-card">
+
+        <form asp-action="Create"
+              method="post"
+              class="axis-form axis-modern-form">
+
+            @Html.AntiForgeryToken()
+
+
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-form-validation">
+            </div>
+
+
+            <section class="axis-form-section axis-modern-section">
+
+                <div class="axis-form-section-title">
+                    Información de acceso
+                </div>
+
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field axis-field-full">
+
+                        <label asp-for="NombreCompleto">
+                            Nombre completo
+                        </label>
+
+                        <input asp-for="NombreCompleto"
+                               placeholder="Nombre y apellidos" />
+
+                        <span asp-validation-for="NombreCompleto"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Usuario">
+                            Usuario
+                        </label>
+
+                        <input asp-for="Usuario"
+                               autocomplete="username"
+                               placeholder="Ej. jperez" />
+
+                        <span asp-validation-for="Usuario"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Email">
+                            Correo electrónico
+                        </label>
+
+                        <input asp-for="Email"
+                               type="email"
+                               autocomplete="email"
+                               placeholder="usuario@empresa.com" />
+
+                        <span asp-validation-for="Email"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="Password">
+                            Contraseña
+                        </label>
+
+                        <input asp-for="Password"
+                               type="password"
+                               autocomplete="new-password"
+                               placeholder="Contraseña segura" />
+
+                        <span asp-validation-for="Password"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label asp-for="ConfirmarPassword">
+                            Confirmar contraseña
+                        </label>
+
+                        <input asp-for="ConfirmarPassword"
+                               type="password"
+                               autocomplete="new-password"
+                               placeholder="Repite la contraseña" />
+
+                        <span asp-validation-for="ConfirmarPassword"></span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <section class="axis-form-section axis-modern-section">
+
+                <div class="axis-form-section-title">
+                    Roles y estado
+                </div>
+
+
+                <div class="axis-field axis-field-full">
+
+                    <label>
+                        Roles asignables
+                    </label>
+
+
+                    <div class="axis-role-grid">
+
+                        @foreach (var rol in roles)
+                        {
+                            var idRol =
+                            "rol_" +
+                            rol
+                            .Replace(" ", "_")
+                            .Replace(".", "_");
+
+
+                            <label class="axis-check-card"
+                                   for="@idRol">
+
+                                <input type="checkbox"
+                                       name="Roles"
+                                       value="@rol"
+                                       id="@idRol" />
+
+                                <span class="axis-check-box"></span>
+
+                                <span class="axis-check-content">
+
+                                    <strong>
+                                        @rol
+                                    </strong>
+
+                                    <small>
+                                        Asignar este rol al usuario
+                                    </small>
+
+                                </span>
+
+                            </label>
+                        }
+
+                    </div>
+
+
+                    <small>
+                        Selecciona uno o varios roles
+                        para definir el acceso del usuario.
+                    </small>
+
+
+                    <span asp-validation-for="Roles"></span>
+
+                </div>
+
+
+                <div class="axis-field axis-field-full">
+
+                    <label class="axis-check-card axis-check-card-inline"
+                           for="Activo">
+
+                        <input asp-for="Activo"
+                               id="Activo" />
+
+                        <span class="axis-check-box"></span>
+
+                        <span class="axis-check-content">
+
+                            <strong>
+                                Usuario activo
+                            </strong>
+
+                            <small>
+                                Permite que el usuario pueda iniciar sesión.
+                            </small>
+
+                        </span>
+
+                    </label>
+
+                </div>
+
+            </section>
+
+
+            <div class="axis-form-actions axis-modern-actions">
+
+                <a asp-action="Index"
+                   class="axis-button axis-button-secondary">
+
+                    Cancelar
+
+                </a>
+
+                <button type="submit"
+                        class="axis-button axis-button-primary">
+
+                    <i class="bi bi-person-plus"></i>
+
+                    Crear usuario
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
 </div>
 
+
 @section Scripts {
+
     <partial name="_ValidationScriptsPartial" />
+
 }

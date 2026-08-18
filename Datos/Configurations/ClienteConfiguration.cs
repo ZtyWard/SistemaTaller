@@ -8,7 +8,10 @@ public class ClienteConfiguration : IEntityTypeConfiguration<Cliente>
 {
     public void Configure(EntityTypeBuilder<Cliente> builder)
     {
-        builder.ToTable("Cliente");
+        builder.ToTable("Cliente", table =>
+        {
+            table.HasTrigger("TR_Auditoria_Cliente");
+        });
 
         builder.HasKey(x => x.IdCliente);
 

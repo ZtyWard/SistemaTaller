@@ -8,7 +8,10 @@ public class ProductoConfiguration : IEntityTypeConfiguration<Producto>
 {
     public void Configure(EntityTypeBuilder<Producto> builder)
     {
-        builder.ToTable("Producto");
+        builder.ToTable("Producto", table =>
+        {
+            table.HasTrigger("TR_Auditoria_Producto");
+        });
 
         builder.HasKey(x => x.IdProducto);
 

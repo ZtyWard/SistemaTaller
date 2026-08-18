@@ -4,84 +4,132 @@
     ViewData["Title"] = "Nueva categoría";
 }
 
-<div class="axis-page">
+<div class="axis-page axis-modern-page">
 
-    <div class="axis-page-header">
+    <div class="axis-page-header axis-modern-header">
 
         <div>
-            <span class="axis-kicker">CATÁLOGO · PRODUCTOS</span>
-            <h1>Nueva categoría</h1>
-            <p>Registra una nueva categoría para organizar los productos del taller.</p>
+
+            <span class="axis-page-kicker">
+                CATÁLOGO · PRODUCTOS
+            </span>
+
+            <h1>
+                Nueva categoría
+            </h1>
+
+            <p>
+                Registra una nueva categoría
+                para organizar los productos del taller.
+            </p>
+
         </div>
 
-        <a asp-action="Categorias"
-           class="axis-btn axis-btn-secondary">
-            Volver
-        </a>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Categorias"
+               class="axis-button axis-button-secondary">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Volver
+
+            </a>
+
+        </div>
 
     </div>
 
-    <div class="axis-form-card">
+
+    <div class="axis-form-card axis-modern-card axis-category-form-card">
 
         <form asp-action="CrearCategoria"
               method="post"
-              class="axis-form">
+              class="axis-form axis-modern-form">
 
             @Html.AntiForgeryToken()
 
+
             <div asp-validation-summary="ModelOnly"
-                 class="axis-validation">
+                 class="axis-form-validation">
             </div>
 
-            <div class="axis-form-grid">
 
-                <div class="axis-field axis-field-full">
+            <section class="axis-form-section axis-modern-section">
 
-                    <label asp-for="Nombre">
-                        Nombre de la categoría
-                    </label>
-
-                    <input asp-for="Nombre"
-                           class="axis-input"
-                           placeholder="Ej. Lubricantes" />
-
-                    <span asp-validation-for="Nombre"
-                          class="axis-field-error">
-                    </span>
-
+                <div class="axis-form-section-title">
+                    Datos de la categoría
                 </div>
 
-                <div class="axis-field">
 
-                    <label asp-for="Activo">
-                        Estado
-                    </label>
+                <div class="axis-form-grid">
 
-                    <div class="axis-checkbox">
+                    <div class="axis-field axis-field-full">
 
-                        <input asp-for="Activo"
-                               type="checkbox" />
+                        <label asp-for="Nombre">
+                            Nombre de la categoría
+                        </label>
 
-                        <span>
-                            Categoría activa
-                        </span>
+                        <input asp-for="Nombre"
+                               placeholder="Ej. Lubricantes"
+                               autocomplete="off" />
+
+                        <span asp-validation-for="Nombre"></span>
+
+                    </div>
+
+
+                    <div class="axis-field axis-field-full">
+
+                        <label class="axis-check-card axis-check-card-inline"
+                               for="Activo">
+
+                            <input asp-for="Activo"
+                                   id="Activo" />
+
+                            <span class="axis-check-box">
+                            </span>
+
+                            <span class="axis-check-content">
+
+                                <strong>
+                                    Categoría activa
+                                </strong>
+
+                                <small>
+                                    La categoría estará disponible
+                                    para organizar productos.
+                                </small>
+
+                            </span>
+
+                        </label>
 
                     </div>
 
                 </div>
 
-            </div>
+            </section>
 
-            <div class="axis-form-actions">
+
+            <div class="axis-form-actions axis-modern-actions">
 
                 <a asp-action="Categorias"
-                   class="axis-btn axis-btn-secondary">
+                   class="axis-button axis-button-secondary">
+
                     Cancelar
+
                 </a>
 
+
                 <button type="submit"
-                        class="axis-btn axis-btn-primary">
+                        class="axis-button axis-button-primary">
+
+                    <i class="bi bi-plus-lg"></i>
+
                     Crear categoría
+
                 </button>
 
             </div>
@@ -92,6 +140,9 @@
 
 </div>
 
+
 @section Scripts {
+
     <partial name="_ValidationScriptsPartial" />
+
 }

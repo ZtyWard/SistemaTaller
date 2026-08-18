@@ -57,7 +57,9 @@
             </div>
 
 
-            <!-- CLASIFICACIÓN -->
+            <!-- =================================================
+                 CLASIFICACIÓN
+                 ================================================= -->
 
             <div class="axis-form-section">
 
@@ -67,19 +69,30 @@
 
                 <div class="axis-form-grid">
 
+
+                    <!-- CLIENTE -->
+
                     <div class="axis-field">
 
                         <label asp-for="IdCliente">
                             Cliente
                         </label>
 
-                        <input asp-for="IdCliente"
-                               type="number" />
+                        <select asp-for="IdCliente"
+                                asp-items="ViewBag.Clientes">
+
+                            <option value="">
+                                Seleccione un cliente
+                            </option>
+
+                        </select>
 
                         <span asp-validation-for="IdCliente"></span>
 
                     </div>
 
+
+                    <!-- MARCA -->
 
                     <div class="axis-field">
 
@@ -87,13 +100,21 @@
                             Marca
                         </label>
 
-                        <input asp-for="IdMarca"
-                               type="number" />
+                        <select asp-for="IdMarca"
+                                asp-items="ViewBag.Marcas">
+
+                            <option value="">
+                                Seleccione una marca
+                            </option>
+
+                        </select>
 
                         <span asp-validation-for="IdMarca"></span>
 
                     </div>
 
+
+                    <!-- MODELO -->
 
                     <div class="axis-field">
 
@@ -101,13 +122,21 @@
                             Modelo
                         </label>
 
-                        <input asp-for="IdModelo"
-                               type="number" />
+                        <select asp-for="IdModelo"
+                                asp-items="ViewBag.Modelos">
+
+                            <option value="">
+                                Seleccione un modelo
+                            </option>
+
+                        </select>
 
                         <span asp-validation-for="IdModelo"></span>
 
                     </div>
 
+
+                    <!-- TIPO VEHÍCULO -->
 
                     <div class="axis-field">
 
@@ -115,13 +144,21 @@
                             Tipo de vehículo
                         </label>
 
-                        <input asp-for="IdTipoVehiculo"
-                               type="number" />
+                        <select asp-for="IdTipoVehiculo"
+                                asp-items="ViewBag.TiposVehiculo">
+
+                            <option value="">
+                                Seleccione un tipo
+                            </option>
+
+                        </select>
 
                         <span asp-validation-for="IdTipoVehiculo"></span>
 
                     </div>
 
+
+                    <!-- COMBUSTIBLE -->
 
                     <div class="axis-field">
 
@@ -129,8 +166,14 @@
                             Combustible
                         </label>
 
-                        <input asp-for="IdTipoCombustible"
-                               type="number" />
+                        <select asp-for="IdTipoCombustible"
+                                asp-items="ViewBag.TiposCombustible">
+
+                            <option value="">
+                                Seleccione un combustible
+                            </option>
+
+                        </select>
 
                         <span asp-validation-for="IdTipoCombustible"></span>
 
@@ -141,7 +184,9 @@
             </div>
 
 
-            <!-- INFORMACIÓN -->
+            <!-- =================================================
+                 INFORMACIÓN DEL VEHÍCULO
+                 ================================================= -->
 
             <div class="axis-form-section">
 
@@ -150,6 +195,9 @@
                 </div>
 
                 <div class="axis-form-grid">
+
+
+                    <!-- PLACA -->
 
                     <div class="axis-field">
 
@@ -163,6 +211,8 @@
 
                     </div>
 
+
+                    <!-- AÑO -->
 
                     <div class="axis-field">
 
@@ -178,6 +228,8 @@
                     </div>
 
 
+                    <!-- COLOR -->
+
                     <div class="axis-field">
 
                         <label asp-for="Color">
@@ -190,6 +242,8 @@
 
                     </div>
 
+
+                    <!-- KILOMETRAJE -->
 
                     <div class="axis-field">
 
@@ -208,6 +262,10 @@
 
             </div>
 
+
+            <!-- =================================================
+                 ACCIONES
+                 ================================================= -->
 
             <div class="axis-form-actions">
 
@@ -230,5 +288,7 @@
 </section>
 
 @section Scripts {
+
     <partial name="_ValidationScriptsPartial" />
+
 }

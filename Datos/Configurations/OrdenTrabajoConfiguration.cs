@@ -8,7 +8,10 @@ public class OrdenTrabajoConfiguration : IEntityTypeConfiguration<OrdenTrabajo>
 {
     public void Configure(EntityTypeBuilder<OrdenTrabajo> builder)
     {
-        builder.ToTable("OrdenTrabajo");
+        builder.ToTable("OrdenTrabajo", table =>
+        {
+            table.HasTrigger("TR_Auditoria_OrdenTrabajo");
+        });
 
         builder.HasKey(x => x.IdOrdenTrabajo);
 

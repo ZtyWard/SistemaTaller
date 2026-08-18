@@ -24,50 +24,73 @@
         ?? Enumerable.Empty<string>();
 }
 
-<div class="container py-4">
+<div class="axis-page axis-modern-page">
 
-    <div class="mb-4">
+    <div class="axis-page-header axis-modern-header">
 
-        <span class="text-muted small fw-bold">
-            AXIS · AGENDA
-        </span>
+        <div>
+            <span class="axis-page-kicker">
+                AXIS · AGENDA
+            </span>
 
-        <h1 class="fw-bold mb-1">
-            Nueva cita
-        </h1>
+            <h1>Nueva cita</h1>
 
-        <p class="text-muted">
-            Programa una nueva atención para el taller.
-        </p>
+            <p>
+                Programa una nueva atención para el taller.
+            </p>
+        </div>
+
+        <div class="axis-page-actions">
+
+            <a asp-action="Index"
+               class="axis-button axis-button-secondary">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Volver
+
+            </a>
+
+        </div>
 
     </div>
 
-    <div class="card border-0 shadow-sm">
 
-        <div class="card-body p-4">
+    <div class="axis-form-card axis-modern-card">
 
-            <form asp-action="Create"
-                  method="post">
+        <form asp-action="Create"
+              method="post"
+              class="axis-form axis-modern-form">
 
-                @Html.AntiForgeryToken()
+            @Html.AntiForgeryToken()
 
-                <div asp-validation-summary="ModelOnly"
-                     class="alert alert-danger">
+            <div asp-validation-summary="ModelOnly"
+                 class="axis-form-validation">
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- INFORMACIÓN DE LA CITA -->
+            <!-- ================================================= -->
+
+            <section class="axis-form-section axis-modern-section">
+
+                <div class="axis-form-section-title">
+                    Información de la cita
                 </div>
 
-                <div class="row g-4">
+
+                <div class="axis-form-grid">
 
                     <!-- CLIENTE -->
 
-                    <div class="col-md-6">
+                    <div class="axis-field">
 
-                        <label asp-for="IdCliente"
-                               class="form-label fw-semibold">
+                        <label asp-for="IdCliente">
                             Cliente
                         </label>
 
                         <select asp-for="IdCliente"
-                                class="form-select"
                                 id="IdCliente">
 
                             <option value="">
@@ -77,32 +100,32 @@
                             @foreach (var cliente in clientes)
                             {
                                 <option value="@cliente.IdCliente">
+
                                     @cliente.Nombre
                                     @cliente.Apellido1
                                     @cliente.Apellido2
-                                    — @cliente.Cedula
+                                    —
+                                    @cliente.Cedula
+
                                 </option>
                             }
 
                         </select>
 
-                        <span asp-validation-for="IdCliente"
-                              class="text-danger">
-                        </span>
+                        <span asp-validation-for="IdCliente"></span>
 
                     </div>
 
-                    <!-- VEHICULO -->
 
-                    <div class="col-md-6">
+                    <!-- VEHÍCULO -->
 
-                        <label asp-for="IdVehiculo"
-                               class="form-label fw-semibold">
+                    <div class="axis-field">
+
+                        <label asp-for="IdVehiculo">
                             Vehículo
                         </label>
 
                         <select asp-for="IdVehiculo"
-                                class="form-select"
                                 id="IdVehiculo">
 
                             <option value="">
@@ -124,28 +147,27 @@
 
                         </select>
 
-                        <span asp-validation-for="IdVehiculo"
-                              class="text-danger">
-                        </span>
+                        <span asp-validation-for="IdVehiculo"></span>
 
                     </div>
 
+
                     <!-- SERVICIO -->
 
-                    <div class="col-md-6">
+                    <div class="axis-field">
 
-                        <label asp-for="IdServicio"
-                               class="form-label fw-semibold">
+                        <label asp-for="IdServicio">
                             Servicio
                         </label>
 
                         <select asp-for="IdServicio"
-                                class="form-select"
                                 id="IdServicio">
 
                             <option value=""
                                     data-duracion="0">
+
                                 Seleccione un servicio
+
                             </option>
 
                             @foreach (var servicio in servicios)
@@ -167,23 +189,20 @@
 
                         </select>
 
-                        <span asp-validation-for="IdServicio"
-                              class="text-danger">
-                        </span>
+                        <span asp-validation-for="IdServicio"></span>
 
                     </div>
 
-                    <!-- MECANICO -->
 
-                    <div class="col-md-6">
+                    <!-- MECÁNICO -->
 
-                        <label asp-for="IdEmpleado"
-                               class="form-label fw-semibold">
+                    <div class="axis-field">
+
+                        <label asp-for="IdEmpleado">
                             Mecánico
                         </label>
 
-                        <select asp-for="IdEmpleado"
-                                class="form-select">
+                        <select asp-for="IdEmpleado">
 
                             <option value="">
                                 Sin mecánico específico
@@ -195,8 +214,7 @@
 
                                     @empleado.NombreCompleto
 
-                                    @if (!string.IsNullOrWhiteSpace(
-                                                                    empleado.Especialidad))
+                                    @if (!string.IsNullOrWhiteSpace(empleado.Especialidad))
                                     {
                                         <text>
                                             — @empleado.Especialidad
@@ -208,23 +226,23 @@
 
                         </select>
 
-                        <small class="text-muted">
-                            Puede asignarse un mecánico, un área o ambos.
+                        <small>
+                            Puede asignarse un mecánico,
+                            un área o ambos.
                         </small>
 
                     </div>
 
-                    <!-- AREA -->
 
-                    <div class="col-md-6">
+                    <!-- ÁREA -->
 
-                        <label asp-for="Area"
-                               class="form-label fw-semibold">
+                    <div class="axis-field">
+
+                        <label asp-for="Area">
                             Área
                         </label>
 
-                        <select asp-for="Area"
-                                class="form-select">
+                        <select asp-for="Area">
 
                             <option value="">
                                 Sin área específica
@@ -262,17 +280,16 @@
 
                     </div>
 
+
                     <!-- ESTADO -->
 
-                    <div class="col-md-6">
+                    <div class="axis-field">
 
-                        <label asp-for="Estado"
-                               class="form-label fw-semibold">
+                        <label asp-for="Estado">
                             Estado
                         </label>
 
-                        <select asp-for="Estado"
-                                class="form-select">
+                        <select asp-for="Estado">
 
                             @foreach (var estado in estados)
                             {
@@ -285,102 +302,110 @@
 
                     </div>
 
-                    <!-- INICIO -->
+                </div>
 
-                    <div class="col-md-6">
+            </section>
 
-                        <label asp-for="FechaInicio"
-                               class="form-label fw-semibold">
+
+            <!-- ================================================= -->
+            <!-- PROGRAMACIÓN -->
+            <!-- ================================================= -->
+
+            <section class="axis-form-section axis-modern-section">
+
+                <div class="axis-form-section-title">
+                    Programación
+                </div>
+
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field">
+
+                        <label asp-for="FechaInicio">
                             Fecha y hora de inicio
                         </label>
 
                         <input asp-for="FechaInicio"
                                type="datetime-local"
-                               class="form-control"
                                id="FechaInicio" />
 
-                        <span asp-validation-for="FechaInicio"
-                              class="text-danger">
-                        </span>
+                        <span asp-validation-for="FechaInicio"></span>
 
                     </div>
 
-                    <!-- FIN CALCULADO -->
 
-                    <div class="col-md-6">
+                    <div class="axis-field">
 
-                        <label asp-for="FechaFin"
-                               class="form-label fw-semibold">
+                        <label asp-for="FechaFin">
                             Fecha y hora de finalización
                         </label>
 
                         <input asp-for="FechaFin"
                                type="datetime-local"
-                               class="form-control"
                                id="FechaFin"
                                readonly />
 
-                        <small class="text-muted">
-                            Se calcula automáticamente según la duración del servicio.
+                        <small>
+                            Se calcula automáticamente
+                            según la duración del servicio.
                         </small>
 
-                        <span asp-validation-for="FechaFin"
-                              class="text-danger">
-                        </span>
+                        <span asp-validation-for="FechaFin"></span>
 
                     </div>
 
-                    <!-- OBSERVACIONES -->
 
-                    <div class="col-12">
+                    <div class="axis-field axis-field-full">
 
-                        <label asp-for="Observaciones"
-                               class="form-label fw-semibold">
+                        <label asp-for="Observaciones">
                             Observaciones
                         </label>
 
                         <textarea asp-for="Observaciones"
-                                  class="form-control"
                                   rows="4"
                                   placeholder="Detalles relevantes de la cita...">
                         </textarea>
 
-                        <span asp-validation-for="Observaciones"
-                              class="text-danger">
-                        </span>
+                        <span asp-validation-for="Observaciones"></span>
 
                     </div>
 
                 </div>
 
-                <hr class="my-4" />
+            </section>
 
-                <div class="d-flex gap-2">
 
-                    <button type="submit"
-                            class="btn btn-primary">
+            <!-- ================================================= -->
+            <!-- BOTONES -->
+            <!-- ================================================= -->
 
-                        <i class="bi bi-calendar-check me-1"></i>
-                        Crear cita
+            <div class="axis-form-actions axis-modern-actions">
 
-                    </button>
+                <a asp-action="Index"
+                   class="axis-button axis-button-secondary">
 
-                    <a asp-action="Index"
-                       class="btn btn-outline-secondary">
+                    Cancelar
 
-                        Cancelar
+                </a>
 
-                    </a>
+                <button type="submit"
+                        class="axis-button axis-button-primary">
 
-                </div>
+                    <i class="bi bi-calendar-check"></i>
 
-            </form>
+                    Crear cita
 
-        </div>
+                </button>
+
+            </div>
+
+        </form>
 
     </div>
 
 </div>
+
 
 @section Scripts {
 
@@ -388,157 +413,190 @@
 
     <script>
 
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
 
-            const cliente =
-                document.getElementById("IdCliente");
+                const cliente =
+                    document.getElementById("IdCliente");
 
-            const vehiculo =
-                document.getElementById("IdVehiculo");
+                const vehiculo =
+                    document.getElementById("IdVehiculo");
 
-            const servicio =
-                document.getElementById("IdServicio");
+                const servicio =
+                    document.getElementById("IdServicio");
 
-            const fechaInicio =
-                document.getElementById("FechaInicio");
+                const fechaInicio =
+                    document.getElementById("FechaInicio");
 
-            const fechaFin =
-                document.getElementById("FechaFin");
+                const fechaFin =
+                    document.getElementById("FechaFin");
 
-            function filtrarVehiculos() {
 
-                const clienteId =
-                    cliente.value;
+                function filtrarVehiculos() {
 
-                const opciones =
-                    vehiculo.querySelectorAll("option");
+                    const clienteId =
+                        cliente.value;
 
-                opciones.forEach(function (opcion) {
+                    vehiculo
+                        .querySelectorAll("option")
+                        .forEach(function (opcion) {
 
-                    if (!opcion.value)
+                            if (!opcion.value)
+                                return;
+
+                            const visible =
+                                !clienteId ||
+                                opcion.dataset.cliente === clienteId;
+
+                            opcion.hidden =
+                                !visible;
+
+                            if (
+                                !visible &&
+                                opcion.selected
+                            ) {
+
+                                vehiculo.value = "";
+
+                            }
+
+                        });
+
+                }
+
+
+                function calcularFechaFin() {
+
+                    if (
+                        !servicio ||
+                        !fechaInicio ||
+                        !fechaFin
+                    )
                         return;
 
-                    const propietario =
-                        opcion.dataset.cliente;
 
-                    const visible =
-                        !clienteId ||
-                        propietario === clienteId;
+                    const opcion =
+                        servicio.options[
+                            servicio.selectedIndex
+                        ];
 
-                    opcion.hidden =
-                        !visible;
 
-                    if (!visible &&
-                        opcion.selected) {
+                    if (
+                        !opcion ||
+                        !opcion.value
+                    ) {
 
-                        vehiculo.value = "";
+                        fechaFin.value = "";
+
+                        return;
+
                     }
 
-                });
-            }
 
-            function calcularFechaFin() {
+                    const duracion =
+                        parseInt(
+                            opcion.dataset.duracion || "0",
+                            10
+                        );
 
-                if (!servicio ||
-                    !fechaInicio ||
-                    !fechaFin)
-                    return;
 
-                const opcion =
-                    servicio.options[
-                        servicio.selectedIndex
-                    ];
+                    if (
+                        !duracion ||
+                        !fechaInicio.value
+                    ) {
 
-                if (!opcion ||
-                    !opcion.value) {
+                        fechaFin.value = "";
 
-                    fechaFin.value = "";
-                    return;
+                        return;
+
+                    }
+
+
+                    const inicio =
+                        new Date(
+                            fechaInicio.value
+                        );
+
+
+                    if (
+                        isNaN(
+                            inicio.getTime()
+                        )
+                    ) {
+
+                        fechaFin.value = "";
+
+                        return;
+
+                    }
+
+
+                    const fin =
+                        new Date(
+                            inicio.getTime() +
+                            duracion * 60000
+                        );
+
+
+                    const year =
+                        fin.getFullYear();
+
+                    const month =
+                        String(
+                            fin.getMonth() + 1
+                        ).padStart(2, "0");
+
+                    const day =
+                        String(
+                            fin.getDate()
+                        ).padStart(2, "0");
+
+                    const hours =
+                        String(
+                            fin.getHours()
+                        ).padStart(2, "0");
+
+                    const minutes =
+                        String(
+                            fin.getMinutes()
+                        ).padStart(2, "0");
+
+
+                    fechaFin.value =
+                        `${year}-${month}-${day}T${hours}:${minutes}`;
+
                 }
 
-                const duracion =
-                    parseInt(
-                        opcion.dataset.duracion || "0",
-                        10);
 
-                if (!duracion ||
-                    !fechaInicio.value) {
-
-                    fechaFin.value = "";
-                    return;
-                }
-
-                const inicio =
-                    new Date(
-                        fechaInicio.value);
-
-                if (isNaN(inicio.getTime())) {
-
-                    fechaFin.value = "";
-                    return;
-                }
-
-                const fin =
-                    new Date(
-                        inicio.getTime() +
-                        duracion * 60000);
-
-                const year =
-                    fin.getFullYear();
-
-                const month =
-                    String(
-                        fin.getMonth() + 1)
-                    .padStart(2, "0");
-
-                const day =
-                    String(
-                        fin.getDate())
-                    .padStart(2, "0");
-
-                const hours =
-                    String(
-                        fin.getHours())
-                    .padStart(2, "0");
-
-                const minutes =
-                    String(
-                        fin.getMinutes())
-                    .padStart(2, "0");
-
-                fechaFin.value =
-                    `${year}-${month}-${day}T${hours}:${minutes}`;
-            }
-
-            if (cliente) {
-
-                cliente.addEventListener(
+                cliente?.addEventListener(
                     "change",
-                    filtrarVehiculos);
+                    filtrarVehiculos
+                );
+
+                servicio?.addEventListener(
+                    "change",
+                    calcularFechaFin
+                );
+
+                fechaInicio?.addEventListener(
+                    "change",
+                    calcularFechaFin
+                );
+
+                fechaInicio?.addEventListener(
+                    "input",
+                    calcularFechaFin
+                );
+
 
                 filtrarVehiculos();
+
+                calcularFechaFin();
+
             }
-
-            if (servicio) {
-
-                servicio.addEventListener(
-                    "change",
-                    calcularFechaFin);
-            }
-
-            if (fechaInicio) {
-
-                fechaInicio.addEventListener(
-                    "change",
-                    calcularFechaFin);
-
-                fechaInicio.addEventListener(
-                    "input",
-                    calcularFechaFin);
-            }
-
-            calcularFechaFin();
-        });
+        );
 
     </script>
+
 }
