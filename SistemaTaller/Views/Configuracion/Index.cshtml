@@ -1,0 +1,527 @@
+﻿@model Negocios.DTOs.ConfiguracionGeneralDto
+
+@{
+    ViewData["Title"] = "Configuración";
+}
+
+<div class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+            <div class="axis-eyebrow">
+                AXIS · ADMINISTRACIÓN
+            </div>
+
+            <h1>Configuración</h1>
+
+            <p>
+                Parámetros generales y operativos del taller.
+            </p>
+        </div>
+
+        <div class="axis-page-header-meta">
+            <span>CONFIGURACIÓN GENERAL</span>
+            <strong>AXIS</strong>
+        </div>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            <span>✓</span>
+            <div>
+                <strong>Guardado correctamente</strong>
+                <p>@TempData["Success"]</p>
+            </div>
+        </div>
+    }
+
+
+    <form asp-action="Index"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="ModelOnly"
+             class="axis-validation">
+        </div>
+
+
+        <!-- ========================================= -->
+        <!-- INFORMACIÓN DEL TALLER -->
+        <!-- ========================================= -->
+
+        <section class="axis-settings-card">
+
+            <div class="axis-settings-card-header">
+
+                <div class="axis-settings-icon">
+                    ◉
+                </div>
+
+                <div>
+                    <h2>Información del taller</h2>
+                    <p>
+                        Datos principales utilizados por AXIS.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="axis-settings-grid">
+
+                <div class="axis-field axis-field-wide">
+
+                    <label asp-for="NombreTaller">
+                        Nombre del taller
+                    </label>
+
+                    <input asp-for="NombreTaller"
+                           class="axis-input"
+                           placeholder="Nombre del taller" />
+
+                    <span asp-validation-for="NombreTaller"
+                          class="axis-field-error">
+                    </span>
+
+                </div>
+
+
+                <div class="axis-field">
+
+                    <label asp-for="IdentificacionJuridica">
+                        Identificación jurídica
+                    </label>
+
+                    <input asp-for="IdentificacionJuridica"
+                           class="axis-input"
+                           placeholder="Cédula jurídica" />
+
+                </div>
+
+
+                <div class="axis-field">
+
+                    <label asp-for="Telefono">
+                        Teléfono
+                    </label>
+
+                    <input asp-for="Telefono"
+                           class="axis-input"
+                           placeholder="Teléfono" />
+
+                </div>
+
+
+                <div class="axis-field axis-field-wide">
+
+                    <label asp-for="Correo">
+                        Correo electrónico
+                    </label>
+
+                    <input asp-for="Correo"
+                           class="axis-input"
+                           type="email"
+                           placeholder="correo@taller.com" />
+
+                </div>
+
+
+                <div class="axis-field axis-field-wide">
+
+                    <label asp-for="Direccion">
+                        Dirección
+                    </label>
+
+                    <textarea asp-for="Direccion"
+                              class="axis-input axis-textarea"
+                              rows="3"
+                              placeholder="Dirección del taller">
+                    </textarea>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================= -->
+        <!-- PARÁMETROS COMERCIALES -->
+        <!-- ========================================= -->
+
+        <section class="axis-settings-card">
+
+            <div class="axis-settings-card-header">
+
+                <div class="axis-settings-icon">
+                    ₡
+                </div>
+
+                <div>
+                    <h2>Parámetros comerciales</h2>
+                    <p>
+                        Valores utilizados en ventas y facturación.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="axis-settings-grid">
+
+                <div class="axis-field">
+
+                    <label asp-for="Moneda">
+                        Moneda
+                    </label>
+
+                    <input asp-for="Moneda"
+                           class="axis-input" />
+
+                </div>
+
+
+                <div class="axis-field">
+
+                    <label asp-for="ImpuestoPorcentaje">
+                        Impuesto (%)
+                    </label>
+
+                    <input asp-for="ImpuestoPorcentaje"
+                           class="axis-input"
+                           type="number"
+                           step="0.01"
+                           min="0"
+                           max="100" />
+
+                </div>
+
+
+                <div class="axis-field">
+
+                    <label asp-for="LimiteDescuentoPorcentaje">
+                        Límite de descuento (%)
+                    </label>
+
+                    <input asp-for="LimiteDescuentoPorcentaje"
+                           class="axis-input"
+                           type="number"
+                           step="0.01"
+                           min="0"
+                           max="100" />
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================= -->
+        <!-- NUMERACIÓN -->
+        <!-- ========================================= -->
+
+        <section class="axis-settings-card">
+
+            <div class="axis-settings-card-header">
+
+                <div class="axis-settings-icon">
+                    #
+                </div>
+
+                <div>
+                    <h2>Numeración de documentos</h2>
+                    <p>
+                        Prefijos y consecutivos utilizados por AXIS.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="axis-settings-grid">
+
+                <div class="axis-field">
+                    <label asp-for="PrefijoRecepcion">
+                        Recepciones
+                    </label>
+
+                    <input asp-for="PrefijoRecepcion"
+                           class="axis-input" />
+
+                </div>
+
+
+                <div class="axis-field">
+                    <label asp-for="SiguienteRecepcion">
+                        Siguiente recepción
+                    </label>
+
+                    <input asp-for="SiguienteRecepcion"
+                           class="axis-input"
+                           type="number"
+                           min="1" />
+
+                </div>
+
+
+                <div class="axis-field">
+                    <label asp-for="PrefijoCotizacion">
+                        Cotizaciones
+                    </label>
+
+                    <input asp-for="PrefijoCotizacion"
+                           class="axis-input" />
+
+                </div>
+
+
+                <div class="axis-field">
+                    <label asp-for="SiguienteCotizacion">
+                        Siguiente cotización
+                    </label>
+
+                    <input asp-for="SiguienteCotizacion"
+                           class="axis-input"
+                           type="number"
+                           min="1" />
+
+                </div>
+
+
+                <div class="axis-field">
+                    <label asp-for="PrefijoOrdenTrabajo">
+                        Órdenes de trabajo
+                    </label>
+
+                    <input asp-for="PrefijoOrdenTrabajo"
+                           class="axis-input" />
+
+                </div>
+
+
+                <div class="axis-field">
+                    <label asp-for="SiguienteOrdenTrabajo">
+                        Siguiente OT
+                    </label>
+
+                    <input asp-for="SiguienteOrdenTrabajo"
+                           class="axis-input"
+                           type="number"
+                           min="1" />
+
+                </div>
+
+
+                <div class="axis-field">
+                    <label asp-for="PrefijoVenta">
+                        Ventas
+                    </label>
+
+                    <input asp-for="PrefijoVenta"
+                           class="axis-input" />
+
+                </div>
+
+
+                <div class="axis-field">
+                    <label asp-for="SiguienteVenta">
+                        Siguiente venta
+                    </label>
+
+                    <input asp-for="SiguienteVenta"
+                           class="axis-input"
+                           type="number"
+                           min="1" />
+
+                </div>
+
+
+                <div class="axis-field">
+                    <label asp-for="PrefijoFactura">
+                        Facturas
+                    </label>
+
+                    <input asp-for="PrefijoFactura"
+                           class="axis-input" />
+
+                </div>
+
+
+                <div class="axis-field">
+                    <label asp-for="SiguienteFactura">
+                        Siguiente factura
+                    </label>
+
+                    <input asp-for="SiguienteFactura"
+                           class="axis-input"
+                           type="number"
+                           min="1" />
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================= -->
+        <!-- OPERACIÓN -->
+        <!-- ========================================= -->
+
+        <section class="axis-settings-card">
+
+            <div class="axis-settings-card-header">
+
+                <div class="axis-settings-icon">
+                    ◷
+                </div>
+
+                <div>
+                    <h2>Operación</h2>
+                    <p>
+                        Parámetros generales de funcionamiento.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="axis-settings-grid">
+
+                <div class="axis-field">
+
+                    <label asp-for="HoraApertura">
+                        Hora de apertura
+                    </label>
+
+                    <input asp-for="HoraApertura"
+                           class="axis-input"
+                           type="time" />
+
+                </div>
+
+
+                <div class="axis-field">
+
+                    <label asp-for="HoraCierre">
+                        Hora de cierre
+                    </label>
+
+                    <input asp-for="HoraCierre"
+                           class="axis-input"
+                           type="time" />
+
+                </div>
+
+
+                <div class="axis-field">
+
+                    <label asp-for="DiasGarantia">
+                        Días de garantía
+                    </label>
+
+                    <input asp-for="DiasGarantia"
+                           class="axis-input"
+                           type="number"
+                           min="0" />
+
+                </div>
+
+
+                <div class="axis-field">
+
+                    <label asp-for="ExistenciaMinimaPredeterminada">
+                        Existencia mínima
+                    </label>
+
+                    <input asp-for="ExistenciaMinimaPredeterminada"
+                           class="axis-input"
+                           type="number"
+                           min="0" />
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================= -->
+        <!-- ESTADOS -->
+        <!-- ========================================= -->
+
+        <section class="axis-settings-card">
+
+            <div class="axis-settings-card-header">
+
+                <div class="axis-settings-icon">
+                    ✓
+                </div>
+
+                <div>
+                    <h2>Estados de proceso</h2>
+                    <p>
+                        Estados disponibles para los procesos del taller.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="axis-field">
+
+                <label asp-for="EstadosProceso">
+                    Estados
+                </label>
+
+                <input asp-for="EstadosProceso"
+                       class="axis-input"
+                       placeholder="Pendiente,En proceso,Completado,Cancelado" />
+
+                <small class="axis-field-hint">
+                    Separar cada estado utilizando comas.
+                </small>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================= -->
+        <!-- ACTION BAR -->
+        <!-- ========================================= -->
+
+        <div class="axis-settings-actions">
+
+            <div>
+                <span class="axis-settings-status">
+                    Configuración del sistema
+                </span>
+
+                <small>
+                    Los cambios se aplicarán al guardar.
+                </small>
+            </div>
+
+            <button type="submit"
+                    class="axis-btn axis-btn-primary">
+
+                Guardar configuración
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

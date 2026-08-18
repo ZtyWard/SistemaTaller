@@ -10,9 +10,18 @@
 @import url("axis-inventory.css");
 @import url("axis-dashboard.css");
 
+
 /* =========================================================
    AXIS PHASE 3
    Visual system / premium interface
    ========================================================= */
 
 @import url("axis-theme.css");
+
+
+/* =========================================================
+   AXIS SETTINGS
+   Configuración general
+   ========================================================= */
+
+@import url("axis-settings.css");

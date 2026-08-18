@@ -140,4 +140,7 @@ public class SistemaTallerDbContext
         builder.ApplyConfigurationsFromAssembly(
             typeof(SistemaTallerDbContext).Assembly);
     }
+
+    public DbSet<ConfiguracionGeneral>
+    ConfiguracionesGenerales => Set<ConfiguracionGeneral>();
 }

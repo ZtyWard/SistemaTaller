@@ -113,6 +113,14 @@ builder.Services.AddScoped<IPagoRepository, PagoRepository>();
 builder.Services.AddScoped<IReportesRepository, ReportesRepository>();
 
 // =====================================================
+// CONFIGURACIÓN GENERAL
+// =====================================================
+
+builder.Services.AddScoped<
+    IConfiguracionGeneralRepository,
+    ConfiguracionGeneralRepository>();
+
+// =====================================================
 // CATÁLOGOS
 // =====================================================
 
@@ -185,6 +193,14 @@ builder.Services.AddScoped<IReportesService, ReportesService>();
 // =====================================================
 
 builder.Services.AddScoped<INotificacionService, NotificacionService>();
+
+// =====================================================
+// CONFIGURACIÓN GENERAL
+// =====================================================
+
+builder.Services.AddScoped<
+    IConfiguracionGeneralService,
+    ConfiguracionGeneralService>();
 
 // =====================================================
 // CATÁLOGOS
