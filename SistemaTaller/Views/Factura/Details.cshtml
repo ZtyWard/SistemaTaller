@@ -1,187 +1,334 @@
 ﻿@model Negocios.DTOs.FacturaDto
 
 @{
-    ViewData["Title"] = "Detalle de factura";
+    ViewData["Title"] = "Factura " + Model.NumeroFactura;
 
     var estadoClass = Model.Estado switch
     {
-        "Pagada" => "axis-status-success",
-        "Anulada" => "axis-status-danger",
-        "Parcialmente pagada" => "axis-status-warning",
-        _ => "axis-status-neutral"
+        "Pagada" => "invoice-status-paid",
+        "Anulada" => "invoice-status-cancelled",
+        "Parcialmente pagada" => "invoice-status-partial",
+        _ => "invoice-status-pending"
     };
 }
 
-<section class="axis-page">
+<section class="invoice-page">
 
-    <div class="axis-page-header">
+    <!-- =====================================================
+         TOPBAR
+         ===================================================== -->
 
-        <div>
+    <div class="invoice-topbar">
 
-            <span class="axis-page-kicker">
-                FACTURACIÓN · DETALLE
-            </span>
+        <a asp-action="Index"
+           class="invoice-back">
+            ← Volver a facturación
+        </a>
 
-            <h1>@Model.NumeroFactura</h1>
-
-            <p>
-                Consulta el estado financiero de la factura.
-            </p>
-
-        </div>
-
-        <div style="display:flex; gap:10px;">
+        <div class="invoice-top-actions">
 
             @if (Model.Estado != "Pagada" &&
                         Model.Estado != "Anulada")
             {
                 <a asp-action="Edit"
                    asp-route-id="@Model.IdFactura"
-                   class="axis-button axis-button-primary">
-                    Editar
+                   class="invoice-action invoice-action-dark">
+                    Editar factura
                 </a>
             }
 
-            <a asp-action="Index"
-               class="axis-button axis-button-secondary">
-                ← Volver
-            </a>
+            <button type="button"
+                    class="invoice-action invoice-action-light"
+                    onclick="window.print()">
+                Imprimir
+            </button>
 
         </div>
 
     </div>
 
 
-    <div class="axis-form-card">
+    <!-- =====================================================
+         DOCUMENTO
+         ===================================================== -->
 
+    <div class="invoice-document">
 
-        <!-- =====================================================
-             ESTADO
-             ===================================================== -->
+        <!-- =================================================
+             HEADER
+             ================================================= -->
 
-        <div class="axis-form-section">
+        <header class="invoice-header">
 
-            <div class="axis-form-section-title">
-                Estado de la factura
+            <div class="invoice-brand">
+
+                <div class="invoice-logo">
+                    A
+                </div>
+
+                <div>
+
+                    <div class="invoice-brand-name">
+                        AXIS
+                    </div>
+
+                    <div class="invoice-brand-subtitle">
+                        TALLER AUTOMOTRIZ
+                    </div>
+
+                </div>
+
             </div>
 
-            <div style="display:flex; align-items:center; gap:15px;">
 
-                <span class="axis-status @estadoClass">
-                    @Model.Estado
+            <div class="invoice-heading">
+
+                <span>
+                    FACTURA
                 </span>
 
-                @if (Model.Estado == "Pendiente")
-                {
-                    <span style="color:#777; font-size:13px;">
-                        Factura pendiente de pago.
-                    </span>
-                }
-                else if (Model.Estado == "Parcialmente pagada")
-                {
-                    <span style="color:#777; font-size:13px;">
-                        La factura tiene pagos registrados.
-                    </span>
-                }
-                else if (Model.Estado == "Pagada")
-                {
-                    <span style="color:#777; font-size:13px;">
-                        La factura fue cancelada completamente.
-                    </span>
-                }
-                else if (Model.Estado == "Anulada")
-                {
-                    <span style="color:#777; font-size:13px;">
-                        Esta factura fue anulada.
-                    </span>
-                }
+                <h1>
+                    @Model.NumeroFactura
+                </h1>
 
-            </div>
-
-        </div>
-
-
-        <!-- =====================================================
-             INFORMACIÓN
-             ===================================================== -->
-
-        <div class="axis-form-section">
-
-            <div class="axis-form-section-title">
-                Información general
-            </div>
-
-            <div class="axis-form-grid">
-
-                <div class="axis-field">
-
-                    <label>Número de factura</label>
-
-                    <input value="@Model.NumeroFactura"
-                           readonly />
-
-                </div>
-
-
-                <div class="axis-field">
-
-                    <label>Cliente</label>
-
-                    <input value="@(string.IsNullOrWhiteSpace(Model.Cliente)
-                                                               ? "Cliente no disponible"
-                                                               : Model.Cliente)"
-                           readonly />
-
-                </div>
-
-
-                <div class="axis-field">
-
-                    <label>Orden de trabajo</label>
-
-                    <input value="@(Model.IdOrdenTrabajo?.ToString() ?? "No asociada")"
-                           readonly />
-
-                </div>
-
-
-                <div class="axis-field">
-
-                    <label>Venta</label>
-
-                    <input value="@(Model.IdVenta?.ToString() ?? "No asociada")"
-                           readonly />
-
-                </div>
-
-
-                <div class="axis-field">
-
-                    <label>Fecha de emisión</label>
-
-                    <input value="@Model.FechaEmision.ToString("dd/MM/yyyy HH:mm")"
-                           readonly />
-
+                <div class="invoice-status @estadoClass">
+                    @Model.Estado
                 </div>
 
             </div>
 
-        </div>
+        </header>
 
 
-        <!-- =====================================================
-             RESUMEN FINANCIERO
-             ===================================================== -->
+        <!-- =================================================
+             INFORMACIÓN GENERAL
+             ================================================= -->
 
-        <div class="axis-form-section">
+        <section class="invoice-info">
 
-            <div class="axis-form-section-title">
-                Resumen financiero
+            <div class="invoice-info-block">
+
+                <span class="invoice-label">
+                    FACTURADO A
+                </span>
+
+                <h2>
+                    @(string.IsNullOrWhiteSpace(Model.Cliente)
+                                        ? "Cliente no disponible"
+                                        : Model.Cliente)
+                </h2>
+
+                <p>
+                    Cliente de AXIS Taller Automotriz
+                </p>
+
             </div>
 
-            <div class="axis-finance-grid">
 
-                <div class="axis-finance-card">
+            <div class="invoice-meta">
+
+                <div class="invoice-meta-row">
+
+                    <span>
+                        FECHA DE EMISIÓN
+                    </span>
+
+                    <strong>
+                        @Model.FechaEmision.ToString("dd/MM/yyyy")
+                    </strong>
+
+                </div>
+
+
+                <div class="invoice-meta-row">
+
+                    <span>
+                        HORA
+                    </span>
+
+                    <strong>
+                        @Model.FechaEmision.ToString("HH:mm")
+                    </strong>
+
+                </div>
+
+
+                <div class="invoice-meta-row">
+
+                    <span>
+                        ORDEN DE TRABAJO
+                    </span>
+
+                    <strong>
+                        @(Model.IdOrdenTrabajo?.ToString()
+                                                ?? "No asociada")
+                    </strong>
+
+                </div>
+
+
+                <div class="invoice-meta-row">
+
+                    <span>
+                        VENTA
+                    </span>
+
+                    <strong>
+                        @(Model.IdVenta?.ToString()
+                                                ?? "No asociada")
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             DETALLE DE CONCEPTOS
+             ================================================= -->
+
+        <section class="invoice-section invoice-concepts-section">
+
+            <div class="invoice-section-heading">
+
+                <div>
+
+                    <span>
+                        DETALLE
+                    </span>
+
+                    <h2>
+                        Servicios y productos
+                    </h2>
+
+                </div>
+
+                <span class="invoice-section-number">
+                    @Model.DetallesVenta.Count concepto(s)
+                </span>
+
+            </div>
+
+
+            @if (Model.DetallesVenta.Any())
+            {
+                <div class="invoice-concepts-table">
+
+                    <div class="invoice-concepts-header">
+
+                        <span>
+                            CONCEPTO
+                        </span>
+
+                        <span>
+                            CANT.
+                        </span>
+
+                        <span>
+                            PRECIO UNIT.
+                        </span>
+
+                        <span>
+                            TOTAL
+                        </span>
+
+                    </div>
+
+
+                    @foreach (var detalle in Model.DetallesVenta)
+                    {
+                        <div class="invoice-concept-row">
+
+                            <div class="invoice-concept-name">
+
+                                <strong>
+                                    @detalle.Producto
+                                </strong>
+
+                                <small>
+                                    Concepto de venta
+                                </small>
+
+                            </div>
+
+
+                            <span>
+                                @detalle.Cantidad
+                            </span>
+
+
+                            <strong>
+                                @detalle.PrecioUnitario.ToString("C2")
+                            </strong>
+
+
+                            <strong>
+                                @detalle.Subtotal.ToString("C2")
+                            </strong>
+
+                        </div>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <div class="invoice-empty-details">
+
+                    <span>
+                        —
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Sin detalle de venta
+                        </strong>
+
+                        <p>
+                            Esta factura no tiene conceptos de venta asociados.
+                        </p>
+
+                    </div>
+
+                </div>
+            }
+
+        </section>
+
+
+        <!-- =================================================
+             DETALLE FINANCIERO
+             ================================================= -->
+
+        <section class="invoice-section">
+
+            <div class="invoice-section-heading">
+
+                <div>
+
+                    <span>
+                        RESUMEN
+                    </span>
+
+                    <h2>
+                        Detalle financiero
+                    </h2>
+
+                </div>
+
+                <span class="invoice-section-number">
+                    #@Model.IdFactura
+                </span>
+
+            </div>
+
+
+            <div class="invoice-financial-table">
+
+                <div class="invoice-financial-row">
 
                     <span>
                         Subtotal
@@ -194,7 +341,20 @@
                 </div>
 
 
-                <div class="axis-finance-card">
+                <div class="invoice-financial-row">
+
+                    <span>
+                        Descuento
+                    </span>
+
+                    <strong class="invoice-discount">
+                        - @Model.Descuento.ToString("C2")
+                    </strong>
+
+                </div>
+
+
+                <div class="invoice-financial-row">
 
                     <span>
                         Impuesto
@@ -207,23 +367,10 @@
                 </div>
 
 
-                <div class="axis-finance-card">
+                <div class="invoice-total-row">
 
                     <span>
-                        Descuento
-                    </span>
-
-                    <strong>
-                        @Model.Descuento.ToString("C2")
-                    </strong>
-
-                </div>
-
-
-                <div class="axis-finance-card">
-
-                    <span>
-                        Total
+                        TOTAL
                     </span>
 
                     <strong>
@@ -232,11 +379,85 @@
 
                 </div>
 
+            </div>
 
-                <div class="axis-finance-card axis-finance-paid">
+        </section>
+
+
+        <!-- =================================================
+             PAGOS
+             ================================================= -->
+
+        <section class="invoice-payment-section">
+
+            <div class="invoice-payment-main">
+
+                <span class="invoice-label">
+                    ESTADO DE PAGO
+                </span>
+
+                <h2>
+
+                    @if (Model.Estado == "Anulada")
+                    {
+                        <text>Factura anulada</text>
+                    }
+                    else if (Model.TotalPagado >= Model.Total &&
+                    Model.Total > 0)
+                    {
+                        <text>Factura pagada</text>
+                    }
+                    else if (Model.TotalPagado > 0)
+                    {
+                        <text>Pago parcial registrado</text>
+                    }
+                    else
+                    {
+                        <text>Pago pendiente</text>
+                    }
+
+                </h2>
+
+
+                <p>
+
+                    @if (Model.Estado == "Anulada")
+                    {
+                        <text>
+                            Esta factura se encuentra anulada.
+                        </text>
+                    }
+                    else if (Model.TotalPagado >= Model.Total &&
+                    Model.Total > 0)
+                    {
+                        <text>
+                            El monto total de la factura ha sido pagado.
+                        </text>
+                    }
+                    else if (Model.TotalPagado > 0)
+                    {
+                        <text>
+                            Se han registrado pagos para esta factura.
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            Esta factura todavía no registra pagos.
+                        </text>
+                    }
+
+                </p>
+
+            </div>
+
+
+            <div class="invoice-payment-values">
+
+                <div class="payment-value">
 
                     <span>
-                        Total pagado
+                        TOTAL PAGADO
                     </span>
 
                     <strong>
@@ -246,10 +467,10 @@
                 </div>
 
 
-                <div class="axis-finance-card axis-finance-balance">
+                <div class="payment-value payment-balance">
 
                     <span>
-                        Saldo pendiente
+                        SALDO PENDIENTE
                     </span>
 
                     <strong>
@@ -260,71 +481,14 @@
 
             </div>
 
-        </div>
+        </section>
 
 
-        <!-- =====================================================
-             PAGOS
-             ===================================================== -->
-
-        <div class="axis-form-section">
-
-            <div class="axis-form-section-title">
-                Pagos
-            </div>
-
-            @if (Model.TotalPagado > 0)
-            {
-                <div class="axis-payment-summary">
-
-                    <div>
-
-                        <span>Total registrado en pagos</span>
-
-                        <strong>
-                            @Model.TotalPagado.ToString("C2")
-                        </strong>
-
-                    </div>
-
-                    <div>
-
-                        <span>Saldo restante</span>
-
-                        <strong>
-                            @Model.SaldoPendiente.ToString("C2")
-                        </strong>
-
-                    </div>
-
-                </div>
-            }
-            else
-            {
-                <div class="axis-empty-state">
-
-                    <h3>Sin pagos registrados</h3>
-
-                    <p>
-                        Esta factura todavía no tiene pagos asociados.
-                    </p>
-
-                </div>
-            }
-
-        </div>
-
-
-        <!-- =====================================================
+        <!-- =================================================
              ACCIONES
-             ===================================================== -->
+             ================================================= -->
 
-        <div class="axis-form-actions">
-
-            <a asp-action="Index"
-               class="axis-button axis-button-secondary">
-                ← Volver a facturación
-            </a>
+        <section class="invoice-actions-section">
 
             @if (Model.Estado != "Pagada" &&
                         Model.Estado != "Anulada")
@@ -332,12 +496,50 @@
                 <a asp-controller="Pago"
                    asp-action="Create"
                    asp-route-idFactura="@Model.IdFactura"
-                   class="axis-button axis-button-primary">
-                    + Registrar pago
+                   class="invoice-primary-button">
+
+                    Registrar pago
+
+                    <span>
+                        →
+                    </span>
+
                 </a>
             }
 
-        </div>
+            <a asp-action="Index"
+               class="invoice-secondary-button">
+
+                Volver a facturación
+
+            </a>
+
+        </section>
+
+
+        <!-- =================================================
+             FOOTER
+             ================================================= -->
+
+        <footer class="invoice-footer">
+
+            <div>
+
+                <strong>
+                    AXIS
+                </strong>
+
+                <span>
+                    Gestión inteligente para talleres automotrices.
+                </span>
+
+            </div>
+
+            <div>
+                Factura #@Model.NumeroFactura
+            </div>
+
+        </footer>
 
     </div>
 
@@ -346,103 +548,759 @@
 
 <style>
 
-    .axis-finance-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+    /* =====================================================
+           CONTENEDOR GENERAL
+           ===================================================== */
+
+    .invoice-page {
+        width: 100%;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 30px 24px 60px;
+        color: #202020;
+    }
+
+
+    /* =====================================================
+           TOPBAR
+           ===================================================== */
+
+    .invoice-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 22px;
+    }
+
+    .invoice-back {
+        color: #666;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        transition: color .2s ease;
+    }
+
+        .invoice-back:hover {
+            color: #111;
+        }
+
+    .invoice-top-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .invoice-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        padding: 0 15px;
+        border-radius: 9px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .2s ease;
+    }
+
+    .invoice-action-dark {
+        color: white;
+        background: #202020;
+        border: 1px solid #202020;
+    }
+
+        .invoice-action-dark:hover {
+            background: #000;
+            color: white;
+        }
+
+    .invoice-action-light {
+        color: #333;
+        background: white;
+        border: 1px solid #dedede;
+    }
+
+        .invoice-action-light:hover {
+            background: #f7f7f7;
+        }
+
+
+    /* =====================================================
+           DOCUMENTO
+           ===================================================== */
+
+    .invoice-document {
+        background: white;
+        border: 1px solid #e4e4e4;
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 18px 55px rgba(0, 0, 0, .07);
+    }
+
+
+    /* =====================================================
+           HEADER
+           ===================================================== */
+
+    .invoice-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 40px;
+        padding: 42px 48px;
+        background: linear-gradient( 120deg, #151515 0%, #202020 55%, #2b2631 100% );
+        color: white;
+    }
+
+    .invoice-brand {
+        display: flex;
+        align-items: center;
         gap: 14px;
     }
 
-    .axis-finance-card {
-        padding: 20px;
-        border: 1px solid #e4e4e4;
-        border-radius: 14px;
+    .invoice-logo {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255,255,255,.25);
+        border-radius: 13px;
+        font-size: 25px;
+        font-weight: 700;
+        background: rgba(255,255,255,.06);
+    }
+
+    .invoice-brand-name {
+        font-size: 25px;
+        line-height: 1;
+        font-weight: 750;
+        letter-spacing: 2px;
+    }
+
+    .invoice-brand-subtitle {
+        margin-top: 6px;
+        font-size: 9px;
+        letter-spacing: 2.4px;
+        color: #bdbdbd;
+    }
+
+    .invoice-heading {
+        text-align: right;
+    }
+
+        .invoice-heading > span {
+            display: block;
+            margin-bottom: 5px;
+            color: #aaa;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .invoice-heading h1 {
+            margin: 0;
+            font-size: 27px;
+            line-height: 1.1;
+            font-weight: 650;
+            letter-spacing: .5px;
+        }
+
+
+    /* =====================================================
+           ESTADO
+           ===================================================== */
+
+    .invoice-status {
+        display: inline-flex;
+        margin-top: 13px;
+        padding: 6px 10px;
+        border-radius: 7px;
+        font-size: 10px;
+        font-weight: 650;
+        letter-spacing: .5px;
+    }
+
+    .invoice-status-paid {
+        background: #dcebd8;
+        color: #385b31;
+    }
+
+    .invoice-status-pending {
+        background: #f1e9ce;
+        color: #705e20;
+    }
+
+    .invoice-status-partial {
+        background: #eee4c9;
+        color: #71602a;
+    }
+
+    .invoice-status-cancelled {
+        background: #efdada;
+        color: #773838;
+    }
+
+
+    /* =====================================================
+           INFORMACIÓN
+           ===================================================== */
+
+    .invoice-info {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 60px;
+        padding: 42px 48px;
+        border-bottom: 1px solid #e9e9e9;
+    }
+
+    .invoice-label {
+        display: block;
+        margin-bottom: 9px;
+        color: #929292;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.8px;
+    }
+
+    .invoice-info-block h2 {
+        margin: 0;
+        color: #202020;
+        font-size: 21px;
+        font-weight: 650;
+    }
+
+    .invoice-info-block p {
+        margin: 8px 0 0;
+        color: #999;
+        font-size: 12px;
+    }
+
+    .invoice-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+    }
+
+    .invoice-meta-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+        .invoice-meta-row:last-child {
+            border-bottom: none;
+        }
+
+        .invoice-meta-row span {
+            color: #999;
+            font-size: 9px;
+            font-weight: 650;
+            letter-spacing: 1.2px;
+        }
+
+        .invoice-meta-row strong {
+            color: #333;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+
+    /* =====================================================
+           SECCIONES
+           ===================================================== */
+
+    .invoice-section {
+        padding: 42px 48px;
+    }
+
+    .invoice-section-heading {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 25px;
+    }
+
+        .invoice-section-heading span:first-child {
+            display: block;
+            color: #999;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.7px;
+        }
+
+        .invoice-section-heading h2 {
+            margin: 5px 0 0;
+            color: #222;
+            font-size: 18px;
+            font-weight: 650;
+        }
+
+    .invoice-section-number {
+        color: #aaa;
+        font-size: 11px;
+    }
+
+
+    /* =====================================================
+           DETALLE DE CONCEPTOS
+           ===================================================== */
+
+    .invoice-concepts-section {
+        padding-bottom: 35px;
+    }
+
+    .invoice-concepts-table {
+        border-top: 1px solid #dedede;
+    }
+
+    .invoice-concepts-header,
+    .invoice-concept-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 80px 150px 150px;
+        align-items: center;
+        column-gap: 20px;
+    }
+
+    .invoice-concepts-header {
+        min-height: 42px;
+        padding: 0 4px;
+        border-bottom: 1px solid #dedede;
+        color: #999;
+        font-size: 8px;
+        font-weight: 750;
+        letter-spacing: 1.4px;
+    }
+
+        .invoice-concepts-header span:nth-child(n+2) {
+            text-align: right;
+        }
+
+    .invoice-concept-row {
+        min-height: 68px;
+        padding: 10px 4px;
+        border-bottom: 1px solid #eeeeee;
+        color: #444;
+        font-size: 12px;
+    }
+
+    .invoice-concept-name {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+        .invoice-concept-name strong {
+            color: #282828;
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        .invoice-concept-name small {
+            color: #aaa;
+            font-size: 10px;
+        }
+
+    .invoice-concept-row > span {
+        color: #666;
+        text-align: right;
+    }
+
+    .invoice-concept-row > strong {
+        color: #333;
+        font-weight: 600;
+        text-align: right;
+    }
+
+    .invoice-empty-details {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        padding: 22px;
+        border: 1px dashed #ddd;
+        border-radius: 12px;
         background: #fafafa;
     }
 
-        .axis-finance-card span {
+        .invoice-empty-details > span {
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            border-radius: 10px;
+            background: #eeeeee;
+            color: #999;
+        }
+
+        .invoice-empty-details strong {
+            display: block;
+            color: #555;
+            font-size: 12px;
+        }
+
+        .invoice-empty-details p {
+            margin: 4px 0 0;
+            color: #aaa;
+            font-size: 10px;
+        }
+
+
+    /* =====================================================
+           TABLA FINANCIERA
+           ===================================================== */
+
+    .invoice-financial-table {
+        border-top: 1px solid #dedede;
+    }
+
+    .invoice-financial-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 4px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+        .invoice-financial-row span {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .invoice-financial-row strong {
+            color: #333;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+    .invoice-discount {
+        color: #7d4a4a !important;
+    }
+
+    .invoice-total-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 8px;
+        padding: 22px 4px;
+        border-top: 2px solid #222;
+    }
+
+        .invoice-total-row span {
+            color: #222;
+            font-size: 11px;
+            font-weight: 750;
+            letter-spacing: 1.3px;
+        }
+
+        .invoice-total-row strong {
+            color: #171717;
+            font-size: 27px;
+            font-weight: 700;
+        }
+
+
+    /* =====================================================
+           PAGOS
+           ===================================================== */
+
+    .invoice-payment-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        margin: 0 48px;
+        padding: 27px 0;
+        border-top: 1px solid #e6e6e6;
+        border-bottom: 1px solid #e6e6e6;
+    }
+
+    .invoice-payment-main h2 {
+        margin: 0;
+        color: #222;
+        font-size: 17px;
+        font-weight: 650;
+    }
+
+    .invoice-payment-main p {
+        max-width: 480px;
+        margin: 8px 0 0;
+        color: #929292;
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .invoice-payment-values {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .payment-value {
+        padding: 17px;
+        border: 1px solid #e3e3e3;
+        border-radius: 12px;
+        background: #fafafa;
+    }
+
+        .payment-value span {
             display: block;
             margin-bottom: 8px;
-            color: #777;
-            font-size: 12px;
+            color: #999;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 1.4px;
         }
 
-        .axis-finance-card strong {
-            display: block;
-            color: #222;
-            font-size: 21px;
-        }
-
-    .axis-finance-paid {
-        background: #f1f7ef;
-        border-color: #d5e5d0;
-    }
-
-    .axis-finance-balance {
-        background: #faf5e8;
-        border-color: #e8ddbc;
-    }
-
-    .axis-payment-summary {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
-    }
-
-        .axis-payment-summary > div {
-            padding: 18px;
-            border: 1px solid #e5e5e5;
-            border-radius: 12px;
-            background: #fff;
-        }
-
-        .axis-payment-summary span {
-            display: block;
-            margin-bottom: 7px;
-            color: #777;
-            font-size: 12px;
-        }
-
-        .axis-payment-summary strong {
+        .payment-value strong {
+            color: #2f5730;
             font-size: 18px;
-            color: #222;
+            font-weight: 700;
         }
 
-    .axis-status {
+    .payment-balance {
+        background: #faf7ee;
+        border-color: #e8dfc7;
+    }
+
+        .payment-balance strong {
+            color: #695b31;
+        }
+
+
+    /* =====================================================
+           BOTONES
+           ===================================================== */
+
+    .invoice-actions-section {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        padding: 28px 48px;
+    }
+
+    .invoice-primary-button,
+    .invoice-secondary-button {
         display: inline-flex;
-        padding: 7px 11px;
-        border-radius: 8px;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        min-height: 43px;
+        padding: 0 17px;
+        border-radius: 9px;
+        text-decoration: none;
         font-size: 11px;
-        font-weight: 600;
+        font-weight: 650;
+        transition: all .2s ease;
     }
 
-    .axis-status-success {
-        background: #e8f2e5;
-        color: #42623c;
+    .invoice-primary-button {
+        color: white;
+        background: #202020;
     }
 
-    .axis-status-danger {
-        background: #f4e7e7;
-        color: #824141;
-    }
+        .invoice-primary-button:hover {
+            color: white;
+            background: #000;
+            transform: translateY(-1px);
+        }
 
-    .axis-status-warning {
-        background: #f5f1df;
-        color: #75672e;
-    }
+        .invoice-primary-button span {
+            font-size: 15px;
+        }
 
-    .axis-status-neutral {
-        background: #eeeeee;
+    .invoice-secondary-button {
         color: #555;
+        border: 1px solid #ddd;
+        background: white;
     }
 
-    @@media (max-width: 900px) {
+        .invoice-secondary-button:hover {
+            color: #222;
+            background: #f7f7f7;
+        }
 
-        .axis-finance-grid {
+
+    /* =====================================================
+           FOOTER
+           ===================================================== */
+
+    .invoice-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 23px 48px;
+        background: #f8f8f8;
+        border-top: 1px solid #e9e9e9;
+        color: #999;
+        font-size: 10px;
+    }
+
+        .invoice-footer div:first-child {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .invoice-footer strong {
+            color: #333;
+            letter-spacing: 1px;
+        }
+
+
+    /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+    @@media (max-width: 850px) {
+
+        .invoice-page {
+            padding: 20px 12px 40px;
+        }
+
+        .invoice-header {
+            flex-direction: column;
+            padding: 32px 28px;
+        }
+
+        .invoice-heading {
+            text-align: left;
+        }
+
+        .invoice-info {
+            grid-template-columns: 1fr;
+            gap: 30px;
+            padding: 32px 28px;
+        }
+
+        .invoice-section {
+            padding: 32px 28px;
+        }
+
+        .invoice-payment-section {
+            grid-template-columns: 1fr;
+            margin: 0 28px;
+        }
+
+        .invoice-actions-section {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 25px 28px;
+        }
+
+        .invoice-primary-button,
+        .invoice-secondary-button {
+            width: 100%;
+        }
+
+        .invoice-footer {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 22px 28px;
+        }
+
+        .invoice-concepts-header,
+        .invoice-concept-row {
+            grid-template-columns: minmax(0, 1fr) 55px 100px;
+        }
+
+            .invoice-concepts-header span:nth-child(3),
+            .invoice-concept-row > strong:nth-of-type(1) {
+                display: none;
+            }
+    }
+
+
+    @@media (max-width: 550px) {
+
+        .invoice-topbar {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .invoice-top-actions {
+            width: 100%;
+        }
+
+        .invoice-action {
+            flex: 1;
+        }
+
+        .invoice-payment-values {
             grid-template-columns: 1fr;
         }
 
-        .axis-payment-summary {
-            grid-template-columns: 1fr;
+        .invoice-meta-row {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .invoice-total-row strong {
+            font-size: 22px;
+        }
+
+        .invoice-concepts-header,
+        .invoice-concept-row {
+            grid-template-columns: minmax(0, 1fr) 55px 85px;
+            column-gap: 10px;
+        }
+
+            .invoice-concepts-header span:nth-child(2) {
+                text-align: right;
+            }
+
+        .invoice-concept-name strong {
+            font-size: 11px;
+        }
+
+        .invoice-concept-name small {
+            font-size: 9px;
+        }
+    }
+
+
+    /* =====================================================
+           IMPRESIÓN
+           ===================================================== */
+
+    @@media print {
+
+        body {
+            background: white !important;
+        }
+
+        .invoice-page {
+            max-width: none;
+            padding: 0;
+        }
+
+        .invoice-topbar {
+            display: none !important;
+        }
+
+        .invoice-document {
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .invoice-primary-button,
+        .invoice-secondary-button {
+            display: none !important;
+        }
+
+        .invoice-actions-section {
+            display: none !important;
+        }
+
+        .invoice-footer {
+            margin-top: 25px;
         }
     }
 

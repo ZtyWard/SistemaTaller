@@ -37,6 +37,8 @@ public class FacturaRepository
             .Include(x => x.Cliente)
             .Include(x => x.OrdenTrabajo)
             .Include(x => x.Venta)
+                .ThenInclude(x => x.Detalles)
+                    .ThenInclude(x => x.Producto)
             .Include(x => x.Pagos)
             .FirstOrDefaultAsync(x =>
                 x.IdFactura == idFactura);

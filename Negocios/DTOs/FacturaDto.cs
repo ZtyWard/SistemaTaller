@@ -29,4 +29,11 @@ public class FacturaDto
     public decimal TotalPagado { get; set; }
 
     public decimal SaldoPendiente { get; set; }
+
+    // =====================================================
+    // DETALLE DE LA VENTA
+    // =====================================================
+
+    public List<DetalleVentaDto> DetallesVenta { get; set; }
+        = new List<DetalleVentaDto>();
 }

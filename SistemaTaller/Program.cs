@@ -222,6 +222,12 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<PermisoClaimsFactory>();
 
 // =====================================================
+// USUARIOS - ADMINISTRACIÓN
+// =====================================================
+
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+
+// =====================================================
 // ROLES - NEGOCIOS
 // =====================================================
 

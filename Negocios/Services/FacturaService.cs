@@ -16,6 +16,10 @@ public class FacturaService
         _repository = repository;
     }
 
+    // =====================================================
+    // OBTENER TODAS
+    // =====================================================
+
     public async Task<IEnumerable<FacturaDto>>
         ObtenerTodosAsync()
     {
@@ -25,6 +29,10 @@ public class FacturaService
         return facturas
             .Select(MapearDto);
     }
+
+    // =====================================================
+    // OBTENER PENDIENTES
+    // =====================================================
 
     public async Task<IEnumerable<FacturaDto>>
         ObtenerPendientesAsync()
@@ -37,6 +45,10 @@ public class FacturaService
             .Select(MapearDto);
     }
 
+    // =====================================================
+    // OBTENER POR ID
+    // =====================================================
+
     public async Task<FacturaDto?>
         ObtenerPorIdAsync(int id)
     {
@@ -48,6 +60,10 @@ public class FacturaService
             ? null
             : MapearDto(factura);
     }
+
+    // =====================================================
+    // CREAR
+    // =====================================================
 
     public async Task CrearAsync(
         FacturaGuardarDto dto)
@@ -106,6 +122,10 @@ public class FacturaService
         await _repository
             .GuardarCambiosAsync();
     }
+
+    // =====================================================
+    // ACTUALIZAR
+    // =====================================================
 
     public async Task<bool> ActualizarAsync(
         int id,
@@ -177,6 +197,10 @@ public class FacturaService
         return true;
     }
 
+    // =====================================================
+    // ANULAR
+    // =====================================================
+
     public async Task<bool> AnularAsync(
         int id)
     {
@@ -192,6 +216,10 @@ public class FacturaService
 
         return true;
     }
+
+    // =====================================================
+    // VALIDACIONES
+    // =====================================================
 
     private static void Validar(
         FacturaGuardarDto dto)
@@ -224,6 +252,10 @@ public class FacturaService
                 "El total no coincide con subtotal + impuesto - descuento.");
         }
     }
+
+    // =====================================================
+    // MAPEAR DTO
+    // =====================================================
 
     private static FacturaDto
         MapearDto(Factura factura)
@@ -278,7 +310,48 @@ public class FacturaService
                 totalPagado,
 
             SaldoPendiente =
-                factura.Total - totalPagado
+                Math.Max(
+                    0m,
+                    factura.Total - totalPagado),
+
+            // =================================================
+            // DETALLES DE LA VENTA
+            // =================================================
+
+            DetallesVenta =
+                factura.Venta?.Detalles?
+                    .Select(x => new DetalleVentaDto
+                    {
+                        IdDetalleVenta =
+                            x.IdDetalleVenta,
+
+                        IdVenta =
+                            x.IdVenta,
+
+                        IdProducto =
+                            x.IdProducto,
+
+                        Producto =
+                            x.Producto?.Nombre
+                            ?? "Producto",
+
+                        Cantidad =
+                            x.Cantidad,
+
+                        PrecioUnitario =
+                            x.PrecioUnitario,
+
+                        Impuesto =
+                            x.Impuesto,
+
+                        Descuento =
+                            x.Descuento,
+
+                        Subtotal =
+                            x.Subtotal
+                    })
+                    .ToList()
+                ?? new List<DetalleVentaDto>()
         };
     }
 }
