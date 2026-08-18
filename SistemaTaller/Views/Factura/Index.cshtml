@@ -4,318 +4,1021 @@
     ViewData["Title"] = "Facturación";
 }
 
-<section class="axis-page">
+<section class="axis-invoice-page">
 
-    <div class="axis-page-header">
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="axis-invoice-header">
+
         <div>
-            <span class="axis-page-kicker">
+
+            <span class="axis-invoice-kicker">
                 FACTURACIÓN · ADMINISTRACIÓN
             </span>
 
-            <h1>Facturación</h1>
+            <h1>
+                Facturación
+            </h1>
 
             <p>
                 Consulta y administra las facturas generadas en AXIS.
             </p>
+
         </div>
 
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+
+        <div class="axis-invoice-actions">
 
             <a asp-action="Pendientes"
-               class="axis-button axis-button-secondary">
+               class="axis-invoice-button axis-invoice-button-secondary">
+
                 Pendientes
+
             </a>
 
+
             <a asp-action="Create"
-               class="axis-button axis-button-primary">
-                + Nueva factura
+               class="axis-invoice-button axis-invoice-button-primary">
+
+                <span>+</span>
+
+                Nueva factura
+
             </a>
 
         </div>
+
     </div>
 
 
+    <!-- =====================================================
+         ALERTAS
+         ===================================================== -->
     @if (TempData["Success"] != null)
     {
-        <div class="axis-alert axis-alert-success">
+        <div class="axis-invoice-alert axis-invoice-alert-success">
             @TempData["Success"]
         </div>
     }
 
     @if (TempData["Error"] != null)
     {
-        <div class="axis-alert axis-alert-error">
+        <div class="axis-invoice-alert axis-invoice-alert-error">
             @TempData["Error"]
         </div>
     }
 
 
-    <div class="axis-form-card">
+    <!-- =====================================================
+         CARD
+         ===================================================== -->
 
-        <div class="axis-form-section">
+    <div class="axis-invoice-card">
 
-            <div class="axis-form-section-title">
-                Facturas registradas
+
+        <!-- HEADER CARD -->
+
+        <div class="axis-invoice-card-header">
+
+            <div>
+
+                <span class="axis-invoice-card-kicker">
+                    REGISTRO
+                </span>
+
+                <h2>
+                    Facturas registradas
+                </h2>
+
+                <p>
+                    @Model.Count() facturas encontradas.
+                </p>
+
             </div>
 
-            @if (!Model.Any())
-            {
-                <div class="axis-empty-state">
 
-                    <h3>No hay facturas registradas</h3>
+            <div class="axis-invoice-count">
+                @Model.Count()
+            </div>
 
-                    <p>
-                        Todavía no existen facturas para mostrar.
-                    </p>
+        </div>
 
-                    <a asp-action="Create"
-                       class="axis-button axis-button-primary">
-                        Crear primera factura
-                    </a>
 
+        <!-- =================================================
+             EMPTY STATE
+             ================================================= -->
+        @if (!Model.Any())
+        {
+            <div class="axis-invoice-empty">
+
+                <div class="axis-invoice-empty-icon">
+                    $
                 </div>
-            }
-            else
-            {
-                <div style="overflow-x:auto;">
 
-                    <table class="axis-data-table">
+                <h3>
+                    No hay facturas registradas
+                </h3>
 
-                        <thead>
-                            <tr>
-                                <th>FACTURA</th>
-                                <th>CLIENTE</th>
-                                <th>FECHA</th>
-                                <th>TOTAL</th>
-                                <th>PAGADO</th>
-                                <th>SALDO</th>
-                                <th>ESTADO</th>
-                                <th>ACCIONES</th>
-                            </tr>
-                        </thead>
+                <p>
+                    Todavía no existen facturas para mostrar.
+                </p>
 
-                        <tbody>
+                <a asp-action="Create"
+                   class="axis-invoice-button axis-invoice-button-primary">
 
-                            @foreach (var factura in Model)
+                    + Crear primera factura
+
+                </a>
+
+            </div>
+        }
+        else
+        {
+
+            <!-- =================================================
+                 TABLA
+                 ================================================= -->
+
+            <div class="axis-invoice-table-wrapper">
+
+                <table class="axis-invoice-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                FACTURA
+                            </th>
+
+                            <th>
+                                CLIENTE
+                            </th>
+
+                            <th>
+                                FECHA
+                            </th>
+
+                            <th>
+                                TOTAL
+                            </th>
+
+                            <th>
+                                PAGADO
+                            </th>
+
+                            <th>
+                                SALDO
+                            </th>
+
+                            <th>
+                                ESTADO
+                            </th>
+
+                            <th>
+                                ACCIONES
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var factura in Model)
+                        {
+                            var estadoClass =
+                            factura.Estado switch
                             {
-                                var estadoClass = factura.Estado switch
-                                {
-                                    "Pagada" => "axis-status-success",
-                                    "Anulada" => "axis-status-danger",
-                                    "Parcialmente pagada" => "axis-status-warning",
-                                    _ => "axis-status-neutral"
-                                };
+                                "Pagada" =>
+                                            "axis-invoice-status-paid",
 
-                                <tr>
+                                "Anulada" =>
+                                            "axis-invoice-status-cancelled",
 
-                                    <td>
+                                "Parcialmente pagada" =>
+                                            "axis-invoice-status-partial",
+
+                                _ =>
+                                            "axis-invoice-status-neutral"
+                            };
+
+
+                            <tr>
+
+                                <!-- FACTURA -->
+
+                                <td>
+
+                                    <div class="axis-invoice-record">
+
                                         <strong>
                                             @factura.NumeroFactura
                                         </strong>
 
-                                        <div class="axis-table-secondary">
+                                        <span>
                                             Factura #@factura.IdFactura
-                                        </div>
-                                    </td>
-
-                                    <td>
-                                        @(string.IsNullOrWhiteSpace(factura.Cliente)
-                                                                        ? "Cliente no disponible"
-                                                                        : factura.Cliente)
-                            </td>
-
-                                    <td>
-                                        @factura.FechaEmision.ToString("dd/MM/yyyy")
-                                    </td>
-
-                                    <td>
-                                        <strong>
-                                            @factura.Total.ToString("C2")
-                                        </strong>
-                                    </td>
-
-                                    <td>
-                                        @factura.TotalPagado.ToString("C2")
-                                    </td>
-
-                                    <td>
-                                        <strong>
-                                            @factura.SaldoPendiente.ToString("C2")
-                                        </strong>
-                                    </td>
-
-                                    <td>
-                                        <span class="axis-status @estadoClass">
-                                            @factura.Estado
                                         </span>
-                                    </td>
 
-                                    <td>
+                                    </div>
 
-                                        <div class="axis-actions">
+                                </td>
 
-                                            <a asp-action="Details"
+
+                                <!-- CLIENTE -->
+
+                                <td>
+
+                                    <div class="axis-invoice-client">
+
+                                        <div class="axis-invoice-client-avatar">
+
+                                            @(
+                                                                                string.IsNullOrWhiteSpace(factura.Cliente)
+                                                                                ? "?"
+                                                                                : factura.Cliente.Substring(0, 1).ToUpper()
+                                                                                )
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <strong>
+                                                @(string.IsNullOrWhiteSpace(factura.Cliente)
+                                                                                        ? "Cliente no disponible"
+                                                                                        : factura.Cliente)
+                                    </strong>
+
+                                            <span>
+                                                Cliente AXIS
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- FECHA -->
+
+                                <td>
+
+                                    <div class="axis-invoice-date">
+
+                                        <strong>
+                                            @factura.FechaEmision.ToString("dd/MM/yyyy")
+                                        </strong>
+
+                                        <span>
+                                            Emisión
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- TOTAL -->
+
+                                <td>
+
+                                    <strong class="axis-invoice-total">
+
+                                        @factura.Total.ToString("C2")
+
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- PAGADO -->
+
+                                <td>
+
+                                    <span class="axis-invoice-money axis-invoice-money-paid">
+
+                                        @factura.TotalPagado.ToString("C2")
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- SALDO -->
+
+                                <td>
+
+                                    <strong class="axis-invoice-balance">
+
+                                        @factura.SaldoPendiente.ToString("C2")
+
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- ESTADO -->
+
+                                <td>
+
+                                    <span class="axis-invoice-status @estadoClass">
+
+                                        <span class="axis-invoice-status-dot"></span>
+
+                                        @factura.Estado
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ACCIONES -->
+
+                                <td>
+
+                                    <div class="axis-invoice-row-actions">
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@factura.IdFactura"
+                                           class="axis-invoice-row-button">
+
+                                            Ver
+
+                                        </a>
+
+
+                                @if (factura.Estado != "Pagada" &&
+                                                                factura.Estado != "Anulada")
+                                        {
+
+                                            <a asp-action="Edit"
                                                asp-route-id="@factura.IdFactura"
-                                               class="axis-small-button">
-                                                Ver
+                                               class="axis-invoice-row-button">
+
+                                                Editar
+
                                             </a>
 
-                                    @if (factura.Estado != "Pagada" &&
-                                                                        factura.Estado != "Anulada")
-                                            {
-                                                <a asp-action="Edit"
-                                                   asp-route-id="@factura.IdFactura"
-                                                   class="axis-small-button">
-                                                    Editar
-                                                </a>
 
-                                                <form asp-action="Anular"
-                                                      asp-route-id="@factura.IdFactura"
-                                                      method="post"
-                                                      style="display:inline;">
+                                            <form asp-action="Anular"
+                                                  asp-route-id="@factura.IdFactura"
+                                                  method="post">
 
-                                                    @Html.AntiForgeryToken()
+                                                @Html.AntiForgeryToken()
 
-                                                    <button type="submit"
-                                                            class="axis-small-button axis-small-danger"
-                                                            onclick="return confirm('¿Desea anular esta factura?');">
-                                                        Anular
-                                                    </button>
+                                                <button type="submit"
+                                                        class="axis-invoice-row-button axis-invoice-danger"
+                                                        onclick="return confirm('¿Desea anular esta factura?');">
 
-                                                </form>
-                                            }
+                                                    Anular
 
-                                        </div>
+                                                </button>
 
-                                    </td>
+                                            </form>
 
-                                </tr>
-                            }
+                                        }
 
-                        </tbody>
+                                    </div>
 
-                    </table>
+                                </td>
 
-                </div>
-            }
+                            </tr>
+                        }
 
-        </div>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        }
 
     </div>
 
 </section>
 
+
 <style>
 
-    .axis-alert {
-        padding: 14px 18px;
-        border-radius: 12px;
-        margin-bottom: 20px;
+    /* =====================================================
+           PÁGINA
+           ===================================================== */
+
+    .axis-invoice-page {
+        width: 100%;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 44px 34px 70px;
+        color: #e7e7ea;
+    }
+
+
+    /* =====================================================
+           HEADER
+           ===================================================== */
+
+    .axis-invoice-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+
+    .axis-invoice-kicker {
+        display: block;
+        margin-bottom: 10px;
+        color: #777985;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2.8px;
+    }
+
+
+    .axis-invoice-header h1 {
+        margin: 0;
+        color: #f5f5f7;
+        font-size: 52px;
+        line-height: 1;
+        font-weight: 700;
+        letter-spacing: -1.8px;
+    }
+
+
+    .axis-invoice-header p {
+        margin: 11px 0 0;
+        color: #858690;
         font-size: 13px;
     }
 
-    .axis-alert-success {
-        background: #edf5e9;
-        border: 1px solid #c9dbc1;
-        color: #41603a;
+
+    /* =====================================================
+           ACCIONES
+           ===================================================== */
+
+    .axis-invoice-actions {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        flex-wrap: wrap;
     }
 
-    .axis-alert-error {
-        background: #f8eeee;
-        border: 1px solid #e5c8c8;
-        color: #8b3d3d;
+
+    .axis-invoice-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        min-height: 40px;
+        padding: 0 16px;
+        border-radius: 11px;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 650;
+        transition: .2s ease;
+        cursor: pointer;
+        white-space: nowrap;
     }
 
-    .axis-data-table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 1050px;
-    }
 
-        .axis-data-table th {
-            padding: 14px 16px;
-            text-align: left;
-            font-size: 10px;
-            letter-spacing: 1.5px;
-            color: #777;
-            background: #fafafa;
-            border-bottom: 1px solid #e5e5e5;
+        .axis-invoice-button:hover {
+            transform: translateY(-1px);
         }
 
-        .axis-data-table td {
-            padding: 16px;
-            border-bottom: 1px solid #eee;
-            font-size: 13px;
-            color: #555;
+
+    .axis-invoice-button-secondary {
+        color: #c9c9cf;
+        background: #17171b;
+        border: 1px solid #292a30;
+    }
+
+
+        .axis-invoice-button-secondary:hover {
+            color: #fff;
+            background: #1d1d22;
+        }
+
+
+    .axis-invoice-button-primary {
+        color: #16161a;
+        background: #f1edf4;
+        border: 1px solid #f1edf4;
+    }
+
+
+        .axis-invoice-button-primary:hover {
+            color: #111;
+            background: #fff;
+        }
+
+
+    /* =====================================================
+           ALERTAS
+           ===================================================== */
+
+    .axis-invoice-alert {
+        margin-bottom: 18px;
+        padding: 13px 16px;
+        border-radius: 11px;
+        font-size: 12px;
+    }
+
+
+    .axis-invoice-alert-success {
+        color: #a8d7ad;
+        background: rgba(81,145,88,.10);
+        border: 1px solid rgba(106,167,112,.18);
+    }
+
+
+    .axis-invoice-alert-error {
+        color: #e2a4a4;
+        background: rgba(160,65,65,.10);
+        border: 1px solid rgba(190,85,85,.18);
+    }
+
+
+    /* =====================================================
+           CARD
+           ===================================================== */
+
+    .axis-invoice-card {
+        overflow: hidden;
+        border: 1px solid #292a30;
+        border-radius: 20px;
+        background: linear-gradient( 145deg, rgba(25,25,29,.95), rgba(15,15,18,.98) );
+        box-shadow: 0 20px 55px rgba(0,0,0,.22);
+    }
+
+
+    /* =====================================================
+           CARD HEADER
+           ===================================================== */
+
+    .axis-invoice-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 23px 24px;
+        border-bottom: 1px solid #292a30;
+    }
+
+
+    .axis-invoice-card-kicker {
+        display: block;
+        margin-bottom: 6px;
+        color: #696b75;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.8px;
+    }
+
+
+    .axis-invoice-card-header h2 {
+        margin: 0;
+        color: #e7e7eb;
+        font-size: 16px;
+        font-weight: 650;
+    }
+
+
+    .axis-invoice-card-header p {
+        margin: 5px 0 0;
+        color: #777983;
+        font-size: 11px;
+    }
+
+
+    .axis-invoice-count {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 30px;
+        height: 30px;
+        padding: 0 9px;
+        border: 1px solid #303139;
+        border-radius: 9px;
+        color: #bcbcc3;
+        background: #1a1a1f;
+        font-size: 11px;
+        font-weight: 650;
+    }
+
+
+    /* =====================================================
+           TABLA
+           ===================================================== */
+
+    .axis-invoice-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+
+    .axis-invoice-table {
+        width: 100%;
+        min-width: 1100px;
+        border-collapse: collapse;
+    }
+
+
+        .axis-invoice-table th {
+            padding: 14px 18px;
+            color: #666872;
+            background: rgba(255,255,255,.018);
+            border-bottom: 1px solid #292a30;
+            text-align: left;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            white-space: nowrap;
+        }
+
+
+        .axis-invoice-table td {
+            padding: 17px 18px;
+            color: #b8b8bf;
+            border-bottom: 1px solid rgba(255,255,255,.055);
+            font-size: 12px;
             vertical-align: middle;
         }
 
-        .axis-data-table tr:last-child td {
-            border-bottom: none;
+
+        .axis-invoice-table tbody tr {
+            transition: background .18s ease;
         }
 
-    .axis-table-secondary {
-        margin-top: 4px;
-        color: #999;
-        font-size: 11px;
-    }
 
-    .axis-status {
-        display: inline-flex;
-        padding: 6px 10px;
-        border-radius: 8px;
-        font-size: 11px;
-        font-weight: 600;
-    }
+            .axis-invoice-table tbody tr:hover {
+                background: rgba(255,255,255,.025);
+            }
 
-    .axis-status-success {
-        background: #e8f2e5;
-        color: #42623c;
-    }
 
-    .axis-status-danger {
-        background: #f4e7e7;
-        color: #824141;
-    }
+            .axis-invoice-table tbody tr:last-child td {
+                border-bottom: none;
+            }
 
-    .axis-status-warning {
-        background: #f5f1df;
-        color: #75672e;
-    }
 
-    .axis-status-neutral {
-        background: #eeeeee;
-        color: #555;
-    }
+    /* =====================================================
+           FACTURA
+           ===================================================== */
 
-    .axis-actions {
+    .axis-invoice-record {
         display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+
+        .axis-invoice-record strong {
+            color: #e5e5e9;
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+
+        .axis-invoice-record span {
+            color: #686a74;
+            font-size: 10px;
+        }
+
+
+    /* =====================================================
+           CLIENTE
+           ===================================================== */
+
+    .axis-invoice-client {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 190px;
+    }
+
+
+    .axis-invoice-client-avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
+        border: 1px solid #34353d;
+        border-radius: 11px;
+        color: #d9d9de;
+        background: #202126;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+
+    .axis-invoice-client strong {
+        display: block;
+        max-width: 180px;
+        overflow: hidden;
+        color: #d8d8dd;
+        font-size: 12px;
+        font-weight: 600;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+
+    .axis-invoice-client span {
+        display: block;
+        margin-top: 3px;
+        color: #656771;
+        font-size: 9px;
+    }
+
+
+    /* =====================================================
+           FECHA
+           ===================================================== */
+
+    .axis-invoice-date {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+
+        .axis-invoice-date strong {
+            color: #c6c6cc;
+            font-size: 11px;
+            font-weight: 550;
+        }
+
+
+        .axis-invoice-date span {
+            color: #686a73;
+            font-size: 10px;
+        }
+
+
+    /* =====================================================
+           DINERO
+           ===================================================== */
+
+    .axis-invoice-total {
+        color: #e1e1e5;
+        font-size: 13px;
+        font-weight: 650;
+        white-space: nowrap;
+    }
+
+
+    .axis-invoice-money {
+        display: inline-flex;
+        padding: 6px 9px;
+        border-radius: 8px;
+        font-size: 10px;
+        white-space: nowrap;
+    }
+
+
+    .axis-invoice-money-paid {
+        color: #a8c9ab;
+        background: rgba(83,139,88,.08);
+        border: 1px solid rgba(93,148,98,.15);
+    }
+
+
+    .axis-invoice-balance {
+        color: #d7c98f;
+        font-size: 12px;
+        font-weight: 650;
+        white-space: nowrap;
+    }
+
+
+    /* =====================================================
+           ESTADOS
+           ===================================================== */
+
+    .axis-invoice-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 9px;
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+
+    .axis-invoice-status-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+    }
+
+
+    .axis-invoice-status-paid {
+        color: #9fcba2;
+        background: rgba(83,139,88,.12);
+        border: 1px solid rgba(93,148,98,.18);
+    }
+
+
+        .axis-invoice-status-paid .axis-invoice-status-dot {
+            background: #79b57e;
+        }
+
+
+    .axis-invoice-status-partial {
+        color: #d3c58a;
+        background: rgba(145,126,59,.12);
+        border: 1px solid rgba(153,134,64,.18);
+    }
+
+
+        .axis-invoice-status-partial .axis-invoice-status-dot {
+            background: #b7a65b;
+        }
+
+
+    .axis-invoice-status-cancelled {
+        color: #d39b9b;
+        background: rgba(142,64,64,.12);
+        border: 1px solid rgba(158,75,75,.18);
+    }
+
+
+        .axis-invoice-status-cancelled .axis-invoice-status-dot {
+            background: #bd7373;
+        }
+
+
+    .axis-invoice-status-neutral {
+        color: #b5b5bd;
+        background: #1d1d22;
+        border: 1px solid #303139;
+    }
+
+
+        .axis-invoice-status-neutral .axis-invoice-status-dot {
+            background: #898b94;
+        }
+
+
+    /* =====================================================
+           ACCIONES
+           ===================================================== */
+
+    .axis-invoice-row-actions {
+        display: flex;
+        align-items: center;
         gap: 6px;
         flex-wrap: wrap;
     }
 
-    .axis-small-button {
+
+        .axis-invoice-row-actions form {
+            margin: 0;
+        }
+
+
+    .axis-invoice-row-button {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 7px 11px;
+        min-height: 31px;
+        padding: 0 10px;
+        border: 1px solid #303139;
         border-radius: 8px;
-        border: 1px solid #ddd;
-        background: white;
-        color: #333;
+        color: #c3c3c9;
+        background: #1b1b20;
         text-decoration: none;
+        font-family: inherit;
+        font-size: 10px;
+        font-weight: 600;
         cursor: pointer;
-        font-size: 11px;
+        transition: .18s ease;
     }
 
-        .axis-small-button:hover {
-            background: #f7f7f7;
+
+        .axis-invoice-row-button:hover {
+            color: #fff;
+            background: #25252b;
+            border-color: #41424b;
         }
 
-    .axis-small-danger {
-        color: #8a3d3d;
-        border-color: #e5cccc;
-        background: #faf0f0;
+
+    .axis-invoice-danger {
+        color: #d39b9b;
+        background: rgba(142,64,64,.08);
+        border-color: rgba(158,75,75,.18);
+    }
+
+
+        .axis-invoice-danger:hover {
+            color: #e4b2b2;
+            background: rgba(142,64,64,.15);
+        }
+
+
+    /* =====================================================
+           EMPTY STATE
+           ===================================================== */
+
+    .axis-invoice-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 330px;
+        padding: 50px 25px;
+        text-align: center;
+    }
+
+
+    .axis-invoice-empty-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 18px;
+        border: 1px solid #303139;
+        border-radius: 14px;
+        color: #aaaab2;
+        background: #1b1b20;
+        font-size: 20px;
+    }
+
+
+    .axis-invoice-empty h3 {
+        margin: 0;
+        color: #dddde2;
+        font-size: 16px;
+        font-weight: 650;
+    }
+
+
+    .axis-invoice-empty p {
+        margin: 8px 0 20px;
+        color: #70727c;
+        font-size: 12px;
+    }
+
+
+    /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+    @@media (max-width: 900px) {
+
+        .axis-invoice-page {
+            padding: 28px 18px 50px;
+        }
+
+        .axis-invoice-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+            .axis-invoice-header h1 {
+                font-size: 42px;
+            }
+
+        .axis-invoice-actions {
+            width: 100%;
+        }
+
+        .axis-invoice-button {
+            flex: 1;
+        }
+    }
+
+
+    @@media (max-width: 550px) {
+
+        .axis-invoice-page {
+            padding: 22px 12px 40px;
+        }
+
+        .axis-invoice-header h1 {
+            font-size: 36px;
+        }
+
+        .axis-invoice-actions {
+            flex-direction: column;
+        }
+
+        .axis-invoice-button {
+            width: 100%;
+        }
+
+        .axis-invoice-card-header {
+            padding: 19px;
+        }
     }
 
 </style>

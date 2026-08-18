@@ -11,371 +11,1242 @@
     var registroId = ViewBag.RegistroId as string;
 }
 
-<div class="container-fluid">
+<section class="axis-audit-page">
 
-    <div class="mb-4">
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
 
-        <div class="text-muted small">
-            AXIS · SEGURIDAD
+    <div class="axis-audit-header">
+
+        <div>
+
+            <span class="axis-audit-kicker">
+                ADMINISTRACIÓN · SEGURIDAD
+            </span>
+
+            <h1>
+                Auditoría
+            </h1>
+
+            <p>
+                Consulta y rastrea las operaciones realizadas
+                dentro del sistema AXIS.
+            </p>
+
         </div>
 
-        <h1 class="mt-2 mb-1">
-            Bitácora de auditoría
-        </h1>
 
-        <p class="text-muted mb-0">
-            Consulta las operaciones registradas en el sistema.
-        </p>
+        <div class="axis-audit-readonly">
 
-    </div>
+            <span class="axis-audit-readonly-dot"></span>
 
-    <!-- ================================================= -->
-    <!-- FILTROS -->
-    <!-- ================================================= -->
-
-    <div class="card shadow-sm mb-4">
-
-        <div class="card-body">
-
-            <form asp-action="Index"
-                  method="get">
-
-                <div class="row g-3">
-
-                    <div class="col-md-4">
-
-                        <label class="form-label">
-                            Usuario
-                        </label>
-
-                        <input type="text"
-                               name="usuarioId"
-                               value="@usuarioId"
-                               class="form-control"
-                               placeholder="ID del usuario" />
-
-                    </div>
-
-                    <div class="col-md-4">
-
-                        <label class="form-label">
-                            Módulo
-                        </label>
-
-                        <input type="text"
-                               name="modulo"
-                               value="@modulo"
-                               class="form-control"
-                               placeholder="Ej. Cliente" />
-
-                    </div>
-
-                    <div class="col-md-4">
-
-                        <label class="form-label">
-                            Acción
-                        </label>
-
-                        <input type="text"
-                               name="accion"
-                               value="@accion"
-                               class="form-control"
-                               placeholder="Ej. INSERT" />
-
-                    </div>
-
-                    <div class="col-md-3">
-
-                        <label class="form-label">
-                            Fecha desde
-                        </label>
-
-                        <input type="date"
-                               name="fechaDesde"
-                               value="@fechaDesde"
-                               class="form-control" />
-
-                    </div>
-
-                    <div class="col-md-3">
-
-                        <label class="form-label">
-                            Fecha hasta
-                        </label>
-
-                        <input type="date"
-                               name="fechaHasta"
-                               value="@fechaHasta"
-                               class="form-control" />
-
-                    </div>
-
-                    <div class="col-md-3">
-
-                        <label class="form-label">
-                            Registro afectado
-                        </label>
-
-                        <input type="text"
-                               name="registroId"
-                               value="@registroId"
-                               class="form-control"
-                               placeholder="ID del registro" />
-
-                    </div>
-
-                    <div class="col-md-3 d-flex align-items-end">
-
-                        <div class="d-flex gap-2 w-100">
-
-                            <button type="submit"
-                                    class="btn btn-primary flex-fill">
-                                Filtrar
-                            </button>
-
-                            <a asp-action="Index"
-                               class="btn btn-outline-secondary">
-                                Limpiar
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </form>
+            Solo lectura
 
         </div>
 
     </div>
 
-    <!-- ================================================= -->
-    <!-- RESULTADOS -->
-    <!-- ================================================= -->
 
-    <div class="card shadow-sm">
+    <!-- =====================================================
+         FILTROS
+         ===================================================== -->
 
-        <div class="card-body">
+    <div class="axis-audit-filter-card">
 
-            <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="axis-audit-filter-header">
 
-                <div>
+            <div>
 
-                    <h5 class="mb-1">
-                        Registros
-                    </h5>
-
-                    <span class="text-muted small">
-                        @Model.Count() registros encontrados
-                    </span>
-
-                </div>
-
-                <span class="badge bg-secondary">
-                    Solo lectura
+                <span class="axis-audit-section-kicker">
+                    CONSULTA
                 </span>
+
+                <h2>
+                    Filtrar actividad
+                </h2>
+
+                <p>
+                    Utiliza los criterios disponibles para localizar
+                    operaciones específicas.
+                </p>
 
             </div>
 
-            @if (!Model.Any())
-            {
-                <div class="alert alert-info mb-0">
-
-                    No existen registros de auditoría
-                    que coincidan con los filtros seleccionados.
-
-                </div>
-            }
-            else
-            {
-                <div class="table-responsive">
-
-                    <table class="table table-hover align-middle">
-
-                        <thead>
-
-                            <tr>
-
-                                <th>
-                                    #
-                                </th>
-
-                                <th>
-                                    Fecha
-                                </th>
-
-                                <th>
-                                    Usuario
-                                </th>
-
-                                <th>
-                                    Módulo
-                                </th>
-
-                                <th>
-                                    Acción
-                                </th>
-
-                                <th>
-                                    Registro
-                                </th>
-
-                                <th>
-                                    Descripción
-                                </th>
-
-                                <th>
-                                    IP
-                                </th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @foreach (var auditoria in Model)
-                            {
-                                <tr>
-
-                                    <td>
-                                        @auditoria.IdAuditoria
-                                    </td>
-
-                                    <td>
-                                        <span class="text-nowrap">
-                                            @auditoria.Fecha.ToString(
-                                            "dd/MM/yyyy HH:mm:ss")
-                                </span>
-                            </td>
-
-                            <td>
-
-                                @if (string.IsNullOrWhiteSpace(
-                                                                auditoria.UsuarioId))
-                                        {
-                                            <span class="text-muted">
-                                                Sistema
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <span class="small">
-                                                @auditoria.UsuarioId
-                                            </span>
-                                        }
-
-                                    </td>
-
-                                    <td>
-
-                                        <span class="badge bg-secondary">
-                                            @auditoria.Modulo
-                                        </span>
-
-                                    </td>
-
-                                    <td>
-
-                                        @{
-                                            var accionNormalizada =
-                                            auditoria.Accion?
-                                            .ToUpperInvariant();
-                                        }
-
-                                        @if (accionNormalizada == "INSERT" ||
-                                                                        accionNormalizada == "CREATE")
-                                        {
-                                            <span class="badge bg-success">
-                                                @auditoria.Accion
-                                            </span>
-                                        }
-                                        else if (
-                                        accionNormalizada == "UPDATE" ||
-                                        accionNormalizada == "EDIT")
-                                        {
-                                            <span class="badge bg-warning text-dark">
-                                                @auditoria.Accion
-                                            </span>
-                                        }
-                                        else if (accionNormalizada == "DELETE")
-                                        {
-                                            <span class="badge bg-danger">
-                                                @auditoria.Accion
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-primary">
-                                                @auditoria.Accion
-                                            </span>
-                                        }
-
-                                    </td>
-
-                                    <td>
-
-                                        @if (string.IsNullOrWhiteSpace(
-                                                                        auditoria.RegistroId))
-                                        {
-                                            <span class="text-muted">
-                                                —
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            @auditoria.RegistroId
-                                        }
-
-                                    </td>
-
-                                    <td>
-
-                                        @if (string.IsNullOrWhiteSpace(
-                                                                        auditoria.Descripcion))
-                                        {
-                                            <span class="text-muted">
-                                                Sin descripción
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <span>
-                                                @auditoria.Descripcion
-                                            </span>
-                                        }
-
-                                    </td>
-
-                                    <td>
-
-                                        @if (string.IsNullOrWhiteSpace(
-                                                                        auditoria.Ip))
-                                        {
-                                            <span class="text-muted">
-                                                —
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            @auditoria.Ip
-                                        }
-
-                                    </td>
-
-                                </tr>
-                            }
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-            }
+            <div class="axis-audit-filter-icon">
+                ⌕
+            </div>
 
         </div>
 
+
+        <form asp-action="Index"
+              method="get"
+              class="axis-audit-form">
+
+            <div class="axis-audit-fields">
+
+
+                <!-- USUARIO -->
+
+                <div class="axis-audit-field">
+
+                    <label>
+                        Usuario
+                    </label>
+
+                    <input type="text"
+                           name="usuarioId"
+                           value="@usuarioId"
+                           placeholder="ID del usuario" />
+
+                </div>
+
+
+                <!-- MODULO -->
+
+                <div class="axis-audit-field">
+
+                    <label>
+                        Módulo
+                    </label>
+
+                    <input type="text"
+                           name="modulo"
+                           value="@modulo"
+                           placeholder="Ej. Cliente" />
+
+                </div>
+
+
+                <!-- ACCION -->
+
+                <div class="axis-audit-field">
+
+                    <label>
+                        Acción
+                    </label>
+
+                    <input type="text"
+                           name="accion"
+                           value="@accion"
+                           placeholder="Ej. INSERT" />
+
+                </div>
+
+
+                <!-- REGISTRO -->
+
+                <div class="axis-audit-field">
+
+                    <label>
+                        Registro afectado
+                    </label>
+
+                    <input type="text"
+                           name="registroId"
+                           value="@registroId"
+                           placeholder="ID del registro" />
+
+                </div>
+
+
+                <!-- FECHA DESDE -->
+
+                <div class="axis-audit-field">
+
+                    <label>
+                        Fecha desde
+                    </label>
+
+                    <input type="date"
+                           name="fechaDesde"
+                           value="@fechaDesde" />
+
+                </div>
+
+
+                <!-- FECHA HASTA -->
+
+                <div class="axis-audit-field">
+
+                    <label>
+                        Fecha hasta
+                    </label>
+
+                    <input type="date"
+                           name="fechaHasta"
+                           value="@fechaHasta" />
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-audit-filter-actions">
+
+                <button type="submit"
+                        class="axis-audit-button axis-audit-button-primary">
+
+                    <span>⌕</span>
+
+                    Filtrar actividad
+
+                </button>
+
+
+                <a asp-action="Index"
+                   class="axis-audit-button axis-audit-button-secondary">
+
+                    Limpiar filtros
+
+                </a>
+
+            </div>
+
+        </form>
+
     </div>
 
-</div>
+
+    <!-- =====================================================
+         RESULTADOS
+         ===================================================== -->
+
+    <div class="axis-audit-results-card">
+
+
+        <!-- HEADER RESULTADOS -->
+
+        <div class="axis-audit-results-header">
+
+            <div>
+
+                <span class="axis-audit-section-kicker">
+                    REGISTRO DE ACTIVIDAD
+                </span>
+
+                <h2>
+                    Bitácora
+                </h2>
+
+                <p>
+                    @Model.Count() registros encontrados.
+                </p>
+
+            </div>
+
+
+            <div class="axis-audit-result-count">
+                @Model.Count()
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             EMPTY STATE
+             ================================================= -->
+        @if (!Model.Any())
+        {
+            <div class="axis-audit-empty">
+
+                <div class="axis-audit-empty-icon">
+                    ◌
+                </div>
+
+                <h3>
+                    No se encontraron registros
+                </h3>
+
+                <p>
+                    No existen operaciones de auditoría que
+                    coincidan con los filtros seleccionados.
+                </p>
+
+                <a asp-action="Index"
+                   class="axis-audit-button axis-audit-button-secondary">
+
+                    Limpiar filtros
+
+                </a>
+
+            </div>
+        }
+        else
+        {
+
+            <!-- =================================================
+                 TABLA
+                 ================================================= -->
+
+            <div class="axis-audit-table-wrapper">
+
+                <table class="axis-audit-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                ID
+                            </th>
+
+                            <th>
+                                FECHA
+                            </th>
+
+                            <th>
+                                USUARIO
+                            </th>
+
+                            <th>
+                                MÓDULO
+                            </th>
+
+                            <th>
+                                ACCIÓN
+                            </th>
+
+                            <th>
+                                REGISTRO
+                            </th>
+
+                            <th>
+                                DESCRIPCIÓN
+                            </th>
+
+                            <th>
+                                IP
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var auditoria in Model)
+                        {
+                            var accionNormalizada =
+                            auditoria.Accion?.ToUpperInvariant();
+
+
+                            <tr>
+
+                                <!-- ID -->
+
+                                <td>
+
+                                    <span class="axis-audit-id">
+                                        #@auditoria.IdAuditoria
+                                    </span>
+
+                                </td>
+
+
+                                <!-- FECHA -->
+
+                                <td>
+
+                                    <div class="axis-audit-date">
+
+                                        <strong>
+                                            @auditoria.Fecha.ToString("dd/MM/yyyy")
+                                        </strong>
+
+                                        <span>
+                                            @auditoria.Fecha.ToString("HH:mm:ss")
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- USUARIO -->
+
+                                <td>
+
+                                    @if (string.IsNullOrWhiteSpace(
+                                                                auditoria.UsuarioId))
+                                    {
+                                        <div class="axis-audit-system-user">
+
+                                            <span class="axis-audit-user-icon">
+                                                S
+                                            </span>
+
+                                            <span>
+                                                Sistema
+                                            </span>
+
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="axis-audit-system-user">
+
+                                            <span class="axis-audit-user-icon">
+                                                U
+                                            </span>
+
+                                            <span class="axis-audit-user-id">
+                                                @auditoria.UsuarioId
+                                            </span>
+
+                                        </div>
+                                    }
+
+                                </td>
+
+
+                                <!-- MODULO -->
+
+                                <td>
+
+                                    <span class="axis-audit-module">
+                                        @auditoria.Modulo
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ACCION -->
+
+                                <td>
+
+                                    @if (accionNormalizada == "INSERT" ||
+                                                                accionNormalizada == "CREATE")
+                                    {
+                                        <span class="axis-audit-action axis-audit-action-create">
+
+                                            <span></span>
+
+                                            @auditoria.Accion
+
+                                        </span>
+                                    }
+                                    else if (
+                                    accionNormalizada == "UPDATE" ||
+                                    accionNormalizada == "EDIT")
+                                    {
+                                        <span class="axis-audit-action axis-audit-action-update">
+
+                                            <span></span>
+
+                                            @auditoria.Accion
+
+                                        </span>
+                                    }
+                                    else if (accionNormalizada == "DELETE")
+                                    {
+                                        <span class="axis-audit-action axis-audit-action-delete">
+
+                                            <span></span>
+
+                                            @auditoria.Accion
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-audit-action axis-audit-action-other">
+
+                                            <span></span>
+
+                                            @auditoria.Accion
+
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- REGISTRO -->
+
+                                <td>
+
+                                    @if (string.IsNullOrWhiteSpace(
+                                                                auditoria.RegistroId))
+                                    {
+                                        <span class="axis-audit-empty-value">
+                                            —
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-audit-record">
+                                            @auditoria.RegistroId
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- DESCRIPCION -->
+
+                                <td>
+
+                                    @if (string.IsNullOrWhiteSpace(
+                                                                auditoria.Descripcion))
+                                    {
+                                        <span class="axis-audit-empty-value">
+                                            Sin descripción
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-audit-description"
+                                              title="@auditoria.Descripcion">
+
+                                            @auditoria.Descripcion
+
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- IP -->
+
+                                <td>
+
+                                    @if (string.IsNullOrWhiteSpace(
+                                                                auditoria.Ip))
+                                    {
+                                        <span class="axis-audit-empty-value">
+                                            —
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-audit-ip">
+                                            @auditoria.Ip
+                                        </span>
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        }
+
+    </div>
+
+</section>
+
+
+<style>
+
+    /* =====================================================
+           PÁGINA
+           ===================================================== */
+
+    .axis-audit-page {
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 42px 32px 70px;
+        color: #e7e7ea;
+    }
+
+
+    /* =====================================================
+           HEADER
+           ===================================================== */
+
+    .axis-audit-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+
+    .axis-audit-kicker {
+        display: block;
+        margin-bottom: 10px;
+        color: #777985;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2.8px;
+    }
+
+
+    .axis-audit-header h1 {
+        margin: 0;
+        color: #f5f5f7;
+        font-size: 52px;
+        line-height: 1;
+        font-weight: 700;
+        letter-spacing: -1.8px;
+    }
+
+
+    .axis-audit-header p {
+        max-width: 600px;
+        margin: 11px 0 0;
+        color: #858690;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+
+    /* =====================================================
+           SOLO LECTURA
+           ===================================================== */
+
+    .axis-audit-readonly {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 34px;
+        padding: 0 12px;
+        border: 1px solid #303139;
+        border-radius: 10px;
+        color: #9698a2;
+        background: #1a1a1f;
+        font-size: 10px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+
+    .axis-audit-readonly-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #8d909a;
+        box-shadow: 0 0 0 3px rgba(141,144,154,.08);
+    }
+
+
+    /* =====================================================
+           CARDS
+           ===================================================== */
+
+    .axis-audit-filter-card,
+    .axis-audit-results-card {
+        overflow: hidden;
+        border: 1px solid #292a30;
+        border-radius: 20px;
+        background: linear-gradient( 145deg, rgba(25,25,29,.95), rgba(15,15,18,.98) );
+        box-shadow: 0 20px 55px rgba(0,0,0,.20);
+    }
+
+
+    .axis-audit-filter-card {
+        margin-bottom: 20px;
+    }
+
+
+    /* =====================================================
+           FILTER HEADER
+           ===================================================== */
+
+    .axis-audit-filter-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 23px 24px;
+        border-bottom: 1px solid #292a30;
+    }
+
+
+    .axis-audit-section-kicker {
+        display: block;
+        margin-bottom: 6px;
+        color: #696b75;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.8px;
+    }
+
+
+    .axis-audit-filter-header h2,
+    .axis-audit-results-header h2 {
+        margin: 0;
+        color: #e7e7eb;
+        font-size: 17px;
+        font-weight: 650;
+    }
+
+
+    .axis-audit-filter-header p,
+    .axis-audit-results-header p {
+        margin: 5px 0 0;
+        color: #777983;
+        font-size: 11px;
+    }
+
+
+    .axis-audit-filter-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 37px;
+        height: 37px;
+        border: 1px solid #34353d;
+        border-radius: 11px;
+        color: #aaaab2;
+        background: #1a1a1f;
+        font-size: 17px;
+    }
+
+
+    /* =====================================================
+           FORMULARIO
+           ===================================================== */
+
+    .axis-audit-form {
+        padding: 22px 24px 24px;
+    }
+
+
+    .axis-audit-fields {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 17px;
+    }
+
+
+    .axis-audit-field {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+
+        .axis-audit-field label {
+            color: #858791;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+        }
+
+
+        .axis-audit-field input {
+            width: 100%;
+            min-height: 39px;
+            padding: 0 12px;
+            outline: none;
+            border: 1px solid #303139;
+            border-radius: 10px;
+            color: #d7d7dc;
+            background: #17171c;
+            font-family: inherit;
+            font-size: 11px;
+            transition: .18s ease;
+            box-sizing: border-box;
+        }
+
+
+            .axis-audit-field input::placeholder {
+                color: #555760;
+            }
+
+
+            .axis-audit-field input:focus {
+                border-color: #555761;
+                background: #1a1a20;
+                box-shadow: 0 0 0 3px rgba(255,255,255,.025);
+            }
+
+
+    .axis-audit-filter-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 20px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255,255,255,.055);
+    }
+
+
+    /* =====================================================
+           BOTONES
+           ===================================================== */
+
+    .axis-audit-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        min-height: 39px;
+        padding: 0 15px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-family: inherit;
+        font-size: 10px;
+        font-weight: 650;
+        transition: .2s ease;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+
+        .axis-audit-button:hover {
+            transform: translateY(-1px);
+        }
+
+
+    .axis-audit-button-primary {
+        color: #17171a;
+        background: #f1edf4;
+        border: 1px solid #f1edf4;
+    }
+
+
+        .axis-audit-button-primary:hover {
+            color: #111;
+            background: #fff;
+        }
+
+
+    .axis-audit-button-secondary {
+        color: #bdbec5;
+        background: #1a1a1f;
+        border: 1px solid #303139;
+    }
+
+
+        .axis-audit-button-secondary:hover {
+            color: #fff;
+            background: #232329;
+            border-color: #42434c;
+        }
+
+
+    /* =====================================================
+           RESULTADOS HEADER
+           ===================================================== */
+
+    .axis-audit-results-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 23px 24px;
+        border-bottom: 1px solid #292a30;
+    }
+
+
+    .axis-audit-result-count {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 31px;
+        height: 31px;
+        padding: 0 9px;
+        border: 1px solid #303139;
+        border-radius: 9px;
+        color: #bcbcc3;
+        background: #1a1a1f;
+        font-size: 11px;
+        font-weight: 650;
+    }
+
+
+    /* =====================================================
+           TABLA
+           ===================================================== */
+
+    .axis-audit-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+
+    .axis-audit-table {
+        width: 100%;
+        min-width: 1250px;
+        border-collapse: collapse;
+    }
+
+
+        .axis-audit-table th {
+            padding: 14px 16px;
+            color: #666872;
+            background: rgba(255,255,255,.018);
+            border-bottom: 1px solid #292a30;
+            text-align: left;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            white-space: nowrap;
+        }
+
+
+        .axis-audit-table td {
+            padding: 16px;
+            color: #b8b8bf;
+            border-bottom: 1px solid rgba(255,255,255,.055);
+            font-size: 11px;
+            vertical-align: middle;
+        }
+
+
+        .axis-audit-table tbody tr {
+            transition: background .18s ease;
+        }
+
+
+            .axis-audit-table tbody tr:hover {
+                background: rgba(255,255,255,.025);
+            }
+
+
+            .axis-audit-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+
+    /* =====================================================
+           ID
+           ===================================================== */
+
+    .axis-audit-id {
+        color: #777984;
+        font-size: 10px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+
+    /* =====================================================
+           FECHA
+           ===================================================== */
+
+    .axis-audit-date {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        white-space: nowrap;
+    }
+
+
+        .axis-audit-date strong {
+            color: #c9c9cf;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+
+        .axis-audit-date span {
+            color: #686a74;
+            font-size: 9px;
+        }
+
+
+    /* =====================================================
+           USUARIO
+           ===================================================== */
+
+    .axis-audit-system-user {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 135px;
+    }
+
+
+    .axis-audit-user-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 28px;
+        width: 28px;
+        height: 28px;
+        border: 1px solid #34353d;
+        border-radius: 9px;
+        color: #bdbdc5;
+        background: #1a1a1f;
+        font-size: 9px;
+        font-weight: 700;
+    }
+
+
+    .axis-audit-system-user > span:last-child {
+        color: #bfc0c6;
+        font-size: 10px;
+    }
+
+
+    .axis-audit-user-id {
+        max-width: 145px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+
+    /* =====================================================
+           MODULO
+           ===================================================== */
+
+    .axis-audit-module {
+        display: inline-flex;
+        align-items: center;
+        min-height: 27px;
+        padding: 0 9px;
+        border: 1px solid #34353d;
+        border-radius: 8px;
+        color: #bfc0c8;
+        background: #1b1b20;
+        font-size: 9px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+
+    /* =====================================================
+           ACCION
+           ===================================================== */
+
+    .axis-audit-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 27px;
+        padding: 0 9px;
+        border-radius: 8px;
+        font-size: 9px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+
+        .axis-audit-action > span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+        }
+
+
+    .axis-audit-action-create {
+        color: #9fcba2;
+        background: rgba(83,139,88,.11);
+        border: 1px solid rgba(93,148,98,.17);
+    }
+
+
+        .axis-audit-action-create > span {
+            background: #79b57e;
+        }
+
+
+    .axis-audit-action-update {
+        color: #d3be87;
+        background: rgba(157,130,60,.10);
+        border: 1px solid rgba(166,141,73,.17);
+    }
+
+
+        .axis-audit-action-update > span {
+            background: #c1a45c;
+        }
+
+
+    .axis-audit-action-delete {
+        color: #d39b9b;
+        background: rgba(142,64,64,.11);
+        border: 1px solid rgba(158,75,75,.18);
+    }
+
+
+        .axis-audit-action-delete > span {
+            background: #bd7373;
+        }
+
+
+    .axis-audit-action-other {
+        color: #b3b8ce;
+        background: rgba(82,91,120,.11);
+        border: 1px solid rgba(100,108,135,.18);
+    }
+
+
+        .axis-audit-action-other > span {
+            background: #858da9;
+        }
+
+
+    /* =====================================================
+           REGISTRO
+           ===================================================== */
+
+    .axis-audit-record {
+        display: inline-flex;
+        align-items: center;
+        min-height: 27px;
+        padding: 0 8px;
+        border: 1px solid #303139;
+        border-radius: 7px;
+        color: #aeb0b8;
+        background: #19191e;
+        font-family: Consolas, monospace;
+        font-size: 9px;
+        white-space: nowrap;
+    }
+
+
+    /* =====================================================
+           DESCRIPCION
+           ===================================================== */
+
+    .axis-audit-description {
+        display: block;
+        width: 230px;
+        max-width: 230px;
+        overflow: hidden;
+        color: #aeb0b7;
+        line-height: 1.5;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+
+    /* =====================================================
+           IP
+           ===================================================== */
+
+    .axis-audit-ip {
+        color: #8e9099;
+        font-family: Consolas, monospace;
+        font-size: 9px;
+        white-space: nowrap;
+    }
+
+
+    .axis-audit-empty-value {
+        color: #555760;
+        font-size: 11px;
+    }
+
+
+    /* =====================================================
+           EMPTY STATE
+           ===================================================== */
+
+    .axis-audit-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 330px;
+        padding: 50px 25px;
+        text-align: center;
+    }
+
+
+    .axis-audit-empty-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 18px;
+        border: 1px solid #303139;
+        border-radius: 14px;
+        color: #aaaab2;
+        background: #1b1b20;
+        font-size: 18px;
+    }
+
+
+    .axis-audit-empty h3 {
+        margin: 0;
+        color: #dddde2;
+        font-size: 16px;
+        font-weight: 650;
+    }
+
+
+    .axis-audit-empty p {
+        max-width: 450px;
+        margin: 8px 0 20px;
+        color: #70727c;
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+
+    /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+    @@media (max-width: 1050px) {
+
+        .axis-audit-fields {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+
+    @@media (max-width: 800px) {
+
+        .axis-audit-page {
+            padding: 28px 18px 50px;
+        }
+
+        .axis-audit-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+            .axis-audit-header h1 {
+                font-size: 42px;
+            }
+
+        .axis-audit-fields {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+
+    @@media (max-width: 550px) {
+
+        .axis-audit-page {
+            padding: 22px 12px 40px;
+        }
+
+        .axis-audit-header h1 {
+            font-size: 36px;
+        }
+
+        .axis-audit-filter-header,
+        .axis-audit-results-header {
+            padding: 19px;
+        }
+
+        .axis-audit-form {
+            padding: 19px;
+        }
+
+        .axis-audit-fields {
+            grid-template-columns: 1fr;
+        }
+
+        .axis-audit-filter-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .axis-audit-button {
+            width: 100%;
+        }
+    }
+
+</style>

@@ -1,49 +1,35 @@
 ﻿@model IEnumerable<Negocios.DTOs.ClienteDto>
 
-
 @{
-    
     ViewData["Title"] = "Clientes";
 }
 
-
 <section class="axis-page">
-
-    <!-- =====================================================
-         HEADER
-         ===================================================== -->
 
     <div class="axis-page-header">
 
         <div>
             <span class="axis-page-kicker">
-                CLIENTES Y VEHÍCULOS
+                CLIENTES · VEHÍCULOS
             </span>
 
-            <h1>
-                Clientes
-            </h1>
+            <h1>Clientes</h1>
 
             <p>
-                Gestiona los clientes registrados en el taller.
+                Gestiona los clientes registrados en el taller AXIS.
             </p>
         </div>
 
         <div class="axis-page-actions">
 
             <a asp-action="Activos"
-               class="axis-button axis-button-secondary">
-
+               class="axis-btn axis-btn-secondary">
                 Activos
-
             </a>
 
             <a asp-action="Create"
-               class="axis-button axis-button-primary">
-
-                <span>+</span>
-                Nuevo cliente
-
+               class="axis-btn axis-btn-primary">
+                + Nuevo cliente
             </a>
 
         </div>
@@ -51,33 +37,22 @@
     </div>
 
 
-    <!-- =====================================================
-         MENSAJES
-         ===================================================== -->
     @if (TempData["Success"] != null)
     {
-        <div class="axis-alert axis-alert-success">
-            @TempData["Success"]
-        </div>
+        <div class="axis-alert success">@TempData["Success"]</div>
     }
 
     @if (TempData["Error"] != null)
     {
-        <div class="axis-alert axis-alert-error">
-            @TempData["Error"]
-        </div>
+        <div class="axis-alert error">@TempData["Error"]</div>
     }
 
-
-    <!-- =====================================================
-         BUSCAR
-         ===================================================== -->
 
     <div class="axis-toolbar">
 
         <form asp-action="BuscarPorCedula"
               method="get"
-              class="axis-table-search">
+              class="axis-search">
 
             <span>⌕</span>
 
@@ -91,184 +66,387 @@
 
         </form>
 
-        <span class="axis-record-count">
-
+        <div class="axis-counter">
             @Model.Count() clientes
-
-        </span>
+        </div>
 
     </div>
 
 
-    <!-- =====================================================
-         TABLA
-         ===================================================== -->
+    <div class="axis-card">
 
-    <div class="axis-table-card">
+        <table class="axis-table">
 
-        <div class="axis-table-wrapper">
+            <thead>
+                <tr>
+                    <th>Cédula</th>
+                    <th>Cliente</th>
+                    <th>Teléfono</th>
+                    <th>Correo</th>
+                    <th>Estado</th>
+                    <th style="width:190px">Acciones</th>
+                </tr>
+            </thead>
 
-            <table class="axis-table">
+            <tbody>
 
-                <thead>
-
+                @if (!Model.Any())
+                {
                     <tr>
-
-                        <th>
-                            Cédula
-                        </th>
-
-                        <th>
-                            Cliente
-                        </th>
-
-                        <th>
-                            Teléfono
-                        </th>
-
-                        <th>
-                            Correo
-                        </th>
-
-                        <th>
-                            Estado
-                        </th>
-
-                        <th class="axis-table-actions-column">
-                            Acciones
-                        </th>
-
+                        <td colspan="6" class="axis-empty">
+                            No existen clientes registrados.
+                        </td>
                     </tr>
-
-                </thead>
-
-                <tbody>
-
-                    @if (!Model.Any())
+                }
+                else
+                {
+                    foreach (var cliente in Model)
                     {
                         <tr>
 
-                            <td colspan="6"
-                                class="axis-empty">
+                            <td>
+                                <strong>@cliente.Cedula</strong>
+                            </td>
 
-                                No hay clientes registrados.
+                            <td>
+
+                                <div class="axis-user">
+
+                                    <div class="avatar">
+                                        @cliente.Nombre.Substring(0, 1).ToUpper()
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            @cliente.Nombre
+                                            @cliente.Apellido1
+                                            @cliente.Apellido2
+                                        </strong>
+
+                                        <small>
+                                            Cliente AXIS
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>@cliente.Telefono</td>
+
+                            <td>@cliente.Correo</td>
+
+                            <td>
+
+                                @if (cliente.Activo)
+                                {
+                                    <span class="status active">
+                                        Activo
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status inactive">
+                                        Inactivo
+                                    </span>
+                                }
+
+                            </td>
+
+                            <td>
+
+                                <div class="actions">
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@cliente.IdCliente"
+                                       class="mini">
+                                        Ver
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@cliente.IdCliente"
+                                       class="mini">
+                                        Editar
+                                    </a>
+
+                                    @if (cliente.Activo)
+                                    {
+                                        <form asp-action="Desactivar"
+                                              asp-route-id="@cliente.IdCliente"
+                                              method="post">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <button class="mini danger">
+                                                Desactivar
+                                            </button>
+
+                                        </form>
+                                    }
+
+                                </div>
 
                             </td>
 
                         </tr>
                     }
-                    else
-                    {
-                        foreach (var cliente in Model)
-                        {
-                            <tr>
+                }
 
-                                <td>
-                                    <strong class="axis-primary-text">
-                                        @cliente.Cedula
-                                    </strong>
-                                </td>
+            </tbody>
 
-                                <td>
-
-                                    <div class="axis-client-cell">
-
-                                        <div class="axis-client-avatar">
-                                            @cliente.Nombre
-                                            .Substring(0, 1)
-                                            .ToUpper()
-                                        </div>
-
-                                        <div>
-
-                                            <strong>
-                                                @cliente.Nombre
-                                                @cliente.Apellido1
-                                                @cliente.Apellido2
-                                            </strong>
-
-                                        </div>
-
-                                    </div>
-
-                                </td>
-
-                                <td>
-                                    @cliente.Telefono
-                                </td>
-
-                                <td>
-                                    @cliente.Correo
-                                </td>
-
-                                <td>
-
-                                    @if (cliente.Activo)
-                                    {
-                                        <span class="axis-status axis-status-active">
-                                            Activo
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span class="axis-status axis-status-inactive">
-                                            Inactivo
-                                        </span>
-                                    }
-
-                                </td>
-
-                                <td>
-
-                                    <div class="axis-row-actions">
-
-                                        <a asp-action="Details"
-                                           asp-route-id="@cliente.IdCliente"
-                                           class="axis-row-action"
-                                           title="Ver detalles">
-                                            Ver
-                                        </a>
-
-                                        <a asp-action="Edit"
-                                           asp-route-id="@cliente.IdCliente"
-                                           class="axis-row-action"
-                                           title="Editar">
-                                            Editar
-                                        </a>
-
-                                        @if (cliente.Activo)
-                                        {
-                                            <form asp-action="Desactivar"
-                                                  asp-route-id="@cliente.IdCliente"
-                                                  method="post"
-                                                  style="display:inline">
-
-                                                @Html.AntiForgeryToken()
-
-                                                <button type="submit"
-                                                        class="axis-row-action axis-row-danger">
-
-                                                    Desactivar
-
-                                                </button>
-
-                                            </form>
-                                        }
-
-                                    </div>
-
-                                </td>
-
-                            </tr>
-                        }
-                    }
-
-                </tbody>
-
-            </table>
-
-        </div>
+        </table>
 
     </div>
 
 </section>
+
+<style>
+
+    .axis-page {
+        max-width: 1250px;
+        margin: auto;
+        padding: 42px;
+    }
+
+    .axis-page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        margin-bottom: 28px;
+    }
+
+    .axis-page-kicker {
+        color: #7f7f8d;
+        font-size: 11px;
+        letter-spacing: 2px;
+        font-weight: 700;
+    }
+
+    .axis-page h1 {
+        font-size: 58px;
+        color: white;
+        margin: 6px 0;
+    }
+
+    .axis-page p {
+        color: #9ca3af;
+    }
+
+    .axis-page-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .axis-btn {
+        text-decoration: none;
+        padding: 12px 18px;
+        border-radius: 14px;
+        font-weight: 600;
+        transition: .25s;
+    }
+
+    .axis-btn-primary {
+        background: #F3F4F6;
+        color: #111;
+    }
+
+    .axis-btn-secondary {
+        border: 1px solid #323645;
+        color: #D1D5DB;
+    }
+
+    .axis-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .axis-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .axis-search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 14px;
+        padding: 8px;
+        width: 420px;
+    }
+
+        .axis-search span {
+            color: #9CA3AF;
+            margin-left: 8px;
+        }
+
+        .axis-search input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+        }
+
+        .axis-search button {
+            border: none;
+            background: #1F2937;
+            color: white;
+            border-radius: 10px;
+            padding: 9px 16px;
+            cursor: pointer;
+        }
+
+    .axis-counter {
+        color: #9CA3AF;
+        font-size: 14px;
+    }
+
+    .axis-card {
+        background: rgba(18,18,22,.82);
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .axis-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .axis-table th {
+            background: rgba(255,255,255,.03);
+            color: #7B8192;
+            text-align: left;
+            padding: 18px;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        .axis-table td {
+            padding: 18px;
+            border-top: 1px solid rgba(255,255,255,.05);
+            color: #E5E7EB;
+            vertical-align: middle;
+        }
+
+    .axis-user {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg,#6366F1,#8B5CF6);
+        color: white;
+        font-weight: 700;
+    }
+
+    .axis-user small {
+        display: block;
+        color: #9CA3AF;
+        margin-top: 3px;
+    }
+
+    .status {
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .active {
+        background: rgba(16,185,129,.12);
+        color: #6EE7B7;
+    }
+
+    .inactive {
+        background: rgba(239,68,68,.12);
+        color: #FCA5A5;
+    }
+
+    .actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .mini {
+        text-decoration: none;
+        padding: 7px 12px;
+        border-radius: 9px;
+        border: 1px solid rgba(255,255,255,.08);
+        background: #20232D;
+        color: #E5E7EB;
+        font-size: 12px;
+    }
+
+    button.mini {
+        cursor: pointer;
+    }
+
+    .danger {
+        color: #FCA5A5;
+    }
+
+    .axis-empty {
+        text-align: center;
+        padding: 50px;
+        color: #9CA3AF;
+    }
+
+    .axis-alert {
+        padding: 14px 18px;
+        border-radius: 12px;
+        margin-bottom: 18px;
+        font-weight: 500;
+    }
+
+    .success {
+        background: rgba(16,185,129,.12);
+        color: #6EE7B7;
+    }
+
+    .error {
+        background: rgba(239,68,68,.12);
+        color: #FCA5A5;
+    }
+
+    @@media(max-width:900px) {
+
+        .axis-page {
+            padding: 24px;
+        }
+
+        .axis-page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .axis-search {
+            width: 100%;
+        }
+
+        .axis-card {
+            overflow: auto;
+        }
+
+        .axis-table {
+            min-width: 900px;
+        }
+    }
+
+</style>

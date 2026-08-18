@@ -1,0 +1,1071 @@
+﻿@model IEnumerable<Negocios.DTOs.PagoDto>
+
+@{
+    ViewData["Title"] = "Pagos";
+
+    var pagos = Model?.ToList() ?? new List<Negocios.DTOs.PagoDto>();
+
+    var totalPagos = pagos.Count;
+    var montoTotal = pagos.Sum(p => p.Monto);
+    var pagosPendientes = pagos.Count(p => p.SaldoPendiente > 0);
+    var montoPendiente = pagos.Sum(p => p.SaldoPendiente);
+}
+
+<section class="axis-page pagos-page">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="axis-page-header pagos-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                PAGOS · CAJA
+            </span>
+
+            <h1>Pagos</h1>
+
+            <p>
+                Consulta y seguimiento de los pagos registrados en AXIS.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ALERTAS
+         ===================================================== -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="axis-alert axis-alert-success">
+            <span class="alert-icon">✓</span>
+            <span>@TempData["Success"]</span>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="axis-alert axis-alert-error">
+            <span class="alert-icon">!</span>
+            <span>@TempData["Error"]</span>
+        </div>
+    }
+
+
+    <!-- =====================================================
+         RESUMEN
+         ===================================================== -->
+
+    <div class="pagos-summary">
+
+        <div class="pagos-stat">
+
+            <div class="pagos-stat-icon">
+                $
+            </div>
+
+            <div class="pagos-stat-content">
+
+                <span>
+                    PAGOS REGISTRADOS
+                </span>
+
+                <strong>
+                    @totalPagos
+                </strong>
+
+                <small>
+                    movimientos registrados
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="pagos-stat">
+
+            <div class="pagos-stat-icon pagos-stat-icon-money">
+                ₡
+            </div>
+
+            <div class="pagos-stat-content">
+
+                <span>
+                    MONTO COBRADO
+                </span>
+
+                <strong>
+                    @montoTotal.ToString("C2")
+                </strong>
+
+                <small>
+                    total de pagos
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="pagos-stat">
+
+            <div class="pagos-stat-icon pagos-stat-icon-warning">
+                ◷
+            </div>
+
+            <div class="pagos-stat-content">
+
+                <span>
+                    PENDIENTES
+                </span>
+
+                <strong>
+                    @pagosPendientes
+                </strong>
+
+                <small>
+                    con saldo pendiente
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="pagos-stat">
+
+            <div class="pagos-stat-icon pagos-stat-icon-danger">
+                ₡
+            </div>
+
+            <div class="pagos-stat-content">
+
+                <span>
+                    SALDO PENDIENTE
+                </span>
+
+                <strong>
+                    @montoPendiente.ToString("C2")
+                </strong>
+
+                <small>
+                    por cobrar
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         CONTENIDO
+         ===================================================== -->
+
+    <div class="pagos-card">
+
+        <div class="pagos-card-header">
+
+            <div>
+
+                <span class="pagos-card-kicker">
+                    MOVIMIENTOS
+                </span>
+
+                <h2>
+                    Pagos recientes
+                </h2>
+
+            </div>
+
+            <span class="pagos-count">
+                @totalPagos registros
+            </span>
+
+        </div>
+
+
+        @if (!pagos.Any())
+        {
+            <div class="pagos-empty">
+
+                <div class="pagos-empty-icon">
+                    $
+                </div>
+
+                <h3>
+                    No hay pagos registrados
+                </h3>
+
+                <p>
+                    Todavía no existen pagos para mostrar en el sistema.
+                </p>
+
+            </div>
+        }
+        else
+        {
+            <div class="pagos-table-wrapper">
+
+                <table class="pagos-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                PAGO
+                            </th>
+
+                            <th>
+                                FACTURA
+                            </th>
+
+                            <th>
+                                CLIENTE
+                            </th>
+
+                            <th>
+                                FECHA
+                            </th>
+
+                            <th>
+                                MONTO
+                            </th>
+
+                            <th>
+                                FORMA DE PAGO
+                            </th>
+
+                            <th>
+                                SALDO
+                            </th>
+
+                            <th>
+                                ESTADO
+                            </th>
+
+                            <th class="acciones-column">
+                                ACCIONES
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var pago in pagos)
+                        {
+                            var estadoClass = pago.EstadoFactura switch
+                            {
+                                "Pagada" => "payment-status-success",
+                                "Anulada" => "payment-status-danger",
+                                "Parcialmente pagada" => "payment-status-warning",
+                                _ => "payment-status-neutral"
+                            };
+
+
+                            <tr>
+
+                                <!-- PAGO -->
+
+                                <td>
+
+                                    <div class="payment-id">
+
+                                        <strong>
+                                            #@pago.IdPago
+                                        </strong>
+
+                                        <span>
+                                            Registro de pago
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- FACTURA -->
+
+                                <td>
+
+                                    <div class="payment-invoice">
+
+                                        <strong>
+                                            @pago.NumeroFactura
+                                        </strong>
+
+                                        <span>
+                                            Factura #@pago.IdFactura
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- CLIENTE -->
+
+                                <td>
+
+                                    <div class="payment-client">
+
+                                        <div class="payment-client-avatar">
+                                            @(
+                                                                                string.IsNullOrWhiteSpace(pago.Cliente)
+                                                                                ? "?"
+                                                                                : pago.Cliente.Substring(0, 1).ToUpper()
+                                                                                )
+                                        </div>
+
+                                        <span>
+                                            @(string.IsNullOrWhiteSpace(pago.Cliente)
+                                                                                ? "Cliente no disponible"
+                                                                                : pago.Cliente)
+                                </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- FECHA -->
+
+                                <td>
+
+                                    <div class="payment-date">
+
+                                        <strong>
+                                            @pago.FechaPago.ToString("dd/MM/yyyy")
+                                        </strong>
+
+                                        <span>
+                                            @pago.FechaPago.ToString("HH:mm")
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- MONTO -->
+
+                                <td>
+
+                                    <div class="payment-amount">
+                                        @pago.Monto.ToString("C2")
+                                    </div>
+
+                                </td>
+
+
+                                <!-- FORMA DE PAGO -->
+
+                                <td>
+
+                                    <span class="payment-method">
+
+                                        <span class="payment-method-dot"></span>
+
+                                        @pago.FormaPago
+
+                                    </span>
+
+                            @if (!string.IsNullOrWhiteSpace(pago.NumeroReferencia))
+                                    {
+                                        <span class="payment-reference">
+                                            Ref. @pago.NumeroReferencia
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- SALDO -->
+
+                                <td>
+
+                                    @if (pago.SaldoPendiente <= 0)
+                                    {
+                                        <span class="payment-balance-paid">
+                                            ₡0,00
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <div class="payment-balance">
+
+                                            <strong>
+                                                @pago.SaldoPendiente.ToString("C2")
+                                            </strong>
+
+                                            <span>
+                                                pendiente
+                                            </span>
+
+                                        </div>
+                                    }
+
+                                </td>
+
+
+                                <!-- ESTADO -->
+
+                                <td>
+
+                                    <span class="payment-status @estadoClass">
+
+                                        <span class="status-dot"></span>
+
+                                        @pago.EstadoFactura
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ACCIONES -->
+
+                                <td class="acciones-column">
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@pago.IdPago"
+                                       class="payment-view-button">
+
+                                        Ver
+
+                                        <span>
+                                            →
+                                        </span>
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+
+</section>
+
+
+<style>
+
+    /* =====================================================
+           PAGE
+           ===================================================== */
+
+    .pagos-page {
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+
+    /* =====================================================
+           HEADER
+           ===================================================== */
+
+    .pagos-header {
+        margin-bottom: 34px;
+    }
+
+
+    /* =====================================================
+           ALERTS
+           ===================================================== */
+
+    .pagos-page .axis-alert {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 13px 16px;
+        margin-bottom: 20px;
+        border-radius: 12px;
+        font-size: 13px;
+    }
+
+    .pagos-page .axis-alert-success {
+        background: rgba(82, 160, 105, .10);
+        border: 1px solid rgba(82, 160, 105, .22);
+        color: #a8d6b3;
+    }
+
+    .pagos-page .axis-alert-error {
+        background: rgba(190, 70, 70, .10);
+        border: 1px solid rgba(190, 70, 70, .22);
+        color: #e0aaaa;
+    }
+
+    .alert-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.08);
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+
+    /* =====================================================
+           SUMMARY
+           ===================================================== */
+
+    .pagos-summary {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 24px;
+    }
+
+
+    .pagos-stat {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-height: 108px;
+        padding: 20px;
+        border-radius: 16px;
+        background: linear-gradient( 145deg, rgba(255,255,255,.045), rgba(255,255,255,.018) );
+        border: 1px solid rgba(255,255,255,.075);
+        box-shadow: 0 12px 35px rgba(0,0,0,.16);
+    }
+
+
+    .pagos-stat-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 44px;
+        width: 44px;
+        height: 44px;
+        border-radius: 13px;
+        background: rgba(255,255,255,.055);
+        border: 1px solid rgba(255,255,255,.07);
+        color: #ddd;
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+
+    .pagos-stat-icon-money {
+        color: #b8d6bc;
+        background: rgba(90,150,100,.09);
+    }
+
+
+    .pagos-stat-icon-warning {
+        color: #d9cfa0;
+        background: rgba(170,150,70,.09);
+    }
+
+
+    .pagos-stat-icon-danger {
+        color: #d5aaaa;
+        background: rgba(170,70,70,.09);
+    }
+
+
+    .pagos-stat-content {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+
+        .pagos-stat-content > span {
+            margin-bottom: 5px;
+            color: #777;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+        }
+
+
+        .pagos-stat-content strong {
+            color: #f1f1f1;
+            font-size: 20px;
+            font-weight: 650;
+            line-height: 1.2;
+        }
+
+
+        .pagos-stat-content small {
+            margin-top: 4px;
+            color: #666;
+            font-size: 10px;
+        }
+
+
+    /* =====================================================
+           MAIN CARD
+           ===================================================== */
+
+    .pagos-card {
+        overflow: hidden;
+        border-radius: 18px;
+        background: linear-gradient( 145deg, rgba(255,255,255,.035), rgba(255,255,255,.012) );
+        border: 1px solid rgba(255,255,255,.08);
+        box-shadow: 0 20px 50px rgba(0,0,0,.20);
+    }
+
+
+    .pagos-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 22px 24px;
+        border-bottom: 1px solid rgba(255,255,255,.065);
+    }
+
+
+    .pagos-card-kicker {
+        display: block;
+        margin-bottom: 5px;
+        color: #666;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+    }
+
+
+    .pagos-card-header h2 {
+        margin: 0;
+        color: #eee;
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+
+    .pagos-count {
+        padding: 7px 11px;
+        border-radius: 9px;
+        background: rgba(255,255,255,.045);
+        border: 1px solid rgba(255,255,255,.07);
+        color: #888;
+        font-size: 10px;
+    }
+
+
+    /* =====================================================
+           TABLE
+           ===================================================== */
+
+    .pagos-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+
+    .pagos-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1120px;
+    }
+
+
+        .pagos-table thead {
+            background: rgba(255,255,255,.025);
+        }
+
+
+        .pagos-table th {
+            padding: 13px 18px;
+            color: #686868;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.35px;
+            text-align: left;
+            white-space: nowrap;
+            border-bottom: 1px solid rgba(255,255,255,.065);
+        }
+
+
+        .pagos-table td {
+            padding: 17px 18px;
+            color: #b6b6b6;
+            font-size: 12px;
+            vertical-align: middle;
+            border-bottom: 1px solid rgba(255,255,255,.055);
+        }
+
+
+        .pagos-table tbody tr {
+            transition: background .18s ease;
+        }
+
+
+            .pagos-table tbody tr:hover {
+                background: rgba(255,255,255,.025);
+            }
+
+
+            .pagos-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+
+    /* =====================================================
+           PAYMENT
+           ===================================================== */
+
+    .payment-id,
+    .payment-invoice,
+    .payment-date,
+    .payment-balance {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+
+        .payment-id strong {
+            color: #e4e4e4;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        .payment-id span,
+        .payment-invoice span,
+        .payment-date span,
+        .payment-balance span {
+            color: #666;
+            font-size: 10px;
+        }
+
+
+        /* =====================================================
+           INVOICE
+           ===================================================== */
+
+        .payment-invoice strong {
+            color: #d7d7d7;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+
+    /* =====================================================
+           CLIENT
+           ===================================================== */
+
+    .payment-client {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        min-width: 150px;
+    }
+
+
+    .payment-client-avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 29px;
+        width: 29px;
+        height: 29px;
+        border-radius: 9px;
+        background: rgba(255,255,255,.055);
+        border: 1px solid rgba(255,255,255,.07);
+        color: #bcbcbc;
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+
+    .payment-client span {
+        color: #bcbcbc;
+        line-height: 1.3;
+    }
+
+
+    /* =====================================================
+           DATE
+           ===================================================== */
+
+    .payment-date strong {
+        color: #bcbcbc;
+        font-size: 11px;
+        font-weight: 500;
+    }
+
+
+    /* =====================================================
+           AMOUNT
+           ===================================================== */
+
+    .payment-amount {
+        color: #f0f0f0;
+        font-size: 13px;
+        font-weight: 650;
+        white-space: nowrap;
+    }
+
+
+    /* =====================================================
+           PAYMENT METHOD
+           ===================================================== */
+
+    .payment-method {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 9px;
+        border-radius: 8px;
+        background: rgba(255,255,255,.045);
+        border: 1px solid rgba(255,255,255,.065);
+        color: #bdbdbd;
+        font-size: 10px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+
+    .payment-method-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #999;
+    }
+
+
+    .payment-reference {
+        display: block;
+        margin-top: 5px;
+        color: #666;
+        font-size: 9px;
+    }
+
+
+    /* =====================================================
+           BALANCE
+           ===================================================== */
+
+    .payment-balance strong {
+        color: #d9d0a2;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+
+    .payment-balance-paid {
+        display: inline-flex;
+        padding: 6px 9px;
+        border-radius: 8px;
+        background: rgba(84,151,97,.10);
+        border: 1px solid rgba(84,151,97,.18);
+        color: #a9d0ae;
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+
+    /* =====================================================
+           STATUS
+           ===================================================== */
+
+    .payment-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 9px;
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+
+    .status-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+    }
+
+
+    .payment-status-success {
+        background: rgba(84,151,97,.10);
+        border: 1px solid rgba(84,151,97,.18);
+        color: #a9d0ae;
+    }
+
+
+        .payment-status-success .status-dot {
+            background: #79b985;
+        }
+
+
+    .payment-status-danger {
+        background: rgba(170,70,70,.10);
+        border: 1px solid rgba(170,70,70,.18);
+        color: #d6a0a0;
+    }
+
+
+        .payment-status-danger .status-dot {
+            background: #c97878;
+        }
+
+
+    .payment-status-warning {
+        background: rgba(170,150,70,.10);
+        border: 1px solid rgba(170,150,70,.18);
+        color: #d4c993;
+    }
+
+
+        .payment-status-warning .status-dot {
+            background: #c7b766;
+        }
+
+
+    .payment-status-neutral {
+        background: rgba(255,255,255,.045);
+        border: 1px solid rgba(255,255,255,.07);
+        color: #999;
+    }
+
+
+        .payment-status-neutral .status-dot {
+            background: #888;
+        }
+
+
+    /* =====================================================
+           ACTION
+           ===================================================== */
+
+    .acciones-column {
+        text-align: right !important;
+    }
+
+
+    .payment-view-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 11px;
+        border-radius: 8px;
+        background: rgba(255,255,255,.045);
+        border: 1px solid rgba(255,255,255,.08);
+        color: #c9c9c9;
+        text-decoration: none;
+        font-size: 10px;
+        font-weight: 600;
+        transition: background .18s ease, border-color .18s ease, transform .18s ease;
+    }
+
+
+        .payment-view-button span {
+            color: #777;
+            transition: transform .18s ease;
+        }
+
+
+        .payment-view-button:hover {
+            background: rgba(255,255,255,.075);
+            border-color: rgba(255,255,255,.14);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+
+            .payment-view-button:hover span {
+                transform: translateX(2px);
+            }
+
+
+    /* =====================================================
+           EMPTY
+           ===================================================== */
+
+    .pagos-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 75px 20px;
+        text-align: center;
+    }
+
+
+    .pagos-empty-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        margin-bottom: 18px;
+        border-radius: 15px;
+        background: rgba(255,255,255,.045);
+        border: 1px solid rgba(255,255,255,.08);
+        color: #777;
+        font-size: 18px;
+    }
+
+
+    .pagos-empty h3 {
+        margin: 0 0 8px;
+        color: #ddd;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+
+    .pagos-empty p {
+        margin: 0;
+        color: #666;
+        font-size: 12px;
+    }
+
+
+    /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+    @@media (max-width: 1100px) {
+
+        .pagos-summary {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+
+    @@media (max-width: 650px) {
+
+        .pagos-summary {
+            grid-template-columns: 1fr;
+        }
+
+        .pagos-card-header {
+            padding: 18px;
+        }
+
+        .pagos-table th,
+        .pagos-table td {
+            padding-left: 14px;
+            padding-right: 14px;
+        }
+    }
+
+</style>

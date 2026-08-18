@@ -4,229 +4,1089 @@
     ViewData["Title"] = "Garantías";
 }
 
-<div class="container-fluid">
+<section class="axis-warranty-page">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="axis-warranty-header">
+
         <div>
-            <h1 class="mb-1">Garantías</h1>
-            <p class="text-muted mb-0">
+
+            <span class="axis-warranty-kicker">
+                POSTVENTA · GARANTÍAS
+            </span>
+
+            <h1>
+                Garantías
+            </h1>
+
+            <p>
                 Administración y seguimiento de garantías del taller.
             </p>
+
         </div>
 
-        <div class="d-flex gap-2">
+
+        <div class="axis-warranty-actions">
 
             <a asp-action="PorVencer"
                asp-route-dias="30"
-               class="btn btn-outline-warning">
+               class="axis-warranty-button axis-warranty-button-secondary">
+
                 Por vencer
+
             </a>
 
+
             <a asp-action="Create"
-               class="btn btn-primary">
+               class="axis-warranty-button axis-warranty-button-primary">
+
+                <span>+</span>
+
                 Nueva garantía
+
             </a>
 
         </div>
+
     </div>
 
+
+    <!-- =====================================================
+         ALERTAS
+         ===================================================== -->
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success">
+        <div class="axis-warranty-alert axis-warranty-alert-success">
             @TempData["Success"]
         </div>
     }
 
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger">
+        <div class="axis-warranty-alert axis-warranty-alert-error">
             @TempData["Error"]
         </div>
     }
 
-    <div class="card shadow-sm">
 
-        <div class="card-body">
+    <!-- =====================================================
+         CARD PRINCIPAL
+         ===================================================== -->
 
-            @if (Model == null || !Model.Any())
-            {
-                <div class="text-center py-5">
+    <div class="axis-warranty-card">
 
-                    <h4>No hay garantías registradas</h4>
 
-                    <p class="text-muted">
-                        Todavía no existen garantías para mostrar.
-                    </p>
+        <!-- CARD HEADER -->
 
-                    <a asp-action="Create"
-                       class="btn btn-primary">
-                        Registrar garantía
-                    </a>
+        <div class="axis-warranty-card-header">
 
+            <div>
+
+                <span class="axis-warranty-card-kicker">
+                    POSTVENTA
+                </span>
+
+                <h2>
+                    Garantías registradas
+                </h2>
+
+                <p>
+                    @Model.Count() garantías encontradas.
+                </p>
+
+            </div>
+
+
+            <div class="axis-warranty-count">
+                @Model.Count()
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             EMPTY STATE
+             ================================================= -->
+        @if (Model == null || !Model.Any())
+        {
+            <div class="axis-warranty-empty">
+
+                <div class="axis-warranty-empty-icon">
+                    ✓
                 </div>
-            }
-            else
-            {
-                <div class="table-responsive">
 
-                    <table class="table table-hover align-middle">
+                <h3>
+                    No hay garantías registradas
+                </h3>
 
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Origen</th>
-                                <th>Cobertura</th>
-                                <th>Inicio</th>
-                                <th>Vencimiento</th>
-                                <th>Estado</th>
-                                <th class="text-end">Acciones</th>
-                            </tr>
-                        </thead>
+                <p>
+                    Todavía no existen garantías para mostrar.
+                </p>
 
-                        <tbody>
+                <a asp-action="Create"
+                   class="axis-warranty-button axis-warranty-button-primary">
 
-                            @foreach (var garantia in Model)
+                    + Registrar garantía
+
+                </a>
+
+            </div>
+        }
+        else
+        {
+
+            <!-- =================================================
+                 TABLA
+                 ================================================= -->
+
+            <div class="axis-warranty-table-wrapper">
+
+                <table class="axis-warranty-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                GARANTÍA
+                            </th>
+
+                            <th>
+                                ORIGEN
+                            </th>
+
+                            <th>
+                                COBERTURA
+                            </th>
+
+                            <th>
+                                INICIO
+                            </th>
+
+                            <th>
+                                VENCIMIENTO
+                            </th>
+
+                            <th>
+                                ESTADO
+                            </th>
+
+                            <th>
+                                ACCIONES
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var garantia in Model)
+                        {
+                            var estadoClass =
+                            garantia.Estado switch
                             {
-                                <tr>
+                                "Vigente" =>
+                                            "axis-warranty-status-valid",
 
-                                    <td>
-                                        <strong>
-                                            #@garantia.IdGarantia
-                                        </strong>
-                                    </td>
+                                "Vencida" =>
+                                            "axis-warranty-status-expired",
 
-                                    <td>
+                                "Reclamada" =>
+                                            "axis-warranty-status-claimed",
+
+                                "Resuelta" =>
+                                            "axis-warranty-status-resolved",
+
+                                "Rechazada" =>
+                                            "axis-warranty-status-rejected",
+
+                                _ =>
+                                            "axis-warranty-status-neutral"
+                            };
+
+
+                            <tr>
+
+                                <!-- =================================================
+                                     ID
+                                     ================================================= -->
+
+                                <td>
+
+                                    <div class="axis-warranty-record">
+
+                                        <div class="axis-warranty-record-icon">
+                                            #
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                #@garantia.IdGarantia
+                                            </strong>
+
+                                            <span>
+                                                Garantía AXIS
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- =================================================
+                                     ORIGEN
+                                     ================================================= -->
+
+                                <td>
+
+                                    <div class="axis-warranty-origin">
 
                                         @if (garantia.IdOrdenTrabajo.HasValue)
                                         {
-                                            <span class="badge bg-secondary">
+                                            <span class="axis-warranty-origin-tag axis-warranty-origin-ot">
                                                 OT #@garantia.IdOrdenTrabajo
                                             </span>
                                         }
 
                                         @if (garantia.IdVenta.HasValue)
                                         {
-                                            <span class="badge bg-info text-dark">
+                                            <span class="axis-warranty-origin-tag axis-warranty-origin-sale">
                                                 Venta #@garantia.IdVenta
                                             </span>
                                         }
 
-                                    </td>
+                                        @if (!garantia.IdOrdenTrabajo.HasValue &&
+                                                                        !garantia.IdVenta.HasValue)
+                                        {
+                                            <span class="axis-warranty-muted">
+                                                Sin origen
+                                            </span>
+                                        }
 
-                                    <td>
+                                    </div>
+
+                                </td>
+
+
+                                <!-- =================================================
+                                     COBERTURA
+                                     ================================================= -->
+
+                                <td>
+
+                                    <div class="axis-warranty-coverage">
 
                                         @if (garantia.IdProducto.HasValue)
                                         {
-                                            <div>
-                                                <strong>Producto</strong>
-                                            </div>
+                                            <strong>
+                                                Producto
+                                            </strong>
 
-                                            <small class="text-muted">
+                                            <span>
                                                 @(garantia.ProductoNombre
                                                                                     ?? $"Producto #{garantia.IdProducto}")
-                                </small>
+                                </span>
                                                                 }
                                         else if (garantia.IdServicio.HasValue)
                                         {
-                                            <div>
-                                                <strong>Servicio</strong>
-                                            </div>
+                                            <strong>
+                                                Servicio
+                                            </strong>
 
-                                            <small class="text-muted">
+                                            <span>
                                                 @(garantia.ServicioNombre
                                                                                     ?? $"Servicio #{garantia.IdServicio}")
-                                </small>
+                                </span>
                                                                 }
-
-                                    </td>
-
-                                    <td>
-                                        @garantia.FechaInicio.ToString("dd/MM/yyyy")
-                                    </td>
-
-                                    <td>
-                                        @garantia.FechaVencimiento.ToString("dd/MM/yyyy")
-                                    </td>
-
-                                    <td>
-
-                                        @switch (garantia.Estado)
+                                        else
                                         {
-                                            case "Vigente":
-                                                <span class="badge bg-success">
-                                                    Vigente
-                                                </span>
-                                                break;
+                                            <strong>
+                                                Sin cobertura
+                                            </strong>
 
-                                            case "Vencida":
-                                                <span class="badge bg-danger">
-                                                    Vencida
-                                                </span>
-                                                break;
-
-                                            case "Reclamada":
-                                                <span class="badge bg-warning text-dark">
-                                                    Reclamada
-                                                </span>
-                                                break;
-
-                                            case "Resuelta":
-                                                <span class="badge bg-primary">
-                                                    Resuelta
-                                                </span>
-                                                break;
-
-                                            case "Rechazada":
-                                                <span class="badge bg-dark">
-                                                    Rechazada
-                                                </span>
-                                                break;
-
-                                            default:
-                                                <span class="badge bg-secondary">
-                                                    @garantia.Estado
-                                                </span>
-                                                break;
+                                            <span>
+                                                No especificada
+                                            </span>
                                         }
 
-                                    </td>
+                                    </div>
 
-                                    <td class="text-end">
+                                </td>
 
-                                        <div class="btn-group">
 
-                                            <a asp-action="Details"
+                                <!-- =================================================
+                                     INICIO
+                                     ================================================= -->
+
+                                <td>
+
+                                    <div class="axis-warranty-date">
+
+                                        <strong>
+                                            @garantia.FechaInicio.ToString("dd/MM/yyyy")
+                                        </strong>
+
+                                        <span>
+                                            Inicio
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- =================================================
+                                     VENCIMIENTO
+                                     ================================================= -->
+
+                                <td>
+
+                                    <div class="axis-warranty-date">
+
+                                        <strong>
+                                            @garantia.FechaVencimiento.ToString("dd/MM/yyyy")
+                                        </strong>
+
+                                        @if (garantia.EstaVencida)
+                                        {
+                                            <span class="axis-warranty-date-danger">
+                                                Vencida
+                                            </span>
+                                        }
+                                        else if (garantia.EstaVigente)
+                                        {
+                                            <span class="axis-warranty-date-valid">
+                                                Vigente
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span>
+                                                Vencimiento
+                                            </span>
+                                        }
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- =================================================
+                                     ESTADO
+                                     ================================================= -->
+
+                                <td>
+
+                                    <span class="axis-warranty-status @estadoClass">
+
+                                        <span class="axis-warranty-status-dot"></span>
+
+                                        @garantia.Estado
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- =================================================
+                                     ACCIONES
+                                     ================================================= -->
+
+                                <td>
+
+                                    <div class="axis-warranty-row-actions">
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@garantia.IdGarantia"
+                                           class="axis-warranty-row-button">
+
+                                            Ver
+
+                                        </a>
+
+
+                                        @if (garantia.Estado == "Vigente")
+                                        {
+                                            <a asp-action="Edit"
                                                asp-route-id="@garantia.IdGarantia"
-                                               class="btn btn-sm btn-outline-primary">
-                                                Ver
+                                               class="axis-warranty-row-button">
+
+                                                Editar
+
                                             </a>
+                                        }
 
-                                            @if (
-                                                                                garantia.Estado == "Vigente")
-                                            {
-                                                <a asp-action="Edit"
-                                                   asp-route-id="@garantia.IdGarantia"
-                                                   class="btn btn-sm btn-outline-secondary">
-                                                    Editar
-                                                </a>
-                                            }
+                                    </div>
 
-                                        </div>
+                                </td>
 
-                                    </td>
+                            </tr>
+                        }
 
-                                </tr>
-                            }
+                    </tbody>
 
-                        </tbody>
+                </table>
 
-                    </table>
+            </div>
 
-                </div>
-            }
-
-        </div>
+        }
 
     </div>
 
-</div>
+</section>
+
+
+<style>
+
+    /* =====================================================
+           PÁGINA
+           ===================================================== */
+
+    .axis-warranty-page {
+        width: 100%;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 44px 34px 70px;
+        color: #e7e7ea;
+    }
+
+
+    /* =====================================================
+           HEADER
+           ===================================================== */
+
+    .axis-warranty-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+
+    .axis-warranty-kicker {
+        display: block;
+        margin-bottom: 10px;
+        color: #777985;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2.8px;
+    }
+
+
+    .axis-warranty-header h1 {
+        margin: 0;
+        color: #f5f5f7;
+        font-size: 52px;
+        line-height: 1;
+        font-weight: 700;
+        letter-spacing: -1.8px;
+    }
+
+
+    .axis-warranty-header p {
+        margin: 11px 0 0;
+        color: #858690;
+        font-size: 13px;
+    }
+
+
+    /* =====================================================
+           BOTONES HEADER
+           ===================================================== */
+
+    .axis-warranty-actions {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        flex-wrap: wrap;
+    }
+
+
+    .axis-warranty-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        min-height: 40px;
+        padding: 0 16px;
+        border-radius: 11px;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 650;
+        transition: .2s ease;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+
+        .axis-warranty-button:hover {
+            transform: translateY(-1px);
+        }
+
+
+    .axis-warranty-button-secondary {
+        color: #c9c9cf;
+        background: #17171b;
+        border: 1px solid #292a30;
+    }
+
+
+        .axis-warranty-button-secondary:hover {
+            color: #fff;
+            background: #1d1d22;
+        }
+
+
+    .axis-warranty-button-primary {
+        color: #16161a;
+        background: #f1edf4;
+        border: 1px solid #f1edf4;
+    }
+
+
+        .axis-warranty-button-primary:hover {
+            color: #111;
+            background: #fff;
+        }
+
+
+    /* =====================================================
+           ALERTAS
+           ===================================================== */
+
+    .axis-warranty-alert {
+        margin-bottom: 18px;
+        padding: 13px 16px;
+        border-radius: 11px;
+        font-size: 12px;
+    }
+
+
+    .axis-warranty-alert-success {
+        color: #a8d7ad;
+        background: rgba(81,145,88,.10);
+        border: 1px solid rgba(106,167,112,.18);
+    }
+
+
+    .axis-warranty-alert-error {
+        color: #e2a4a4;
+        background: rgba(160,65,65,.10);
+        border: 1px solid rgba(190,85,85,.18);
+    }
+
+
+    /* =====================================================
+           CARD
+           ===================================================== */
+
+    .axis-warranty-card {
+        overflow: hidden;
+        border: 1px solid #292a30;
+        border-radius: 20px;
+        background: linear-gradient( 145deg, rgba(25,25,29,.95), rgba(15,15,18,.98) );
+        box-shadow: 0 20px 55px rgba(0,0,0,.22);
+    }
+
+
+    /* =====================================================
+           CARD HEADER
+           ===================================================== */
+
+    .axis-warranty-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 23px 24px;
+        border-bottom: 1px solid #292a30;
+    }
+
+
+    .axis-warranty-card-kicker {
+        display: block;
+        margin-bottom: 6px;
+        color: #696b75;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.8px;
+    }
+
+
+    .axis-warranty-card-header h2 {
+        margin: 0;
+        color: #e7e7eb;
+        font-size: 16px;
+        font-weight: 650;
+    }
+
+
+    .axis-warranty-card-header p {
+        margin: 5px 0 0;
+        color: #777983;
+        font-size: 11px;
+    }
+
+
+    .axis-warranty-count {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 30px;
+        height: 30px;
+        padding: 0 9px;
+        border: 1px solid #303139;
+        border-radius: 9px;
+        color: #bcbcc3;
+        background: #1a1a1f;
+        font-size: 11px;
+        font-weight: 650;
+    }
+
+
+    /* =====================================================
+           TABLA
+           ===================================================== */
+
+    .axis-warranty-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+
+    .axis-warranty-table {
+        width: 100%;
+        min-width: 1050px;
+        border-collapse: collapse;
+    }
+
+
+        .axis-warranty-table th {
+            padding: 14px 18px;
+            color: #666872;
+            background: rgba(255,255,255,.018);
+            border-bottom: 1px solid #292a30;
+            text-align: left;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            white-space: nowrap;
+        }
+
+
+        .axis-warranty-table td {
+            padding: 17px 18px;
+            color: #b8b8bf;
+            border-bottom: 1px solid rgba(255,255,255,.055);
+            font-size: 12px;
+            vertical-align: middle;
+        }
+
+
+        .axis-warranty-table tbody tr {
+            transition: background .18s ease;
+        }
+
+
+            .axis-warranty-table tbody tr:hover {
+                background: rgba(255,255,255,.025);
+            }
+
+
+            .axis-warranty-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+
+    /* =====================================================
+           GARANTÍA
+           ===================================================== */
+
+    .axis-warranty-record {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 125px;
+    }
+
+
+    .axis-warranty-record-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
+        border: 1px solid #34353d;
+        border-radius: 11px;
+        color: #cfcfd5;
+        background: #202126;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+
+    .axis-warranty-record strong {
+        display: block;
+        color: #e5e5e9;
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+
+    .axis-warranty-record span {
+        display: block;
+        margin-top: 3px;
+        color: #686a74;
+        font-size: 9px;
+    }
+
+
+    /* =====================================================
+           ORIGEN
+           ===================================================== */
+
+    .axis-warranty-origin {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        min-width: 110px;
+    }
+
+
+    .axis-warranty-origin-tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 9px;
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+
+    .axis-warranty-origin-ot {
+        color: #bfc5d5;
+        background: rgba(94,104,132,.13);
+        border: 1px solid rgba(108,118,148,.18);
+    }
+
+
+    .axis-warranty-origin-sale {
+        color: #a9c7cf;
+        background: rgba(69,126,140,.11);
+        border: 1px solid rgba(79,139,154,.17);
+    }
+
+
+    .axis-warranty-muted {
+        color: #696b74;
+        font-size: 10px;
+    }
+
+
+    /* =====================================================
+           COBERTURA
+           ===================================================== */
+
+    .axis-warranty-coverage {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 180px;
+        max-width: 230px;
+    }
+
+
+        .axis-warranty-coverage strong {
+            color: #d4d4d9;
+            font-size: 11px;
+            font-weight: 650;
+        }
+
+
+        .axis-warranty-coverage span {
+            overflow: hidden;
+            color: #747680;
+            font-size: 10px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+
+    /* =====================================================
+           FECHAS
+           ===================================================== */
+
+    .axis-warranty-date {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 95px;
+    }
+
+
+        .axis-warranty-date strong {
+            color: #c6c6cc;
+            font-size: 11px;
+            font-weight: 550;
+            white-space: nowrap;
+        }
+
+
+        .axis-warranty-date span {
+            color: #686a73;
+            font-size: 9px;
+        }
+
+
+    .axis-warranty-date-valid {
+        color: #91bd96 !important;
+    }
+
+
+    .axis-warranty-date-danger {
+        color: #cf8d8d !important;
+    }
+
+
+    /* =====================================================
+           ESTADOS
+           ===================================================== */
+
+    .axis-warranty-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 9px;
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+
+    .axis-warranty-status-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+    }
+
+
+    .axis-warranty-status-valid {
+        color: #9fcba2;
+        background: rgba(83,139,88,.12);
+        border: 1px solid rgba(93,148,98,.18);
+    }
+
+
+        .axis-warranty-status-valid .axis-warranty-status-dot {
+            background: #79b57e;
+        }
+
+
+    .axis-warranty-status-expired {
+        color: #d39b9b;
+        background: rgba(142,64,64,.12);
+        border: 1px solid rgba(158,75,75,.18);
+    }
+
+
+        .axis-warranty-status-expired .axis-warranty-status-dot {
+            background: #bd7373;
+        }
+
+
+    .axis-warranty-status-claimed {
+        color: #d3c58a;
+        background: rgba(145,126,59,.12);
+        border: 1px solid rgba(153,134,64,.18);
+    }
+
+
+        .axis-warranty-status-claimed .axis-warranty-status-dot {
+            background: #b7a65b;
+        }
+
+
+    .axis-warranty-status-resolved {
+        color: #a8c4d8;
+        background: rgba(70,111,143,.12);
+        border: 1px solid rgba(80,121,153,.18);
+    }
+
+
+        .axis-warranty-status-resolved .axis-warranty-status-dot {
+            background: #76a5c4;
+        }
+
+
+    .axis-warranty-status-rejected {
+        color: #c8a0a0;
+        background: rgba(100,57,57,.12);
+        border: 1px solid rgba(120,69,69,.18);
+    }
+
+
+        .axis-warranty-status-rejected .axis-warranty-status-dot {
+            background: #a56f6f;
+        }
+
+
+    .axis-warranty-status-neutral {
+        color: #b5b5bd;
+        background: #1d1d22;
+        border: 1px solid #303139;
+    }
+
+
+        .axis-warranty-status-neutral .axis-warranty-status-dot {
+            background: #898b94;
+        }
+
+
+    /* =====================================================
+           ACCIONES
+           ===================================================== */
+
+    .axis-warranty-row-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+        min-width: 120px;
+    }
+
+
+    .axis-warranty-row-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 31px;
+        padding: 0 11px;
+        border: 1px solid #303139;
+        border-radius: 8px;
+        color: #c3c3c9;
+        background: #1b1b20;
+        text-decoration: none;
+        font-size: 10px;
+        font-weight: 600;
+        transition: .18s ease;
+        white-space: nowrap;
+    }
+
+
+        .axis-warranty-row-button:hover {
+            color: #fff;
+            background: #25252b;
+            border-color: #41424b;
+        }
+
+
+    /* =====================================================
+           EMPTY STATE
+           ===================================================== */
+
+    .axis-warranty-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 330px;
+        padding: 50px 25px;
+        text-align: center;
+    }
+
+
+    .axis-warranty-empty-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 18px;
+        border: 1px solid #303139;
+        border-radius: 14px;
+        color: #aaaab2;
+        background: #1b1b20;
+        font-size: 20px;
+    }
+
+
+    .axis-warranty-empty h3 {
+        margin: 0;
+        color: #dddde2;
+        font-size: 16px;
+        font-weight: 650;
+    }
+
+
+    .axis-warranty-empty p {
+        margin: 8px 0 20px;
+        color: #70727c;
+        font-size: 12px;
+    }
+
+
+    /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+    @@media (max-width: 900px) {
+
+        .axis-warranty-page {
+            padding: 28px 18px 50px;
+        }
+
+        .axis-warranty-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+            .axis-warranty-header h1 {
+                font-size: 42px;
+            }
+
+        .axis-warranty-actions {
+            width: 100%;
+        }
+
+        .axis-warranty-button {
+            flex: 1;
+        }
+    }
+
+
+    @@media (max-width: 550px) {
+
+        .axis-warranty-page {
+            padding: 22px 12px 40px;
+        }
+
+        .axis-warranty-header h1 {
+            font-size: 36px;
+        }
+
+        .axis-warranty-actions {
+            flex-direction: column;
+        }
+
+        .axis-warranty-button {
+            width: 100%;
+        }
+
+        .axis-warranty-card-header {
+            padding: 19px;
+        }
+    }
+
+</style>

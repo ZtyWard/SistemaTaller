@@ -5,27 +5,698 @@
 
     DateTime fechaSeleccionada =
         ViewBag.FechaSeleccionada ?? DateTime.Today;
+
+    var totalCitas = Model.Count();
 }
 
-<div class="container-fluid py-4">
+@section Styles {
+    <style>
+        /* =========================================================
+                   AXIS · CITAS
+                   ========================================================= */
 
-    <!-- HEADER -->
+        .axis-citas {
+            width: 100%;
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 42px 48px 70px;
+        }
 
-    <div class="d-flex flex-wrap justify-content-between
-                align-items-center gap-3 mb-4">
+        /* ---------------------------------------------------------
+                   HEADER
+                   --------------------------------------------------------- */
+
+        .axis-citas-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 34px;
+        }
+
+        .axis-citas-eyebrow {
+            display: block;
+            margin-bottom: 10px;
+            color: #73737c;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+        }
+
+        .axis-citas-title {
+            margin: 0;
+            color: #f4f4f7;
+            font-size: clamp(34px, 4vw, 52px);
+            font-weight: 750;
+            letter-spacing: -.045em;
+            line-height: 1;
+        }
+
+        .axis-citas-description {
+            margin: 14px 0 0;
+            color: #85858e;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ---------------------------------------------------------
+                   BUTTONS
+                   --------------------------------------------------------- */
+
+        .axis-citas-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 42px;
+            padding: 0 17px;
+            border: 1px solid #2b2b31;
+            border-radius: 11px;
+            background: #19191d;
+            color: #e8e8ec !important;
+            font-size: 13px;
+            font-weight: 650;
+            text-decoration: none !important;
+            transition: background .18s ease, border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+        }
+
+            .axis-citas-btn:hover {
+                background: #222227;
+                border-color: #414149;
+                color: #ffffff !important;
+                transform: translateY(-1px);
+            }
+
+        .axis-citas-btn-primary {
+            min-height: 46px;
+            padding: 0 20px;
+            border-color: rgba(255,255,255,.75);
+            background: #f1edf4;
+            color: #151519 !important;
+            box-shadow: 0 8px 25px rgba(0,0,0,.18);
+        }
+
+            .axis-citas-btn-primary:hover {
+                background: #ffffff;
+                border-color: #ffffff;
+                color: #111115 !important;
+                box-shadow: 0 10px 30px rgba(255,255,255,.08);
+            }
+
+        .axis-citas-btn-danger {
+            color: #dca4a4 !important;
+        }
+
+            .axis-citas-btn-danger:hover {
+                border-color: rgba(190,80,80,.45);
+                background: rgba(130,40,40,.12);
+                color: #f0b5b5 !important;
+            }
+
+        /* ---------------------------------------------------------
+                   ALERTS
+                   --------------------------------------------------------- */
+
+        .axis-citas-alert {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 22px;
+            padding: 14px 16px;
+            border: 1px solid #2d2d34;
+            border-radius: 13px;
+            background: #151519;
+            color: #d9d9df;
+            font-size: 13px;
+        }
+
+        .axis-citas-alert-success {
+            border-color: rgba(83,150,106,.3);
+            background: rgba(50,100,65,.08);
+        }
+
+        .axis-citas-alert-danger {
+            border-color: rgba(170,75,75,.3);
+            background: rgba(120,40,40,.08);
+        }
+
+        .axis-citas-alert button {
+            filter: invert(1);
+            opacity: .55;
+        }
+
+        /* ---------------------------------------------------------
+                   FILTER
+                   --------------------------------------------------------- */
+
+        .axis-citas-filter {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 22px;
+            margin-bottom: 22px;
+            padding: 18px;
+            border: 1px solid #29292f;
+            border-radius: 16px;
+            background: linear-gradient( 145deg, rgba(255,255,255,.035), rgba(255,255,255,.012) );
+            box-shadow: 0 16px 45px rgba(0,0,0,.16);
+        }
+
+        .axis-citas-filter-main {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .axis-citas-field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .axis-citas-label {
+            padding-left: 2px;
+            color: #76767f;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+        }
+
+        .axis-citas-date {
+            width: 190px;
+            height: 42px;
+            padding: 0 12px;
+            border: 1px solid #303037;
+            border-radius: 10px;
+            outline: none;
+            background: #121216;
+            color: #e8e8eb;
+            color-scheme: dark;
+            font-size: 13px;
+        }
+
+            .axis-citas-date:focus {
+                border-color: #5a5863;
+                box-shadow: 0 0 0 3px rgba(150,140,160,.08);
+            }
+
+        .axis-citas-filter-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .axis-citas-date-summary {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-right: 6px;
+        }
+
+        .axis-citas-date-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #2d2d34;
+            border-radius: 11px;
+            background: #18181d;
+            color: #a9a7af;
+        }
+
+        .axis-citas-date-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .axis-citas-date-caption {
+            color: #686871;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+
+        .axis-citas-date-value {
+            color: #d8d8dd;
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        /* ---------------------------------------------------------
+                   AGENDA CARD
+                   --------------------------------------------------------- */
+
+        .axis-citas-agenda {
+            overflow: hidden;
+            border: 1px solid #29292f;
+            border-radius: 18px;
+            background: linear-gradient( 150deg, rgba(255,255,255,.035), rgba(255,255,255,.012) 45%, rgba(255,255,255,.018) );
+            box-shadow: 0 22px 70px rgba(0,0,0,.20);
+        }
+
+        .axis-citas-agenda-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 22px 24px;
+            border-bottom: 1px solid #27272d;
+        }
+
+        .axis-citas-agenda-heading {
+            margin: 0;
+            color: #e7e7eb;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .axis-citas-agenda-meta {
+            margin-top: 5px;
+            color: #686871;
+            font-size: 12px;
+        }
+
+        .axis-citas-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 30px;
+            height: 25px;
+            padding: 0 8px;
+            margin-left: 5px;
+            border: 1px solid #34343b;
+            border-radius: 999px;
+            background: #19191e;
+            color: #bdbdc4;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* ---------------------------------------------------------
+                   TABLE
+                   --------------------------------------------------------- */
+
+        .axis-citas-table-wrap {
+            overflow-x: auto;
+        }
+
+        .axis-citas-table {
+            width: 100%;
+            min-width: 1000px;
+            border-collapse: collapse;
+        }
+
+            .axis-citas-table thead th {
+                padding: 13px 18px;
+                border-bottom: 1px solid #29292f;
+                background: rgba(255,255,255,.012);
+                color: #64646d;
+                font-size: 9px;
+                font-weight: 800;
+                letter-spacing: .15em;
+                text-align: left;
+                text-transform: uppercase;
+                white-space: nowrap;
+            }
+
+            .axis-citas-table tbody td {
+                padding: 17px 18px;
+                border-bottom: 1px solid #222228;
+                color: #bfc0c7;
+                font-size: 13px;
+                vertical-align: middle;
+            }
+
+            .axis-citas-table tbody tr:last-child td {
+                border-bottom: 0;
+            }
+
+            .axis-citas-table tbody tr {
+                transition: background .18s ease;
+            }
+
+                .axis-citas-table tbody tr:hover {
+                    background: rgba(255,255,255,.018);
+                }
+
+        /* ---------------------------------------------------------
+                   TIME
+                   --------------------------------------------------------- */
+
+        .axis-citas-time {
+            display: flex;
+            flex-direction: column;
+            min-width: 72px;
+        }
+
+        .axis-citas-time-start {
+            color: #f0f0f3;
+            font-size: 15px;
+            font-weight: 750;
+            letter-spacing: -.02em;
+        }
+
+        .axis-citas-time-end {
+            margin-top: 3px;
+            color: #62626b;
+            font-size: 11px;
+        }
+
+        /* ---------------------------------------------------------
+                   CLIENT
+                   --------------------------------------------------------- */
+
+        .axis-citas-client {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 180px;
+        }
+
+        .axis-citas-avatar {
+            display: flex;
+            flex: 0 0 auto;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border: 1px solid #35353d;
+            border-radius: 50%;
+            background: #1c1c21;
+            color: #aaa9b1;
+            font-size: 11px;
+            font-weight: 750;
+            text-transform: uppercase;
+        }
+
+        .axis-citas-client-name {
+            color: #e0e0e4;
+            font-weight: 650;
+        }
+
+        /* ---------------------------------------------------------
+                   VEHICLE
+                   --------------------------------------------------------- */
+
+        .axis-citas-plate {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 72px;
+            padding: 5px 9px;
+            border: 1px solid #35353c;
+            border-radius: 7px;
+            background: #17171b;
+            color: #d2d2d7;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .08em;
+        }
+
+        .axis-citas-service {
+            color: #d0d0d5;
+            font-weight: 550;
+        }
+
+        /* ---------------------------------------------------------
+                   EMPLOYEE / AREA
+                   --------------------------------------------------------- */
+
+        .axis-citas-assignment {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .axis-citas-employee {
+            color: #cfcfd5;
+            font-weight: 550;
+        }
+
+        .axis-citas-area {
+            color: #65656e;
+            font-size: 11px;
+        }
+
+        /* ---------------------------------------------------------
+                   STATUS
+                   --------------------------------------------------------- */
+
+        .axis-citas-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 9px;
+            border: 1px solid #34343a;
+            border-radius: 999px;
+            background: #18181c;
+            color: #aeadb5;
+            font-size: 10px;
+            font-weight: 750;
+            white-space: nowrap;
+        }
+
+            .axis-citas-status::before {
+                content: "";
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: #77777f;
+            }
+
+        .axis-citas-status-programada::before {
+            background: #a9a3b4;
+        }
+
+        .axis-citas-status-confirmada {
+            border-color: rgba(82,145,103,.28);
+            color: #9ac4a6;
+        }
+
+            .axis-citas-status-confirmada::before {
+                background: #6ca77d;
+            }
+
+        .axis-citas-status-espera {
+            border-color: rgba(164,133,71,.3);
+            color: #c9b47f;
+        }
+
+            .axis-citas-status-espera::before {
+                background: #c4a65e;
+            }
+
+        .axis-citas-status-atendida {
+            border-color: rgba(82,123,150,.3);
+            color: #9dbbd0;
+        }
+
+            .axis-citas-status-atendida::before {
+                background: #719dbb;
+            }
+
+        .axis-citas-status-cancelada {
+            border-color: rgba(165,72,72,.3);
+            color: #d59b9b;
+        }
+
+            .axis-citas-status-cancelada::before {
+                background: #b86c6c;
+            }
+
+        .axis-citas-status-no-asistio {
+            color: #85858e;
+        }
+
+        /* ---------------------------------------------------------
+                   ACTIONS
+                   --------------------------------------------------------- */
+
+        .axis-citas-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .axis-citas-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 32px;
+            padding: 0 10px;
+            border: 1px solid #303038;
+            border-radius: 8px;
+            background: #17171b;
+            color: #aaaab2 !important;
+            font-size: 11px;
+            font-weight: 650;
+            text-decoration: none !important;
+            transition: .18s ease;
+        }
+
+            .axis-citas-action:hover {
+                border-color: #47474f;
+                background: #222228;
+                color: #f0f0f2 !important;
+            }
+
+        .axis-citas-action-danger {
+            border-color: rgba(145,65,65,.3);
+            color: #bc8585 !important;
+        }
+
+            .axis-citas-action-danger:hover {
+                border-color: rgba(180,75,75,.45);
+                background: rgba(120,40,40,.1);
+                color: #dfaaaa !important;
+            }
+
+        /* ---------------------------------------------------------
+                   EMPTY STATE
+                   --------------------------------------------------------- */
+
+        .axis-citas-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 330px;
+            padding: 45px 25px;
+            text-align: center;
+        }
+
+        .axis-citas-empty-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 58px;
+            height: 58px;
+            margin-bottom: 18px;
+            border: 1px solid #303038;
+            border-radius: 16px;
+            background: #18181d;
+            color: #777780;
+            font-size: 22px;
+        }
+
+        .axis-citas-empty-title {
+            margin: 0;
+            color: #dcdce1;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .axis-citas-empty-description {
+            max-width: 390px;
+            margin: 8px 0 20px;
+            color: #686871;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* ---------------------------------------------------------
+                   RESPONSIVE
+                   --------------------------------------------------------- */
+
+        @@media (max-width: 900px) {
+            .axis-citas {
+                padding: 30px 24px 55px;
+            }
+
+            .axis-citas-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .axis-citas-filter {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .axis-citas-date-summary {
+                padding-right: 0;
+            }
+        }
+
+        @@media (max-width: 600px) {
+            .axis-citas {
+                padding: 25px 16px 45px;
+            }
+
+            .axis-citas-title {
+                font-size: 34px;
+            }
+
+            .axis-citas-header .axis-citas-btn-primary {
+                width: 100%;
+            }
+
+            .axis-citas-filter-main {
+                width: 100%;
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .axis-citas-field,
+            .axis-citas-date {
+                width: 100%;
+            }
+
+            .axis-citas-filter-actions {
+                width: 100%;
+            }
+
+                .axis-citas-filter-actions .axis-citas-btn {
+                    flex: 1;
+                }
+
+            .axis-citas-date-summary {
+                display: none;
+            }
+
+            .axis-citas-agenda-header {
+                padding: 18px;
+            }
+
+            .axis-citas-table thead th,
+            .axis-citas-table tbody td {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+        }
+    </style>
+}
+
+<div class="axis-citas">
+
+    <!-- =========================================================
+         HEADER
+         ========================================================= -->
+
+    <header class="axis-citas-header">
 
         <div>
-            <span class="text-muted small fw-bold">
+
+            <span class="axis-citas-eyebrow">
                 AXIS · AGENDA
             </span>
 
-            <h1 class="fw-bold mb-1">
+            <h1 class="axis-citas-title">
                 Citas
             </h1>
 
-            <p class="text-muted mb-0">
+            <p class="axis-citas-description">
                 Agenda y programación del taller.
             </p>
+
         </div>
 
         @if (User.HasClaim(
@@ -33,369 +704,403 @@
                 Negocios.Seguridad.Permisos.CitasCrear))
         {
             <a asp-action="Create"
-               class="btn btn-primary">
-                <i class="bi bi-calendar-plus me-1"></i>
-                Nueva cita
+               class="axis-citas-btn axis-citas-btn-primary">
+
+                <span>＋</span>
+                <span>Nueva cita</span>
+
             </a>
         }
 
-    </div>
+    </header>
 
 
-    <!-- MENSAJES -->
+    <!-- =========================================================
+         MENSAJES
+         ========================================================= -->
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show">
-            @TempData["Success"]
+        <div class="axis-citas-alert axis-citas-alert-success">
+
+            <span>
+                @TempData["Success"]
+            </span>
 
             <button type="button"
                     class="btn-close"
-                    data-bs-dismiss="alert">
+                    data-bs-dismiss="alert"
+                    aria-label="Cerrar">
             </button>
+
         </div>
     }
 
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show">
-            @TempData["Error"]
+        <div class="axis-citas-alert axis-citas-alert-danger">
+
+            <span>
+                @TempData["Error"]
+            </span>
 
             <button type="button"
                     class="btn-close"
-                    data-bs-dismiss="alert">
+                    data-bs-dismiss="alert"
+                    aria-label="Cerrar">
             </button>
+
         </div>
     }
 
 
-    <!-- FILTRO DE FECHA -->
+    <!-- =========================================================
+         FILTRO
+         ========================================================= -->
 
-    <div class="card border-0 shadow-sm mb-4">
+    <section class="axis-citas-filter">
 
-        <div class="card-body">
+        <form asp-action="Index"
+              method="get"
+              class="axis-citas-filter-main">
 
-            <form asp-action="Index"
-                  method="get"
-                  class="row g-3 align-items-end">
+            <div class="axis-citas-field">
 
-                <div class="col-md-4">
+                <label class="axis-citas-label"
+                       for="fecha">
+                    Fecha
+                </label>
 
-                    <label class="form-label fw-semibold">
-                        Fecha
-                    </label>
+                <input id="fecha"
+                       type="date"
+                       name="fecha"
+                       value="@fechaSeleccionada.ToString("yyyy-MM-dd")"
+                       class="axis-citas-date" />
 
-                    <input type="date"
-                           name="fecha"
-                           value="@fechaSeleccionada.ToString("yyyy-MM-dd")"
-                           class="form-control" />
+            </div>
 
-                </div>
+            <div class="axis-citas-filter-actions">
 
-                <div class="col-auto">
+                <button type="submit"
+                        class="axis-citas-btn">
 
-                    <button type="submit"
-                            class="btn btn-outline-primary">
+                    Consultar
 
-                        <i class="bi bi-search me-1"></i>
-                        Consultar
+                </button>
 
-                    </button>
+                <a asp-action="Index"
+                   class="axis-citas-btn">
 
-                </div>
+                    Hoy
 
-                <div class="col-auto">
+                </a>
 
-                    <a asp-action="Index"
-                       class="btn btn-outline-secondary">
+            </div>
 
-                        Hoy
-
-                    </a>
-
-                </div>
-
-            </form>
-
-        </div>
-
-    </div>
+        </form>
 
 
-    <!-- AGENDA -->
+        <div class="axis-citas-date-summary">
 
-    <div class="card border-0 shadow-sm">
+            <div class="axis-citas-date-icon">
+                ◷
+            </div>
 
-        <div class="card-header bg-transparent
-                    border-0 pt-4 px-4">
+            <div class="axis-citas-date-text">
 
-            <div class="d-flex justify-content-between
-                        align-items-center">
+                <span class="axis-citas-date-caption">
+                    Fecha seleccionada
+                </span>
 
-                <div>
-
-                    <h5 class="fw-bold mb-1">
-                        Agenda del @fechaSeleccionada.ToString("dd/MM/yyyy")
-                    </h5>
-
-                    <small class="text-muted">
-                        @Model.Count() cita(s) programada(s)
-                    </small>
-
-                </div>
-
-                <i class="bi bi-calendar3 fs-4 text-muted"></i>
+                <span class="axis-citas-date-value">
+                    @fechaSeleccionada.ToString("dddd, dd MMMM yyyy")
+                </span>
 
             </div>
 
         </div>
 
+    </section>
 
-        <div class="card-body px-4">
 
-            @if (Model.Any())
-            {
-                <div class="table-responsive">
+    <!-- =========================================================
+         AGENDA
+         ========================================================= -->
 
-                    <table class="table table-hover align-middle">
+    <section class="axis-citas-agenda">
 
-                        <thead>
+        <div class="axis-citas-agenda-header">
+
+            <div>
+
+                <h2 class="axis-citas-agenda-heading">
+                    Agenda del @fechaSeleccionada.ToString("dd/MM/yyyy")
+                </h2>
+
+                <div class="axis-citas-agenda-meta">
+
+                    @if (totalCitas == 1)
+                    {
+                        <span>1 cita programada</span>
+                    }
+                    else
+                    {
+                        <span>@totalCitas citas programadas</span>
+                    }
+
+                    <span class="axis-citas-count">
+                        @totalCitas
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="axis-citas-date-icon">
+                ◫
+            </div>
+
+        </div>
+
+
+        @if (Model.Any())
+        {
+            <div class="axis-citas-table-wrap">
+
+                <table class="axis-citas-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Hora</th>
+                            <th>Cliente</th>
+                            <th>Vehículo</th>
+                            <th>Servicio</th>
+                            <th>Mecánico / Área</th>
+                            <th>Estado</th>
+                            <th class="text-end">Acciones</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var cita in Model)
+                        {
+                            var inicialCliente =
+                            string.IsNullOrWhiteSpace(cita.ClienteNombre)
+                            ? "?"
+                            : cita.ClienteNombre
+                            .Substring(0, 1)
+                            .ToUpper();
+
+                            var claseEstado =
+                            cita.Estado switch
+                            {
+                                "Programada" => "axis-citas-status-programada",
+                                "Confirmada" => "axis-citas-status-confirmada",
+                                "En espera" => "axis-citas-status-espera",
+                                "Atendida" => "axis-citas-status-atendida",
+                                "Cancelada" => "axis-citas-status-cancelada",
+                                "No asistió" => "axis-citas-status-no-asistio",
+                                _ => ""
+                            };
 
                             <tr>
 
-                                <th>
-                                    Hora
-                                </th>
+                                <!-- HORA -->
 
-                                <th>
-                                    Cliente
-                                </th>
+                                <td>
 
-                                <th>
-                                    Vehículo
-                                </th>
+                                    <div class="axis-citas-time">
 
-                                <th>
-                                    Servicio
-                                </th>
-
-                                <th>
-                                    Mecánico / Área
-                                </th>
-
-                                <th>
-                                    Estado
-                                </th>
-
-                                <th class="text-end">
-                                    Acciones
-                                </th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @foreach (var cita in Model)
-                            {
-                                <tr>
-
-                                    <td>
-                                        <strong>
+                                        <span class="axis-citas-time-start">
                                             @cita.FechaInicio.ToString("HH:mm")
-                                        </strong>
-
-                                        <small class="text-muted d-block">
-                                            @cita.FechaFin.ToString("HH:mm")
-                                        </small>
-                                    </td>
-
-
-                                    <td>
-
-                                        <strong>
-                                            @cita.ClienteNombre
-                                        </strong>
-
-                                    </td>
-
-
-                                    <td>
-
-                                        <span class="badge bg-light
-                                                         text-dark border">
-                                            @cita.VehiculoPlaca
                                         </span>
 
-                                    </td>
+                                        <span class="axis-citas-time-end">
+                                            hasta @cita.FechaFin.ToString("HH:mm")
+                                        </span>
+
+                                    </div>
+
+                                </td>
 
 
-                                    <td>
+                                <!-- CLIENTE -->
+
+                                <td>
+
+                                    <div class="axis-citas-client">
+
+                                        <span class="axis-citas-avatar">
+                                            @inicialCliente
+                                        </span>
+
+                                        <span class="axis-citas-client-name">
+                                            @cita.ClienteNombre
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- VEHÍCULO -->
+
+                                <td>
+
+                                    <span class="axis-citas-plate">
+                                        @cita.VehiculoPlaca
+                                    </span>
+
+                                </td>
+
+
+                                <!-- SERVICIO -->
+
+                                <td>
+
+                                    <span class="axis-citas-service">
                                         @cita.ServicioNombre
-                                    </td>
+                                    </span>
+
+                                </td>
 
 
-                                    <td>
+                                <!-- MECÁNICO / ÁREA -->
+
+                                <td>
+
+                                    <div class="axis-citas-assignment">
 
                                         @if (!string.IsNullOrWhiteSpace(
                                                                         cita.EmpleadoNombre))
                                         {
-                                            <div>
-                                                <i class="bi bi-person-gear me-1"></i>
+                                            <span class="axis-citas-employee">
                                                 @cita.EmpleadoNombre
-                                            </div>
+                                            </span>
                                         }
 
                                         @if (!string.IsNullOrWhiteSpace(
                                                                         cita.Area))
                                         {
-                                            <div class="text-muted small">
-                                                <i class="bi bi-building me-1"></i>
+                                            <span class="axis-citas-area">
                                                 @cita.Area
-                                            </div>
+                                            </span>
                                         }
 
-                                    </td>
+                                    </div>
+
+                                </td>
 
 
-                                    <td>
+                                <!-- ESTADO -->
 
-                                        @switch (cita.Estado)
+                                <td>
+
+                                    <span class="axis-citas-status @claseEstado">
+                                        @cita.Estado
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ACCIONES -->
+
+                                <td>
+
+                                    <div class="axis-citas-actions">
+
+                                        @if (User.HasClaim(
+                                                                        "Permiso",
+                                                                        Negocios.Seguridad.Permisos.CitasEditar))
                                         {
-                                            case "Programada":
-                                                <span class="badge bg-primary">
-                                                    Programada
-                                                </span>
-                                                break;
+                                            <a asp-action="Edit"
+                                               asp-route-id="@cita.IdCita"
+                                               class="axis-citas-action">
 
-                                            case "Confirmada":
-                                                <span class="badge bg-success">
-                                                    Confirmada
-                                                </span>
-                                                break;
+                                                Editar
 
-                                            case "En espera":
-                                                <span class="badge bg-warning text-dark">
-                                                    En espera
-                                                </span>
-                                                break;
-
-                                            case "Atendida":
-                                                <span class="badge bg-info text-dark">
-                                                    Atendida
-                                                </span>
-                                                break;
-
-                                            case "Cancelada":
-                                                <span class="badge bg-danger">
-                                                    Cancelada
-                                                </span>
-                                                break;
-
-                                            case "No asistió":
-                                                <span class="badge bg-secondary">
-                                                    No asistió
-                                                </span>
-                                                break;
-
-                                            default:
-                                                <span class="badge bg-secondary">
-                                                    @cita.Estado
-                                                </span>
-                                                break;
+                                            </a>
                                         }
 
-                                    </td>
+                                        @if (
+                                                                        cita.Estado != "Cancelada"
+                                                                        &&
+                                                                        User.HasClaim(
+                                                                        "Permiso",
+                                                                        Negocios.Seguridad.Permisos.CitasCancelar))
+                                        {
+                                            <form asp-action="Cancelar"
+                                                  asp-route-id="@cita.IdCita"
+                                                  method="post"
+                                                  style="display:inline;">
 
+                                                @Html.AntiForgeryToken()
 
-                                    <td class="text-end">
+                                                <button type="submit"
+                                                        class="axis-citas-action axis-citas-action-danger"
+                                                        onclick="return confirm('¿Desea cancelar esta cita?');">
 
-                                        <div class="btn-group">
+                                                    Cancelar
 
-                                            @if (User.HasClaim(
-                                                                                "Permiso",
-                                                                                Negocios.Seguridad.Permisos.CitasEditar))
-                                            {
-                                                <a asp-action="Edit"
-                                                   asp-route-id="@cita.IdCita"
-                                                   class="btn btn-sm
-                                                                  btn-outline-primary">
+                                                </button>
 
-                                                    Editar
+                                            </form>
+                                        }
 
-                                                </a>
-                                            }
+                                    </div>
 
-                                            @if (
-                                                                                cita.Estado != "Cancelada"
-                                                                                &&
-                                                                                User.HasClaim(
-                                                                                "Permiso",
-                                                                                Negocios.Seguridad.Permisos.CitasCancelar))
-                                            {
-                                                <form asp-action="Cancelar"
-                                                      asp-route-id="@cita.IdCita"
-                                                      method="post">
+                                </td>
 
-                                                    @Html.AntiForgeryToken()
+                            </tr>
+                        }
 
-                                                    <button type="submit"
-                                                            class="btn btn-sm
-                                                                           btn-outline-danger"
-                                                            onclick="return confirm('¿Desea cancelar esta cita?');">
+                    </tbody>
 
-                                                        Cancelar
+                </table>
 
-                                                    </button>
+            </div>
+        }
+        else
+        {
+            <!-- =================================================
+                 EMPTY STATE
+                 ================================================= -->
 
-                                                </form>
-                                            }
+            <div class="axis-citas-empty">
 
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-                            }
-
-                        </tbody>
-
-                    </table>
-
+                <div class="axis-citas-empty-icon">
+                    ◷
                 </div>
-            }
-            else
-            {
-                <div class="text-center py-5">
 
-                    <i class="bi bi-calendar-x fs-1 text-muted"></i>
+                <h3 class="axis-citas-empty-title">
+                    No hay citas para esta fecha
+                </h3>
 
-                    <h5 class="mt-3">
-                        No hay citas para esta fecha
-                    </h5>
+                <p class="axis-citas-empty-description">
+                    No existen citas programadas para el día
+                    seleccionado.
+                </p>
 
-                    <p class="text-muted">
-                        No existen citas programadas para el día seleccionado.
-                    </p>
+                @if (User.HasClaim(
+                            "Permiso",
+                            Negocios.Seguridad.Permisos.CitasCrear))
+                {
+                    <a asp-action="Create"
+                       class="axis-citas-btn axis-citas-btn-primary">
 
-                    @if (User.HasClaim(
-                                    "Permiso",
-                                    Negocios.Seguridad.Permisos.CitasCrear))
-                    {
-                        <a asp-action="Create"
-                           class="btn btn-primary">
+                        <span>＋</span>
+                        <span>Crear cita</span>
 
-                            <i class="bi bi-calendar-plus me-1"></i>
-                            Crear cita
+                    </a>
+                }
 
-                        </a>
-                    }
+            </div>
+        }
 
-                </div>
-            }
-
-        </div>
-
-    </div>
+    </section>
 
 </div>

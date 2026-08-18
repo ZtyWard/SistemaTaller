@@ -4,65 +4,180 @@
     ViewData["Title"] = "Administración de usuarios";
 }
 
-<div class="container-fluid py-4">
+<section class="axis-users-page">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="axis-users-header">
+
         <div>
-            <h1 class="fw-bold mb-1">Administración de usuarios</h1>
-            <p class="text-muted mb-0">
+
+            <span class="axis-users-kicker">
+                ADMINISTRACIÓN · USUARIOS
+            </span>
+
+            <h1>
+                Usuarios
+            </h1>
+
+            <p>
                 Gestiona los usuarios y accesos del sistema AXIS.
             </p>
+
         </div>
+
 
         @if (User.HasClaim("Permiso", Negocios.Seguridad.Permisos.UsuariosCrear))
         {
-            <a asp-action="Create"
-               class="btn btn-primary">
-                <i class="bi bi-person-plus me-1"></i>
-                Nuevo usuario
-            </a>
+            <div class="axis-users-header-actions">
+
+                <a asp-action="Create"
+                   class="axis-users-button axis-users-button-primary">
+
+                    <span>+</span>
+
+                    Nuevo usuario
+
+                </a>
+
+            </div>
         }
+
     </div>
 
+
+    <!-- =====================================================
+         ALERTAS
+         ===================================================== -->
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show">
+        <div class="axis-users-alert axis-users-alert-success">
             @TempData["Success"]
-            <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert">
-            </button>
         </div>
     }
 
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show">
+        <div class="axis-users-alert axis-users-alert-error">
             @TempData["Error"]
-            <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert">
-            </button>
         </div>
     }
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
 
-            <div class="table-responsive">
+    <!-- =====================================================
+         CARD
+         ===================================================== -->
 
-                <table class="table table-hover align-middle">
+    <div class="axis-users-card">
+
+
+        <!-- CARD HEADER -->
+
+        <div class="axis-users-card-header">
+
+            <div>
+
+                <span class="axis-users-card-kicker">
+                    ACCESOS
+                </span>
+
+                <h2>
+                    Usuarios registrados
+                </h2>
+
+                <p>
+                    @Model.Count() usuarios encontrados.
+                </p>
+
+            </div>
+
+
+            <div class="axis-users-count">
+                @Model.Count()
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             EMPTY STATE
+             ================================================= -->
+        @if (Model == null || !Model.Any())
+        {
+            <div class="axis-users-empty">
+
+                <div class="axis-users-empty-icon">
+                    U
+                </div>
+
+                <h3>
+                    No hay usuarios registrados
+                </h3>
+
+                <p>
+                    Cree el primer usuario desde el botón
+                    "Nuevo usuario".
+                </p>
+
+                @if (User.HasClaim(
+                            "Permiso",
+                            Negocios.Seguridad.Permisos.UsuariosCrear))
+                {
+                    <a asp-action="Create"
+                       class="axis-users-button axis-users-button-primary">
+
+                        + Crear usuario
+
+                    </a>
+                }
+
+            </div>
+        }
+        else
+        {
+
+            <!-- =================================================
+                 TABLA
+                 ================================================= -->
+
+            <div class="axis-users-table-wrapper">
+
+                <table class="axis-users-table">
 
                     <thead>
+
                         <tr>
-                            <th>Usuario</th>
-                            <th>Nombre completo</th>
-                            <th>Correo</th>
-                            <th>Roles</th>
-                            <th>Estado</th>
-                            <th class="text-end">Acciones</th>
+
+                            <th>
+                                USUARIO
+                            </th>
+
+                            <th>
+                                NOMBRE COMPLETO
+                            </th>
+
+                            <th>
+                                CORREO
+                            </th>
+
+                            <th>
+                                ROLES
+                            </th>
+
+                            <th>
+                                ESTADO
+                            </th>
+
+                            <th>
+                                ACCIONES
+                            </th>
+
                         </tr>
+
                     </thead>
+
 
                     <tbody>
 
@@ -70,98 +185,207 @@
                         {
                             <tr>
 
-                                <td>
-                                    <strong>
-                                        @usuario.Usuario
-                                    </strong>
-                                </td>
+                                <!-- =================================================
+                                     USUARIO
+                                     ================================================= -->
 
                                 <td>
-                                    @usuario.NombreCompleto
+
+                                    <div class="axis-user-record">
+
+                                        <div class="axis-user-avatar">
+
+                                            @(
+                                                                                string.IsNullOrWhiteSpace(usuario.Usuario)
+                                                                                ? "U"
+                                                                                : usuario.Usuario.Substring(0, 1).ToUpper()
+                                                                                )
+
+                                </div>
+
+
+                                        <div>
+
+                                            <strong>
+                                                @usuario.Usuario
+                                            </strong>
+
+                                            <span>
+                                                Cuenta AXIS
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
                                 </td>
 
-                                <td>
-                                    @usuario.Email
-                                </td>
+
+                                <!-- =================================================
+                                     NOMBRE
+                                     ================================================= -->
 
                                 <td>
-                                    @if (usuario.Roles.Any())
-                                    {
-                                        foreach (var rol in usuario.Roles)
+
+                                    <div class="axis-user-name">
+
+                                @if (!string.IsNullOrWhiteSpace(usuario.NombreCompleto))
                                         {
-                                            <span class="badge bg-secondary me-1">
-                                                @rol
+                                            <strong>
+                                                @usuario.NombreCompleto
+                                            </strong>
+                                        }
+                                        else
+                                        {
+                                            <span class="axis-users-muted">
+                                                Sin nombre registrado
                                             </span>
                                         }
-                                    }
-                                    else
-                                    {
-                                        <span class="text-muted">
-                                            Sin rol
-                                        </span>
-                                    }
+
+                                    </div>
+
                                 </td>
+
+
+                                <!-- =================================================
+                                     CORREO
+                                     ================================================= -->
 
                                 <td>
-                                    @if (usuario.Activo)
+
+                                    @if (!string.IsNullOrWhiteSpace(usuario.Email))
                                     {
-                                        <span class="badge bg-success">
-                                            Activo
+                                        <span class="axis-user-email">
+                                            @usuario.Email
                                         </span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-danger">
-                                            Inactivo
+                                        <span class="axis-users-muted">
+                                            Sin correo
                                         </span>
                                     }
+
                                 </td>
 
-                                <td class="text-end">
 
-                                    <div class="btn-group">
+                                <!-- =================================================
+                                     ROLES
+                                     ================================================= -->
+
+                                <td>
+
+                                    <div class="axis-user-roles">
+
+                                        @if (usuario.Roles.Any())
+                                        {
+                                            foreach (var rol in usuario.Roles)
+                                            {
+                                                <span class="axis-user-role">
+                                                    @rol
+                                                </span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="axis-users-muted">
+                                                Sin rol
+                                            </span>
+                                        }
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- =================================================
+                                     ESTADO
+                                     ================================================= -->
+
+                                <td>
+
+                                    @if (usuario.Activo)
+                                    {
+                                        <span class="axis-user-status axis-user-status-active">
+
+                                            <span class="axis-user-status-dot"></span>
+
+                                            Activo
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-user-status axis-user-status-inactive">
+
+                                            <span class="axis-user-status-dot"></span>
+
+                                            Inactivo
+
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- =================================================
+                                     ACCIONES
+                                     ================================================= -->
+
+                                <td>
+
+                                    <div class="axis-user-actions">
 
                                         <a asp-action="Details"
                                            asp-route-id="@usuario.Id"
-                                           class="btn btn-sm btn-outline-secondary">
+                                           class="axis-user-action">
+
                                             Ver
+
                                         </a>
 
+
                                         @if (User.HasClaim(
-                                                                            "Permiso",
-                                                                            Negocios.Seguridad.Permisos.UsuariosEditar))
+                                                                        "Permiso",
+                                                                        Negocios.Seguridad.Permisos.UsuariosEditar))
                                         {
                                             <a asp-action="Edit"
                                                asp-route-id="@usuario.Id"
-                                               class="btn btn-sm btn-outline-primary">
+                                               class="axis-user-action">
+
                                                 Editar
+
                                             </a>
                                         }
 
+
                                         @if (User.HasClaim(
-                                                                            "Permiso",
-                                                                            Negocios.Seguridad.Permisos.UsuariosDesactivar))
+                                                                        "Permiso",
+                                                                        Negocios.Seguridad.Permisos.UsuariosDesactivar))
                                         {
                                             <form asp-action="CambiarEstado"
                                                   asp-route-id="@usuario.Id"
-                                                  method="post"
-                                                  class="d-inline">
+                                                  method="post">
 
                                                 @Html.AntiForgeryToken()
 
                                                 @if (usuario.Activo)
                                                 {
                                                     <button type="submit"
-                                                            class="btn btn-sm btn-outline-danger"
+                                                            class="axis-user-action axis-user-action-danger"
                                                             onclick="return confirm('¿Desea desactivar este usuario?');">
+
                                                         Desactivar
+
                                                     </button>
                                                 }
                                                 else
                                                 {
                                                     <button type="submit"
-                                                            class="btn btn-sm btn-outline-success">
+                                                            class="axis-user-action axis-user-action-success">
+
                                                         Activar
+
                                                     </button>
                                                 }
 
@@ -181,21 +405,577 @@
 
             </div>
 
-            @if (!Model.Any())
-            {
-                <div class="text-center py-5">
+        }
 
-                    <h5>No hay usuarios registrados.</h5>
-
-                    <p class="text-muted">
-                        Cree el primer usuario desde el botón
-                        "Nuevo usuario".
-                    </p>
-
-                </div>
-            }
-
-        </div>
     </div>
 
-</div>
+</section>
+
+
+<style>
+
+    /* =====================================================
+           PÁGINA
+           ===================================================== */
+
+    .axis-users-page {
+        width: 100%;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 44px 34px 70px;
+        color: #e7e7ea;
+    }
+
+
+    /* =====================================================
+           HEADER
+           ===================================================== */
+
+    .axis-users-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+
+    .axis-users-kicker {
+        display: block;
+        margin-bottom: 10px;
+        color: #777985;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2.8px;
+    }
+
+
+    .axis-users-header h1 {
+        margin: 0;
+        color: #f5f5f7;
+        font-size: 52px;
+        line-height: 1;
+        font-weight: 700;
+        letter-spacing: -1.8px;
+    }
+
+
+    .axis-users-header p {
+        margin: 11px 0 0;
+        color: #858690;
+        font-size: 13px;
+    }
+
+
+    .axis-users-header-actions {
+        display: flex;
+        align-items: center;
+    }
+
+
+    /* =====================================================
+           BOTONES
+           ===================================================== */
+
+    .axis-users-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        min-height: 40px;
+        padding: 0 16px;
+        border-radius: 11px;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 650;
+        transition: .2s ease;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+
+        .axis-users-button:hover {
+            transform: translateY(-1px);
+        }
+
+
+    .axis-users-button-primary {
+        color: #16161a;
+        background: #f1edf4;
+        border: 1px solid #f1edf4;
+    }
+
+
+        .axis-users-button-primary:hover {
+            color: #111;
+            background: #fff;
+        }
+
+
+    /* =====================================================
+           ALERTAS
+           ===================================================== */
+
+    .axis-users-alert {
+        margin-bottom: 18px;
+        padding: 13px 16px;
+        border-radius: 11px;
+        font-size: 12px;
+    }
+
+
+    .axis-users-alert-success {
+        color: #a8d7ad;
+        background: rgba(81,145,88,.10);
+        border: 1px solid rgba(106,167,112,.18);
+    }
+
+
+    .axis-users-alert-error {
+        color: #e2a4a4;
+        background: rgba(160,65,65,.10);
+        border: 1px solid rgba(190,85,85,.18);
+    }
+
+
+    /* =====================================================
+           CARD
+           ===================================================== */
+
+    .axis-users-card {
+        overflow: hidden;
+        border: 1px solid #292a30;
+        border-radius: 20px;
+        background: linear-gradient( 145deg, rgba(25,25,29,.95), rgba(15,15,18,.98) );
+        box-shadow: 0 20px 55px rgba(0,0,0,.22);
+    }
+
+
+    /* =====================================================
+           CARD HEADER
+           ===================================================== */
+
+    .axis-users-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 23px 24px;
+        border-bottom: 1px solid #292a30;
+    }
+
+
+    .axis-users-card-kicker {
+        display: block;
+        margin-bottom: 6px;
+        color: #696b75;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.8px;
+    }
+
+
+    .axis-users-card-header h2 {
+        margin: 0;
+        color: #e7e7eb;
+        font-size: 16px;
+        font-weight: 650;
+    }
+
+
+    .axis-users-card-header p {
+        margin: 5px 0 0;
+        color: #777983;
+        font-size: 11px;
+    }
+
+
+    .axis-users-count {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 30px;
+        height: 30px;
+        padding: 0 9px;
+        border: 1px solid #303139;
+        border-radius: 9px;
+        color: #bcbcc3;
+        background: #1a1a1f;
+        font-size: 11px;
+        font-weight: 650;
+    }
+
+
+    /* =====================================================
+           TABLA
+           ===================================================== */
+
+    .axis-users-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+
+    .axis-users-table {
+        width: 100%;
+        min-width: 1100px;
+        border-collapse: collapse;
+    }
+
+
+        .axis-users-table th {
+            padding: 14px 18px;
+            color: #666872;
+            background: rgba(255,255,255,.018);
+            border-bottom: 1px solid #292a30;
+            text-align: left;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            white-space: nowrap;
+        }
+
+
+        .axis-users-table td {
+            padding: 17px 18px;
+            color: #b8b8bf;
+            border-bottom: 1px solid rgba(255,255,255,.055);
+            font-size: 12px;
+            vertical-align: middle;
+        }
+
+
+        .axis-users-table tbody tr {
+            transition: background .18s ease;
+        }
+
+
+            .axis-users-table tbody tr:hover {
+                background: rgba(255,255,255,.025);
+            }
+
+
+            .axis-users-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+
+    /* =====================================================
+           USUARIO
+           ===================================================== */
+
+    .axis-user-record {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        min-width: 160px;
+    }
+
+
+    .axis-user-avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 38px;
+        width: 38px;
+        height: 38px;
+        border: 1px solid #3a3b45;
+        border-radius: 12px;
+        color: #dedee3;
+        background: linear-gradient( 135deg, #24252c, #1a1a1f );
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+
+    .axis-user-record strong {
+        display: block;
+        color: #e2e2e7;
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+
+    .axis-user-record span {
+        display: block;
+        margin-top: 3px;
+        color: #686a74;
+        font-size: 9px;
+    }
+
+
+    /* =====================================================
+           NOMBRE
+           ===================================================== */
+
+    .axis-user-name {
+        min-width: 170px;
+    }
+
+
+        .axis-user-name strong {
+            color: #cfcfd5;
+            font-size: 12px;
+            font-weight: 550;
+        }
+
+
+    /* =====================================================
+           CORREO
+           ===================================================== */
+
+    .axis-user-email {
+        display: inline-block;
+        max-width: 220px;
+        overflow: hidden;
+        color: #aeb0b8;
+        font-size: 11px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+
+    .axis-users-muted {
+        color: #686a74;
+        font-size: 10px;
+    }
+
+
+    /* =====================================================
+           ROLES
+           ===================================================== */
+
+    .axis-user-roles {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-wrap: wrap;
+        min-width: 150px;
+        max-width: 260px;
+    }
+
+
+    .axis-user-role {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 9px;
+        border: 1px solid #34353d;
+        border-radius: 8px;
+        color: #c0c1c8;
+        background: #1c1c21;
+        font-size: 9px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+
+    /* =====================================================
+           ESTADO
+           ===================================================== */
+
+    .axis-user-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 9px;
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+
+    .axis-user-status-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+    }
+
+
+    .axis-user-status-active {
+        color: #9fcba2;
+        background: rgba(83,139,88,.12);
+        border: 1px solid rgba(93,148,98,.18);
+    }
+
+
+        .axis-user-status-active .axis-user-status-dot {
+            background: #79b57e;
+        }
+
+
+    .axis-user-status-inactive {
+        color: #d39b9b;
+        background: rgba(142,64,64,.12);
+        border: 1px solid rgba(158,75,75,.18);
+    }
+
+
+        .axis-user-status-inactive .axis-user-status-dot {
+            background: #bd7373;
+        }
+
+
+    /* =====================================================
+           ACCIONES
+           ===================================================== */
+
+    .axis-user-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+        min-width: 220px;
+    }
+
+
+        .axis-user-actions form {
+            margin: 0;
+        }
+
+
+    .axis-user-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 31px;
+        padding: 0 10px;
+        border: 1px solid #303139;
+        border-radius: 8px;
+        color: #c3c3c9;
+        background: #1b1b20;
+        text-decoration: none;
+        font-family: inherit;
+        font-size: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: .18s ease;
+        white-space: nowrap;
+    }
+
+
+        .axis-user-action:hover {
+            color: #fff;
+            background: #25252b;
+            border-color: #41424b;
+        }
+
+
+    .axis-user-action-danger {
+        color: #d39b9b;
+        background: rgba(142,64,64,.08);
+        border-color: rgba(158,75,75,.18);
+    }
+
+
+        .axis-user-action-danger:hover {
+            color: #e4b2b2;
+            background: rgba(142,64,64,.15);
+        }
+
+
+    .axis-user-action-success {
+        color: #9fcba2;
+        background: rgba(83,139,88,.08);
+        border-color: rgba(93,148,98,.18);
+    }
+
+
+        .axis-user-action-success:hover {
+            color: #b8dfbb;
+            background: rgba(83,139,88,.15);
+        }
+
+
+    /* =====================================================
+           EMPTY STATE
+           ===================================================== */
+
+    .axis-users-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 330px;
+        padding: 50px 25px;
+        text-align: center;
+    }
+
+
+    .axis-users-empty-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 18px;
+        border: 1px solid #303139;
+        border-radius: 14px;
+        color: #aaaab2;
+        background: #1b1b20;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+
+    .axis-users-empty h3 {
+        margin: 0;
+        color: #dddde2;
+        font-size: 16px;
+        font-weight: 650;
+    }
+
+
+    .axis-users-empty p {
+        max-width: 420px;
+        margin: 8px 0 20px;
+        color: #70727c;
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+
+    /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+    @@media (max-width: 900px) {
+
+        .axis-users-page {
+            padding: 28px 18px 50px;
+        }
+
+        .axis-users-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+            .axis-users-header h1 {
+                font-size: 42px;
+            }
+
+        .axis-users-header-actions {
+            width: 100%;
+        }
+
+        .axis-users-button {
+            width: 100%;
+        }
+    }
+
+
+    @@media (max-width: 550px) {
+
+        .axis-users-page {
+            padding: 22px 12px 40px;
+        }
+
+        .axis-users-header h1 {
+            font-size: 36px;
+        }
+
+        .axis-users-card-header {
+            padding: 19px;
+        }
+    }
+
+</style>

@@ -4,85 +4,169 @@
     ViewData["Title"] = "Administración de roles";
 }
 
-<div class="container-fluid py-4">
+<section class="axis-roles-page">
 
-    <div class="d-flex justify-content-between
-                align-items-center mb-4">
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="axis-roles-header">
 
         <div>
 
-            <div class="text-muted small">
-                AXIS · SEGURIDAD
-            </div>
+            <span class="axis-roles-kicker">
+                ADMINISTRACIÓN · SEGURIDAD
+            </span>
 
-            <h1 class="fw-bold mb-1">
-                Administración de roles
+            <h1>
+                Roles
             </h1>
 
-            <p class="text-muted mb-0">
-                Gestiona los roles y permisos de acceso
-                del sistema.
+            <p>
+                Gestiona los roles y permisos de acceso del sistema.
             </p>
 
         </div>
+
 
         @if (User.HasClaim(
                 "Permiso",
                 Negocios.Seguridad.Permisos.RolesAdministrar))
         {
             <a asp-action="Create"
-               class="btn btn-primary">
-                + Nuevo rol
+               class="axis-roles-button axis-roles-button-primary">
+
+                <span>+</span>
+
+                Nuevo rol
+
             </a>
         }
 
     </div>
 
+
+    <!-- =====================================================
+         ALERTAS
+         ===================================================== -->
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success">
+        <div class="axis-roles-alert axis-roles-alert-success">
             @TempData["Success"]
         </div>
     }
 
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger">
+        <div class="axis-roles-alert axis-roles-alert-error">
             @TempData["Error"]
         </div>
     }
 
-    <div class="card shadow-sm border-0">
 
-        <div class="card-body">
+    <!-- =====================================================
+         CARD
+         ===================================================== -->
 
-            <div class="table-responsive">
+    <div class="axis-roles-card">
 
-                <table class="table table-hover align-middle">
+        <!-- CARD HEADER -->
+
+        <div class="axis-roles-card-header">
+
+            <div>
+
+                <span class="axis-roles-card-kicker">
+                    CONTROL DE ACCESO
+                </span>
+
+                <h2>
+                    Roles registrados
+                </h2>
+
+                <p>
+                    @Model.Count() roles configurados en AXIS.
+                </p>
+
+            </div>
+
+
+            <div class="axis-roles-count">
+                @Model.Count()
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             EMPTY STATE
+             ================================================= -->
+        @if (Model == null || !Model.Any())
+        {
+            <div class="axis-roles-empty">
+
+                <div class="axis-roles-empty-icon">
+                    ◈
+                </div>
+
+                <h3>
+                    No hay roles registrados
+                </h3>
+
+                <p>
+                    Cree el primer rol desde el botón
+                    "Nuevo rol".
+                </p>
+
+                @if (User.HasClaim(
+                            "Permiso",
+                            Negocios.Seguridad.Permisos.RolesAdministrar))
+                {
+                    <a asp-action="Create"
+                       class="axis-roles-button axis-roles-button-primary">
+
+                        + Crear rol
+
+                    </a>
+                }
+
+            </div>
+        }
+        else
+        {
+
+            <!-- =================================================
+                 TABLA
+                 ================================================= -->
+
+            <div class="axis-roles-table-wrapper">
+
+                <table class="axis-roles-table">
 
                     <thead>
 
                         <tr>
 
                             <th>
-                                Rol
+                                ROL
                             </th>
 
                             <th>
-                                Usuarios
+                                USUARIOS
                             </th>
 
                             <th>
-                                Permisos
+                                PERMISOS
                             </th>
 
-                            <th class="text-end">
-                                Acciones
+                            <th>
+                                ACCIONES
                             </th>
 
                         </tr>
 
                     </thead>
+
 
                     <tbody>
 
@@ -90,66 +174,140 @@
                         {
                             <tr>
 
+                                <!-- =================================================
+                                     ROL
+                                     ================================================= -->
+
                                 <td>
-                                    <strong>
-                                        @rol.Nombre
-                                    </strong>
+
+                                    <div class="axis-role-record">
+
+                                        <div class="axis-role-icon">
+                                            ◈
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                @rol.Nombre
+                                            </strong>
+
+                                            <span>
+                                                Rol de seguridad
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
                                 </td>
 
+
+                                <!-- =================================================
+                                     USUARIOS
+                                     ================================================= -->
+
                                 <td>
-                                    <span class="badge bg-secondary">
-                                        @rol.CantidadUsuarios
-                                    </span>
+
+                                    <div class="axis-role-metric">
+
+                                        <strong>
+                                            @rol.CantidadUsuarios
+                                        </strong>
+
+                                        <span>
+                                            @(rol.CantidadUsuarios == 1
+                                                                                ? "usuario asignado"
+                                                                                : "usuarios asignados")
+                                </span>
+
+                                    </div>
+
                                 </td>
 
+
+                                <!-- =================================================
+                                     PERMISOS
+                                     ================================================= -->
+
                                 <td>
 
-                                    @if (rol.Permisos.Any())
+                            @if (rol.Permisos.Any())
                                     {
-                                        <span class="badge bg-primary">
-                                            @rol.Permisos.Count
-                                            permisos
-                                        </span>
+                                        <div class="axis-role-permission">
+
+                                            <span class="axis-role-permission-number">
+                                                @rol.Permisos.Count
+                                            </span>
+
+                                            <div>
+
+                                                <strong>
+                                                    permisos
+                                                </strong>
+
+                                                <span>
+                                                    Configurados para este rol
+                                                </span>
+
+                                            </div>
+
+                                        </div>
                                     }
                                     else
                                     {
-                                        <span class="text-muted">
-                                            Sin permisos
+                                        <span class="axis-roles-muted">
+                                            Sin permisos configurados
                                         </span>
                                     }
 
                                 </td>
 
-                                <td class="text-end">
+
+                                <!-- =================================================
+                                     ACCIONES
+                                     ================================================= -->
+
+                                <td>
 
                                     @if (User.HasClaim(
-                                                                    "Permiso",
-                                                                    Negocios.Seguridad.Permisos.RolesAdministrar))
+                                                                "Permiso",
+                                                                Negocios.Seguridad.Permisos.RolesAdministrar))
                                     {
-                                        <div class="btn-group">
+                                        <div class="axis-role-actions">
 
                                             <a asp-action="Edit"
                                                asp-route-id="@rol.Id"
-                                               class="btn btn-sm btn-outline-primary">
+                                               class="axis-role-action">
+
                                                 Editar
+
                                             </a>
+
 
                                             <form asp-action="Delete"
                                                   asp-route-id="@rol.Id"
-                                                  method="post"
-                                                  class="d-inline">
+                                                  method="post">
 
                                                 @Html.AntiForgeryToken()
 
                                                 <button type="submit"
-                                                        class="btn btn-sm btn-outline-danger"
+                                                        class="axis-role-action axis-role-action-danger"
                                                         onclick="return confirm('¿Desea eliminar este rol?');">
+
                                                     Eliminar
+
                                                 </button>
 
                                             </form>
 
                                         </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="axis-roles-muted">
+                                            Sin acciones disponibles
+                                        </span>
                                     }
 
                                 </td>
@@ -163,24 +321,520 @@
 
             </div>
 
-            @if (!Model.Any())
-            {
-                <div class="text-center py-5">
-
-                    <h5>
-                        No hay roles registrados.
-                    </h5>
-
-                    <p class="text-muted">
-                        Cree el primer rol desde
-                        "Nuevo rol".
-                    </p>
-
-                </div>
-            }
-
-        </div>
+        }
 
     </div>
 
-</div>
+</section>
+
+
+<style>
+
+    /* =====================================================
+           PÁGINA
+           ===================================================== */
+
+    .axis-roles-page {
+        width: 100%;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 44px 34px 70px;
+        color: #e7e7ea;
+    }
+
+
+    /* =====================================================
+           HEADER
+           ===================================================== */
+
+    .axis-roles-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+
+    .axis-roles-kicker {
+        display: block;
+        margin-bottom: 10px;
+        color: #777985;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2.8px;
+    }
+
+
+    .axis-roles-header h1 {
+        margin: 0;
+        color: #f5f5f7;
+        font-size: 52px;
+        line-height: 1;
+        font-weight: 700;
+        letter-spacing: -1.8px;
+    }
+
+
+    .axis-roles-header p {
+        margin: 11px 0 0;
+        color: #858690;
+        font-size: 13px;
+    }
+
+
+    /* =====================================================
+           BOTONES
+           ===================================================== */
+
+    .axis-roles-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        min-height: 40px;
+        padding: 0 16px;
+        border-radius: 11px;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 650;
+        transition: .2s ease;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+
+        .axis-roles-button:hover {
+            transform: translateY(-1px);
+        }
+
+
+    .axis-roles-button-primary {
+        color: #16161a;
+        background: #f1edf4;
+        border: 1px solid #f1edf4;
+    }
+
+
+        .axis-roles-button-primary:hover {
+            color: #111;
+            background: #fff;
+        }
+
+
+    /* =====================================================
+           ALERTAS
+           ===================================================== */
+
+    .axis-roles-alert {
+        margin-bottom: 18px;
+        padding: 13px 16px;
+        border-radius: 11px;
+        font-size: 12px;
+    }
+
+
+    .axis-roles-alert-success {
+        color: #a8d7ad;
+        background: rgba(81,145,88,.10);
+        border: 1px solid rgba(106,167,112,.18);
+    }
+
+
+    .axis-roles-alert-error {
+        color: #e2a4a4;
+        background: rgba(160,65,65,.10);
+        border: 1px solid rgba(190,85,85,.18);
+    }
+
+
+    /* =====================================================
+           CARD
+           ===================================================== */
+
+    .axis-roles-card {
+        overflow: hidden;
+        border: 1px solid #292a30;
+        border-radius: 20px;
+        background: linear-gradient( 145deg, rgba(25,25,29,.95), rgba(15,15,18,.98) );
+        box-shadow: 0 20px 55px rgba(0,0,0,.22);
+    }
+
+
+    /* =====================================================
+           CARD HEADER
+           ===================================================== */
+
+    .axis-roles-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 23px 24px;
+        border-bottom: 1px solid #292a30;
+    }
+
+
+    .axis-roles-card-kicker {
+        display: block;
+        margin-bottom: 6px;
+        color: #696b75;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.8px;
+    }
+
+
+    .axis-roles-card-header h2 {
+        margin: 0;
+        color: #e7e7eb;
+        font-size: 16px;
+        font-weight: 650;
+    }
+
+
+    .axis-roles-card-header p {
+        margin: 5px 0 0;
+        color: #777983;
+        font-size: 11px;
+    }
+
+
+    .axis-roles-count {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 30px;
+        height: 30px;
+        padding: 0 9px;
+        border: 1px solid #303139;
+        border-radius: 9px;
+        color: #bcbcc3;
+        background: #1a1a1f;
+        font-size: 11px;
+        font-weight: 650;
+    }
+
+
+    /* =====================================================
+           TABLA
+           ===================================================== */
+
+    .axis-roles-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+
+    .axis-roles-table {
+        width: 100%;
+        min-width: 850px;
+        border-collapse: collapse;
+    }
+
+
+        .axis-roles-table th {
+            padding: 14px 20px;
+            color: #666872;
+            background: rgba(255,255,255,.018);
+            border-bottom: 1px solid #292a30;
+            text-align: left;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            white-space: nowrap;
+        }
+
+
+        .axis-roles-table td {
+            padding: 18px 20px;
+            color: #b8b8bf;
+            border-bottom: 1px solid rgba(255,255,255,.055);
+            font-size: 12px;
+            vertical-align: middle;
+        }
+
+
+        .axis-roles-table tbody tr {
+            transition: background .18s ease;
+        }
+
+
+            .axis-roles-table tbody tr:hover {
+                background: rgba(255,255,255,.025);
+            }
+
+
+            .axis-roles-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+
+    /* =====================================================
+           ROL
+           ===================================================== */
+
+    .axis-role-record {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        min-width: 210px;
+    }
+
+
+    .axis-role-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 39px;
+        width: 39px;
+        height: 39px;
+        border: 1px solid #393a44;
+        border-radius: 12px;
+        color: #d1d1d7;
+        background: linear-gradient( 135deg, #25262d, #1a1a1f );
+        font-size: 14px;
+    }
+
+
+    .axis-role-record strong {
+        display: block;
+        color: #e2e2e7;
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+
+    .axis-role-record span {
+        display: block;
+        margin-top: 3px;
+        color: #686a74;
+        font-size: 9px;
+    }
+
+
+    /* =====================================================
+           MÉTRICA USUARIOS
+           ===================================================== */
+
+    .axis-role-metric {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 130px;
+    }
+
+
+        .axis-role-metric strong {
+            color: #d3d3d8;
+            font-size: 18px;
+            line-height: 1;
+            font-weight: 650;
+        }
+
+
+        .axis-role-metric span {
+            color: #686a74;
+            font-size: 9px;
+        }
+
+
+    /* =====================================================
+           PERMISOS
+           ===================================================== */
+
+    .axis-role-permission {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 220px;
+    }
+
+
+    .axis-role-permission-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 35px;
+        width: 35px;
+        height: 35px;
+        border: 1px solid rgba(100,108,135,.22);
+        border-radius: 10px;
+        color: #bfc5d7;
+        background: rgba(82,91,120,.12);
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+
+    .axis-role-permission div {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+
+    .axis-role-permission strong {
+        color: #c9c9cf;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+
+    .axis-role-permission span:last-child {
+        color: #686a74;
+        font-size: 9px;
+    }
+
+
+    .axis-roles-muted {
+        color: #686a74;
+        font-size: 10px;
+    }
+
+
+    /* =====================================================
+           ACCIONES
+           ===================================================== */
+
+    .axis-role-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+        min-width: 145px;
+    }
+
+
+        .axis-role-actions form {
+            margin: 0;
+        }
+
+
+    .axis-role-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 31px;
+        padding: 0 11px;
+        border: 1px solid #303139;
+        border-radius: 8px;
+        color: #c3c3c9;
+        background: #1b1b20;
+        text-decoration: none;
+        font-family: inherit;
+        font-size: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: .18s ease;
+        white-space: nowrap;
+    }
+
+
+        .axis-role-action:hover {
+            color: #fff;
+            background: #25252b;
+            border-color: #41424b;
+        }
+
+
+    .axis-role-action-danger {
+        color: #d39b9b;
+        background: rgba(142,64,64,.08);
+        border-color: rgba(158,75,75,.18);
+    }
+
+
+        .axis-role-action-danger:hover {
+            color: #e4b2b2;
+            background: rgba(142,64,64,.15);
+        }
+
+
+    /* =====================================================
+           EMPTY STATE
+           ===================================================== */
+
+    .axis-roles-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 330px;
+        padding: 50px 25px;
+        text-align: center;
+    }
+
+
+    .axis-roles-empty-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 18px;
+        border: 1px solid #303139;
+        border-radius: 14px;
+        color: #aaaab2;
+        background: #1b1b20;
+        font-size: 18px;
+    }
+
+
+    .axis-roles-empty h3 {
+        margin: 0;
+        color: #dddde2;
+        font-size: 16px;
+        font-weight: 650;
+    }
+
+
+    .axis-roles-empty p {
+        max-width: 420px;
+        margin: 8px 0 20px;
+        color: #70727c;
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+
+    /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+    @@media (max-width: 900px) {
+
+        .axis-roles-page {
+            padding: 28px 18px 50px;
+        }
+
+        .axis-roles-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+            .axis-roles-header h1 {
+                font-size: 42px;
+            }
+
+        .axis-roles-button {
+            width: 100%;
+        }
+    }
+
+
+    @@media (max-width: 550px) {
+
+        .axis-roles-page {
+            padding: 22px 12px 40px;
+        }
+
+        .axis-roles-header h1 {
+            font-size: 36px;
+        }
+
+        .axis-roles-card-header {
+            padding: 19px;
+        }
+    }
+
+</style>
