@@ -265,7 +265,7 @@ builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 // =====================================================
-// ROLES Y USUARIO ADMINISTRADOR
+// ROLES Y USUARIOS
 // =====================================================
 
 using (var scope = app.Services.CreateScope())
@@ -288,6 +288,10 @@ using (var scope = app.Services.CreateScope())
         "Cajero",
         "Supervisor"
     };
+
+    // =====================================================
+    // CREAR ROLES Y SUS PERMISOS
+    // =====================================================
 
     foreach (var nombreRol in roles)
     {
@@ -430,7 +434,7 @@ using (var scope = app.Services.CreateScope())
             foreach (var error in resultadoPassword.Errors)
             {
                 Console.WriteLine(
-                    $"ERROR CAMBIANDO PASSWORD: {error.Description}");
+                    $"ERROR CAMBIANDO PASSWORD ADMIN: {error.Description}");
             }
         }
     }
@@ -449,13 +453,110 @@ using (var scope = app.Services.CreateScope())
             foreach (var error in resultadoRolUsuario.Errors)
             {
                 Console.WriteLine(
-                    $"ERROR ASIGNANDO ROL: {error.Description}");
+                    $"ERROR ASIGNANDO ROL ADMIN: {error.Description}");
+            }
+        }
+    }
+
+    // =====================================================
+    // USUARIO DE PRUEBA - VENDEDOR
+    // =====================================================
+
+    var usuarioPrueba =
+        await userManager.FindByNameAsync("tester.axis");
+
+    if (usuarioPrueba == null)
+    {
+        usuarioPrueba = new ApplicationUser
+        {
+            UserName = "tester.axis",
+            Email = "tester.axis@axis.com",
+            NombreCompleto = "Usuario Prueba",
+            Activo = true,
+            EmailConfirmed = true
+        };
+
+        var resultadoCrearTester =
+            await userManager.CreateAsync(
+                usuarioPrueba,
+                "AxisTest2026!");
+
+        if (!resultadoCrearTester.Succeeded)
+        {
+            foreach (var error in resultadoCrearTester.Errors)
+            {
+                Console.WriteLine(
+                    $"ERROR CREANDO USUARIO DE PRUEBA: {error.Description}");
+            }
+        }
+    }
+    else
+    {
+        usuarioPrueba.Activo = true;
+        usuarioPrueba.EmailConfirmed = true;
+
+        await userManager.UpdateAsync(usuarioPrueba);
+
+        var tokenTester =
+            await userManager.GeneratePasswordResetTokenAsync(
+                usuarioPrueba);
+
+        var resultadoPasswordTester =
+            await userManager.ResetPasswordAsync(
+                usuarioPrueba,
+                tokenTester,
+                "AxisTest2026!");
+
+        if (!resultadoPasswordTester.Succeeded)
+        {
+            foreach (var error in resultadoPasswordTester.Errors)
+            {
+                Console.WriteLine(
+                    $"ERROR CAMBIANDO PASSWORD TESTER: {error.Description}");
+            }
+        }
+    }
+
+    // =====================================================
+    // ASEGURAR ROL VENDEDOR
+    // =====================================================
+
+    if (!await userManager.IsInRoleAsync(
+            usuarioPrueba,
+            "Vendedor"))
+    {
+        var resultadoRolTester =
+            await userManager.AddToRoleAsync(
+                usuarioPrueba,
+                "Vendedor");
+
+        if (!resultadoRolTester.Succeeded)
+        {
+            foreach (var error in resultadoRolTester.Errors)
+            {
+                Console.WriteLine(
+                    $"ERROR ASIGNANDO ROL VENDEDOR AL TESTER: {error.Description}");
             }
         }
     }
 
     Console.WriteLine(
-        "ROLES Y USUARIO ADMINISTRADOR VERIFICADOS.");
+        "==============================================");
+
+    Console.WriteLine(
+        "ROLES Y USUARIOS VERIFICADOS.");
+
+    Console.WriteLine(
+        "ADMIN: admin / Admin123");
+
+    Console.WriteLine(
+        "TESTER: tester.axis / AxisTest2026!");
+
+    Console.WriteLine(
+        "ROL TESTER: Vendedor");
+
+    Console.WriteLine(
+        "==============================================");
 }
 
 // =====================================================
