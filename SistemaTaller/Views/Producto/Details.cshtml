@@ -3,9 +3,32 @@
 @{
     Layout = "_LayoutInterno";
     ViewData["Title"] = "Detalle del producto";
+
+    var margen =
+        Model.PrecioVenta -
+        Model.PrecioCompra;
+
+    var stockBajo =
+        Model.Stock <=
+        Model.StockMinimo;
+
+    var inicial =
+        string.IsNullOrWhiteSpace(Model.Nombre)
+            ? "P"
+            : Model.Nombre
+                .Substring(0, 1)
+                .ToUpper();
+
+    var tieneImagen =
+        !string.IsNullOrWhiteSpace(
+            Model.ImagenUrl);
 }
 
-<section class="axis-page">
+<section class="axis-page producto-details-page">
+
+    <!-- =====================================================
+         ENCABEZADO
+         ===================================================== -->
 
     <div class="axis-page-header">
 
@@ -43,140 +66,236 @@
     </div>
 
 
-    <div class="axis-detail-grid">
+    <!-- =====================================================
+         RESUMEN DEL PRODUCTO
+         ===================================================== -->
 
+    <div class="producto-hero-card">
 
-        <!-- RESUMEN -->
+        <div class="producto-hero-image">
 
-        <div class="axis-detail-card">
+            @if (tieneImagen)
+            {
+                <img src="@Model.ImagenUrl"
+                     alt="@Model.Nombre"
+                     class="producto-image"
+                     loading="lazy"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
 
-            <div class="axis-detail-card-header">
+                <div class="producto-placeholder producto-placeholder-fallback"
+                     style="display:none;">
 
-                <div class="axis-detail-avatar">
-
-                    @(string.IsNullOrWhiteSpace(Model.Nombre)
-                                        ? "P"
-                                        : Model.Nombre
-                                        .Substring(0, 1)
-                                        .ToUpper())
+                    <span>
+                        @inicial
+                    </span>
 
                 </div>
+            }
+            else
+            {
+                <div class="producto-placeholder">
+
+                    <span>
+                        @inicial
+                    </span>
+
+                </div>
+            }
+
+        </div>
+
+
+        <div class="producto-hero-info">
+
+            <span class="axis-detail-label">
+                PRODUCTO
+            </span>
+
+            <h2>
+                @Model.Nombre
+            </h2>
+
+            <div class="producto-code">
+                @Model.Codigo
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Categoria))
+            {
+                <div class="producto-category">
+                    @Model.Categoria
+                </div>
+            }
+
+        </div>
+
+
+        <div class="producto-hero-status">
+
+            @if (Model.Activo)
+            {
+                <span class="axis-status axis-status-active">
+                    ● Activo
+                </span>
+            }
+            else
+            {
+                <span class="axis-status axis-status-inactive">
+                    ● Inactivo
+                </span>
+            }
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         INFORMACIÓN GENERAL
+         ===================================================== -->
+
+    <div class="producto-section">
+
+        <div class="producto-section-header">
+
+            <div>
+
+                <span class="axis-detail-label">
+                    INFORMACIÓN
+                </span>
+
+                <h3>
+                    Datos del producto
+                </h3>
+
+            </div>
+
+        </div>
+
+
+        <div class="producto-info-grid">
+
+            <div class="producto-info-item">
+
+                <span>
+                    Código interno
+                </span>
+
+                <strong>
+                    @Model.Codigo
+                </strong>
+
+            </div>
+
+
+            <div class="producto-info-item">
+
+                <span>
+                    Código de barras
+                </span>
+
+                <strong>
+                    @(string.IsNullOrWhiteSpace(Model.CodigoBarras)
+                                        ? "No registrado"
+                                        : Model.CodigoBarras)
+                </strong>
+
+            </div>
+
+
+            <div class="producto-info-item">
+
+                <span>
+                    Categoría
+                </span>
+
+                <strong>
+                    @(string.IsNullOrWhiteSpace(Model.Categoria)
+                                        ? "Sin categoría"
+                                        : Model.Categoria)
+                </strong>
+
+            </div>
+
+
+            <div class="producto-info-item">
+
+                <span>
+                    ID del producto
+                </span>
+
+                <strong>
+                    #@Model.IdProducto
+                </strong>
+
+            </div>
+
+
+            <div class="producto-info-item">
+
+                <span>
+                    ID categoría
+                </span>
+
+                <strong>
+                    #@Model.IdCategoriaProducto
+                </strong>
+
+            </div>
+
+
+            <div class="producto-info-item producto-info-full">
+
+                <span>
+                    Descripción
+                </span>
+
+                <strong class="producto-description">
+
+                    @(string.IsNullOrWhiteSpace(Model.Descripcion)
+                                        ? "Sin descripción registrada."
+                                        : Model.Descripcion)
+
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PRECIOS + INVENTARIO
+         ===================================================== -->
+
+    <div class="producto-two-columns">
+
+        <!-- =================================================
+             PRECIOS
+             ================================================= -->
+
+        <div class="producto-section">
+
+            <div class="producto-section-header">
 
                 <div>
 
                     <span class="axis-detail-label">
-                        PRODUCTO
+                        PRECIOS
                     </span>
 
-                    <h2>
-                        @Model.Nombre
-                    </h2>
-
-                    <span class="axis-table-secondary-text">
-                        @Model.Codigo
-                    </span>
+                    <h3>
+                        Información comercial
+                    </h3>
 
                 </div>
 
             </div>
 
 
-            <div class="axis-detail-status">
+            <div class="producto-price-list">
 
-                @if (Model.Activo)
-                {
-                    <span class="axis-status axis-status-active">
-                        Activo
-                    </span>
-                }
-                else
-                {
-                    <span class="axis-status axis-status-inactive">
-                        Inactivo
-                    </span>
-                }
-
-            </div>
-
-        </div>
-
-
-        <!-- INFORMACIÓN -->
-
-        <div class="axis-detail-card">
-
-            <span class="axis-detail-label">
-                INFORMACIÓN DEL PRODUCTO
-            </span>
-
-            <div class="axis-detail-list">
-
-                <div class="axis-detail-row">
-
-                    <span>
-                        Código
-                    </span>
-
-                    <strong>
-                        @Model.Codigo
-                    </strong>
-
-                </div>
-
-                <div class="axis-detail-row">
-
-                    <span>
-                        Categoría
-                    </span>
-
-                    <strong>
-                        @Model.Categoria
-                    </strong>
-
-                </div>
-
-                <div class="axis-detail-row">
-
-                    <span>
-                        ID categoría
-                    </span>
-
-                    <strong>
-                        #@Model.IdCategoriaProducto
-                    </strong>
-
-                </div>
-
-                <div class="axis-detail-row">
-
-                    <span>
-                        Descripción
-                    </span>
-
-                    <strong>
-                        @(string.IsNullOrWhiteSpace(Model.Descripcion)
-                                                ? "—"
-                                                : Model.Descripcion)
-                    </strong>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- PRECIOS -->
-
-        <div class="axis-detail-card">
-
-            <span class="axis-detail-label">
-                PRECIOS
-            </span>
-
-            <div class="axis-detail-list">
-
-                <div class="axis-detail-row">
+                <div class="producto-price-row">
 
                     <span>
                         Precio de compra
@@ -188,7 +307,8 @@
 
                 </div>
 
-                <div class="axis-detail-row">
+
+                <div class="producto-price-row">
 
                     <span>
                         Precio de venta
@@ -200,15 +320,15 @@
 
                 </div>
 
-                <div class="axis-detail-row">
+
+                <div class="producto-price-row producto-margin-row">
 
                     <span>
-                        Margen
+                        Margen por unidad
                     </span>
 
                     <strong>
-                        ₡@((Model.PrecioVenta - Model.PrecioCompra)
-                                                .ToString("N2"))
+                        ₡@margen.ToString("N2")
                     </strong>
 
                 </div>
@@ -218,17 +338,32 @@
         </div>
 
 
-        <!-- INVENTARIO -->
+        <!-- =================================================
+             INVENTARIO
+             ================================================= -->
 
-        <div class="axis-detail-card">
+        <div class="producto-section">
 
-            <span class="axis-detail-label">
-                INVENTARIO
-            </span>
+            <div class="producto-section-header">
 
-            <div class="axis-detail-list">
+                <div>
 
-                <div class="axis-detail-row">
+                    <span class="axis-detail-label">
+                        INVENTARIO
+                    </span>
+
+                    <h3>
+                        Existencias
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            <div class="producto-stock-main">
+
+                <div>
 
                     <span>
                         Stock actual
@@ -240,7 +375,25 @@
 
                 </div>
 
-                <div class="axis-detail-row">
+                @if (stockBajo)
+                {
+                    <span class="producto-stock-warning">
+                        Stock bajo
+                    </span>
+                }
+                else
+                {
+                    <span class="producto-stock-ok">
+                        Stock disponible
+                    </span>
+                }
+
+            </div>
+
+
+            <div class="producto-stock-details">
+
+                <div>
 
                     <span>
                         Stock mínimo
@@ -252,62 +405,15 @@
 
                 </div>
 
-                <div class="axis-detail-row">
+
+                <div>
 
                     <span>
-                        Estado del stock
-                    </span>
-
-                    @if (Model.Stock <= Model.StockMinimo)
-                    {
-                        <strong>
-                            Stock bajo
-                        </strong>
-                    }
-                    else
-                    {
-                        <strong class="axis-detail-active-text">
-                            Disponible
-                        </strong>
-                    }
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- REGISTRO -->
-
-        <div class="axis-detail-card">
-
-            <span class="axis-detail-label">
-                REGISTRO
-            </span>
-
-            <div class="axis-detail-list">
-
-                <div class="axis-detail-row">
-
-                    <span>
-                        ID producto
+                        Diferencia
                     </span>
 
                     <strong>
-                        #@Model.IdProducto
-                    </strong>
-
-                </div>
-
-                <div class="axis-detail-row">
-
-                    <span>
-                        Estado
-                    </span>
-
-                    <strong>
-                        @(Model.Activo ? "Activo" : "Inactivo")
+                        @(Model.Stock - Model.StockMinimo)
                     </strong>
 
                 </div>
@@ -318,4 +424,629 @@
 
     </div>
 
+
+    <!-- =====================================================
+         FOTO DEL PRODUCTO
+         ===================================================== -->
+    @if (tieneImagen)
+    {
+        <div class="producto-section producto-photo-section">
+
+            <div class="producto-section-header">
+
+                <div>
+
+                    <span class="axis-detail-label">
+                        IMAGEN
+                    </span>
+
+                    <h3>
+                        Fotografía del producto
+                    </h3>
+
+                    <p>
+                        Imagen registrada para identificar visualmente
+                        el producto.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="producto-photo-container">
+
+                <img src="@Model.ImagenUrl"
+                     alt="@Model.Nombre"
+                     class="producto-photo-large"
+                     loading="lazy"
+                     onerror="this.style.display='none'; document.getElementById('photo-error').style.display='flex';" />
+
+                <div id="photo-error"
+                     class="producto-photo-error"
+                     style="display:none;">
+
+                    <span>
+                        No se pudo cargar la fotografía.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+
+    <!-- =====================================================
+         CÓDIGO DE BARRAS
+         ===================================================== -->
+
+    <div class="producto-section producto-barcode-section">
+
+        <div class="producto-section-header">
+
+            <div>
+
+                <span class="axis-detail-label">
+                    IDENTIFICACIÓN
+                </span>
+
+                <h3>
+                    Código de barras
+                </h3>
+
+                <p>
+                    Código utilizado para identificar el producto
+                    mediante un lector de códigos de barras.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="producto-barcode-container">
+
+            <div class="producto-barcode-placeholder">
+
+                <div class="barcode-lines">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
+                <strong>
+                    @(string.IsNullOrWhiteSpace(Model.CodigoBarras)
+                                        ? Model.Codigo
+                                        : Model.CodigoBarras)
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="producto-barcode-actions">
+
+            <button type="button"
+                    class="axis-button axis-button-secondary"
+                    onclick="window.print()">
+
+                🖨 Imprimir etiqueta
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         REGISTRO
+         ===================================================== -->
+
+    <div class="producto-section">
+
+        <div class="producto-section-header">
+
+            <div>
+
+                <span class="axis-detail-label">
+                    REGISTRO
+                </span>
+
+                <h3>
+                    Estado del producto
+                </h3>
+
+            </div>
+
+        </div>
+
+
+        <div class="producto-registration-grid">
+
+            <div>
+
+                <span>
+                    ID producto
+                </span>
+
+                <strong>
+                    #@Model.IdProducto
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Estado
+                </span>
+
+                <strong>
+                    @(Model.Activo
+                                        ? "Activo"
+                                        : "Inactivo")
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Inventario
+                </span>
+
+                <strong>
+                    @(stockBajo
+                                        ? "Requiere reposición"
+                                        : "Normal")
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </section>
+
+
+<style>
+
+    .producto-details-page {
+        max-width: 1450px;
+        margin: 0 auto;
+    }
+
+    /* =====================================================
+           HERO
+           ===================================================== */
+
+    .producto-hero-card {
+        display: grid;
+        grid-template-columns: 150px 1fr auto;
+        align-items: center;
+        gap: 28px;
+        padding: 30px;
+        margin-bottom: 22px;
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 22px;
+        background: rgba(20,20,24,.72);
+    }
+
+    .producto-hero-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 18px;
+        overflow: hidden;
+    }
+
+    .producto-image {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        border-radius: 18px;
+        background: #18181d;
+    }
+
+    .producto-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 18px;
+        background: linear-gradient( 145deg, #303038, #151519 );
+        border: 1px solid rgba(255,255,255,.10);
+    }
+
+        .producto-placeholder span {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+    .producto-hero-info h2 {
+        margin: 7px 0 5px;
+        font-size: 32px;
+        color: #ffffff;
+    }
+
+    .producto-code {
+        font-size: 15px;
+        color: rgba(255,255,255,.62);
+        font-family: monospace;
+    }
+
+    .producto-category {
+        margin-top: 10px;
+        color: rgba(255,255,255,.45);
+    }
+
+    /* =====================================================
+           SECCIONES
+           ===================================================== */
+
+    .producto-section {
+        padding: 28px;
+        margin-bottom: 22px;
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 22px;
+        background: rgba(20,20,24,.65);
+    }
+
+    .producto-section-header {
+        margin-bottom: 25px;
+    }
+
+        .producto-section-header h3 {
+            margin: 7px 0 0;
+            font-size: 21px;
+            color: #ffffff;
+        }
+
+        .producto-section-header p {
+            margin-top: 8px;
+            color: rgba(255,255,255,.48);
+        }
+
+    /* =====================================================
+           INFORMACIÓN
+           ===================================================== */
+
+    .producto-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0;
+    }
+
+    .producto-info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 18px 0;
+        border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+        .producto-info-item span,
+        .producto-price-row span,
+        .producto-stock-details span,
+        .producto-registration-grid span {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: rgba(255,255,255,.42);
+        }
+
+        .producto-info-item strong,
+        .producto-price-row strong,
+        .producto-stock-details strong,
+        .producto-registration-grid strong {
+            color: #ffffff;
+            font-size: 15px;
+        }
+
+    .producto-info-full {
+        grid-column: 1 / -1;
+    }
+
+    .producto-description {
+        line-height: 1.6;
+        font-weight: 400;
+        color: rgba(255,255,255,.70) !important;
+    }
+
+    /* =====================================================
+           COLUMNAS
+           ===================================================== */
+
+    .producto-two-columns {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+    }
+
+    /* =====================================================
+           PRECIOS
+           ===================================================== */
+
+    .producto-price-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .producto-price-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 17px 0;
+        border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+        .producto-price-row strong {
+            font-size: 18px;
+        }
+
+    .producto-margin-row strong {
+        font-size: 20px;
+    }
+
+    /* =====================================================
+           STOCK
+           ===================================================== */
+
+    .producto-stock-main {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0 22px;
+    }
+
+        .producto-stock-main div {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .producto-stock-main span:first-child {
+            color: rgba(255,255,255,.42);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+
+        .producto-stock-main strong {
+            font-size: 42px;
+            color: #ffffff;
+        }
+
+    .producto-stock-warning,
+    .producto-stock-ok {
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        border: 1px solid rgba(255,255,255,.10);
+    }
+
+    .producto-stock-warning {
+        color: #ffffff;
+        background: rgba(255,255,255,.08);
+    }
+
+    .producto-stock-ok {
+        color: #ffffff;
+        background: rgba(255,255,255,.05);
+    }
+
+    .producto-stock-details {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255,255,255,.07);
+    }
+
+        .producto-stock-details div,
+        .producto-registration-grid div {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+    /* =====================================================
+           FOTO GRANDE
+           ===================================================== */
+
+    .producto-photo-container {
+        width: 100%;
+        min-height: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        border-radius: 18px;
+        background: rgba(0,0,0,.22);
+        border: 1px solid rgba(255,255,255,.06);
+    }
+
+    .producto-photo-large {
+        display: block;
+        max-width: 100%;
+        max-height: 550px;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        border-radius: 14px;
+    }
+
+    .producto-photo-error {
+        min-height: 250px;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255,255,255,.45);
+    }
+
+    /* =====================================================
+           CÓDIGO DE BARRAS
+           ===================================================== */
+
+    .producto-barcode-container {
+        padding: 25px;
+        background: #ffffff;
+        border-radius: 14px;
+    }
+
+    .producto-barcode-placeholder {
+        min-height: 170px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 18px;
+        color: #000000;
+    }
+
+    .barcode-lines {
+        height: 95px;
+        display: flex;
+        align-items: stretch;
+        gap: 3px;
+    }
+
+        .barcode-lines span {
+            width: 3px;
+            background: #000000;
+        }
+
+            .barcode-lines span:nth-child(2n) {
+                width: 6px;
+            }
+
+            .barcode-lines span:nth-child(3n) {
+                width: 2px;
+            }
+
+            .barcode-lines span:nth-child(4n) {
+                width: 8px;
+            }
+
+    .producto-barcode-placeholder strong {
+        font-family: monospace;
+        font-size: 17px;
+        letter-spacing: 3px;
+        color: #000000;
+    }
+
+    .producto-barcode-actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 18px;
+    }
+
+    /* =====================================================
+           REGISTRO
+           ===================================================== */
+
+    .producto-registration-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+    @@media (max-width: 900px) {
+
+        .producto-hero-card {
+            grid-template-columns: 100px 1fr;
+        }
+
+        .producto-hero-image {
+            width: 100px;
+            height: 100px;
+        }
+
+        .producto-hero-status {
+            grid-column: 2;
+        }
+
+        .producto-two-columns {
+            grid-template-columns: 1fr;
+        }
+
+        .producto-info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .producto-info-full {
+            grid-column: auto;
+        }
+
+        .producto-registration-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .producto-photo-large {
+            max-height: 400px;
+        }
+    }
+
+    /* =====================================================
+           IMPRESIÓN
+           ===================================================== */
+
+    @@media print {
+
+        body {
+            background: #ffffff !important;
+        }
+
+        .axis-page-header,
+        .producto-hero-card,
+        .producto-photo-section,
+        .producto-section:not( .producto-barcode-section ) {
+            display: none !important;
+        }
+
+        .producto-barcode-section {
+            display: block !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .producto-barcode-actions {
+            display: none !important;
+        }
+
+        .producto-barcode-container {
+            border: none !important;
+        }
+    }
+
+</style>

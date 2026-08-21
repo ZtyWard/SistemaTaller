@@ -39,12 +39,23 @@ public class ProductoRepository
     }
 
     public async Task<Producto?>
-        ObtenerPorCodigoAsync(string codigo)
+        ObtenerPorCodigoAsync(
+            string codigo)
     {
         return await _dbSet
             .Include(x => x.CategoriaProducto)
             .FirstOrDefaultAsync(
                 x => x.Codigo == codigo);
+    }
+
+    public async Task<Producto?>
+        ObtenerPorCodigoBarrasAsync(
+            string codigoBarras)
+    {
+        return await _dbSet
+            .Include(x => x.CategoriaProducto)
+            .FirstOrDefaultAsync(
+                x => x.CodigoBarras == codigoBarras);
     }
 
     public async Task<IEnumerable<Producto>>

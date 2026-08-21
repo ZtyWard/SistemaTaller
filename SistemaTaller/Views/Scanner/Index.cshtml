@@ -1,0 +1,381 @@
+﻿@{
+    Layout = "_InternalLayout";
+
+    ViewData["Title"] = "Scanner de productos";
+}
+
+<div class="scanner-page">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header class="scanner-header">
+
+        <div>
+            <span class="scanner-eyebrow">
+                INVENTARIO
+            </span>
+
+            <h1>
+                Scanner
+            </h1>
+
+            <p>
+                Escanea el código QR del producto para consultar
+                su información en tiempo real.
+            </p>
+        </div>
+
+        <a asp-controller="Producto"
+           asp-action="Index"
+           class="scanner-back-button">
+            ← Productos
+        </a>
+
+    </header>
+
+
+    <!-- =====================================================
+         SCANNER
+         ===================================================== -->
+
+    <main class="scanner-main">
+
+        <section class="scanner-card">
+
+            <div class="scanner-card-header">
+
+                <div>
+                    <span class="scanner-section-label">
+                        ESCÁNER QR
+                    </span>
+
+                    <h2>
+                        Escanea un producto
+                    </h2>
+
+                    <p>
+                        Apunta la cámara del teléfono al código QR
+                        del producto.
+                    </p>
+                </div>
+
+                <div class="scanner-status"
+                     id="scannerStatus">
+
+                    <span class="scanner-status-dot"></span>
+
+                    Listo para escanear
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 CAMERA
+                 ================================================= -->
+
+            <div class="scanner-camera-wrapper">
+
+                <div id="qr-reader"
+                     class="scanner-camera">
+                </div>
+
+                <div class="scanner-frame">
+
+                    <span class="scanner-corner top-left"></span>
+                    <span class="scanner-corner top-right"></span>
+                    <span class="scanner-corner bottom-left"></span>
+                    <span class="scanner-corner bottom-right"></span>
+
+                    <div class="scanner-line"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="scanner-help">
+
+                <span>
+                    📱
+                </span>
+
+                <p>
+                    Permite el acceso a la cámara cuando el navegador
+                    lo solicite.
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 MANUAL TEST
+                 ================================================= -->
+
+            <div class="scanner-manual">
+
+                <div class="scanner-divider">
+                    <span>o prueba manualmente</span>
+                </div>
+
+                <div class="scanner-manual-form">
+
+                    <input type="text"
+                           id="codigoManual"
+                           placeholder="Introduce el código de barras..."
+                           autocomplete="off" />
+
+                    <button type="button"
+                            id="btnBuscarManual">
+                        Buscar
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             RESULTADO
+             ===================================================== -->
+
+        <section id="scannerResult"
+                 class="scanner-result"
+                 hidden>
+
+            <div class="scanner-result-header">
+
+                <div>
+                    <span class="scanner-section-label">
+                        PRODUCTO ENCONTRADO
+                    </span>
+
+                    <h2 id="resultadoNombre">
+                        Producto
+                    </h2>
+
+                    <p id="resultadoCodigo">
+                        Código
+                    </p>
+                </div>
+
+                <span id="resultadoEstado"
+                      class="scanner-product-status">
+                    Activo
+                </span>
+
+            </div>
+
+
+            <div class="scanner-product-content">
+
+                <!-- FOTO -->
+
+                <div class="scanner-product-image-wrapper">
+
+                    <div class="scanner-product-image-placeholder"
+                         id="imagenPlaceholder">
+
+                        <span id="imagenInicial">
+                            P
+                        </span>
+
+                    </div>
+
+                    <img id="resultadoImagen"
+                         class="scanner-product-image"
+                         alt="Imagen del producto"
+                         hidden />
+
+                </div>
+
+
+                <!-- INFORMACIÓN -->
+
+                <div class="scanner-product-info">
+
+                    <div class="scanner-info-grid">
+
+                        <div class="scanner-info-item">
+
+                            <span>
+                                CÓDIGO INTERNO
+                            </span>
+
+                            <strong id="infoCodigo">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="scanner-info-item">
+
+                            <span>
+                                CÓDIGO DE BARRAS
+                            </span>
+
+                            <strong id="infoCodigoBarras">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="scanner-info-item">
+
+                            <span>
+                                CATEGORÍA
+                            </span>
+
+                            <strong id="infoCategoria">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="scanner-info-item">
+
+                            <span>
+                                STOCK ACTUAL
+                            </span>
+
+                            <strong id="infoStock">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="scanner-info-item">
+
+                            <span>
+                                STOCK MÍNIMO
+                            </span>
+
+                            <strong id="infoStockMinimo">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="scanner-info-item">
+
+                            <span>
+                                PRECIO DE VENTA
+                            </span>
+
+                            <strong id="infoPrecioVenta">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="scanner-description">
+
+                        <span>
+                            DESCRIPCIÓN
+                        </span>
+
+                        <p id="infoDescripcion">
+                            —
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="scanner-result-actions">
+
+                <a id="btnVerProducto"
+                   href="#"
+                   class="scanner-primary-button">
+                    Ver producto completo
+                </a>
+
+                <button type="button"
+                        id="btnEscanearOtro"
+                        class="scanner-secondary-button">
+                    Escanear otro
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             ERROR
+             ===================================================== -->
+
+        <div id="scannerError"
+             class="scanner-error"
+             hidden>
+
+            <span class="scanner-error-icon">
+                !
+            </span>
+
+            <div>
+
+                <strong>
+                    Producto no encontrado
+                </strong>
+
+                <p id="scannerErrorMessage">
+                    No existe un producto asociado a este código.
+                </p>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+@section Styles {
+
+    <link rel="stylesheet"
+          href="~/css/scanner.css"
+          asp-append-version="true" />
+
+}
+
+
+@section Scripts {
+
+    <!-- =====================================================
+         HTML5 QR CODE
+         ===================================================== -->
+
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
+    </script>
+
+    <script>
+
+        window.scannerConfig = {
+            buscarUrl: '@Url.Action("Buscar", "Scanner")'
+        };
+
+    </script>
+
+    <script src="~/js/scanner.js"
+            asp-append-version="true">
+    </script>
+
+}

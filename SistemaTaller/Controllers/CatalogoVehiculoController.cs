@@ -8,9 +8,6 @@ using Negocios.DTOs;
 using Negocios.Interfaces;
 using Negocios.Seguridad;
 
-// =====================================================
-
-using Microsoft.AspNetCore.Authorization;
 public class CatalogoVehiculoController : Controller
 {
     private readonly IMarcaService _marcaService;
@@ -182,6 +179,7 @@ public class CatalogoVehiculoController : Controller
         return RedirectToAction(nameof(Marcas));
     }
 
+
     // =====================================================
     // MODELOS
     // =====================================================
@@ -190,7 +188,8 @@ public class CatalogoVehiculoController : Controller
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> Modelos()
     {
-        var modelos = await _modeloService.ObtenerTodosAsync();
+        var modelos =
+            await _modeloService.ObtenerTodosAsync();
 
         return View(modelos);
     }
@@ -199,7 +198,8 @@ public class CatalogoVehiculoController : Controller
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> ModelosActivos()
     {
-        var modelos = await _modeloService.ObtenerActivasAsync();
+        var modelos =
+            await _modeloService.ObtenerActivasAsync();
 
         return View("Modelos", modelos);
     }
@@ -208,7 +208,8 @@ public class CatalogoVehiculoController : Controller
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> DetalleModelo(int id)
     {
-        var modelo = await _modeloService.ObtenerPorIdAsync(id);
+        var modelo =
+            await _modeloService.ObtenerPorIdAsync(id);
 
         if (modelo == null)
             return NotFound();
@@ -218,8 +219,13 @@ public class CatalogoVehiculoController : Controller
 
     // GET: CatalogoVehiculo/CrearModelo
     [Authorize(Policy = Permisos.VehiculosCrear)]
-    public IActionResult CrearModelo()
+    public async Task<IActionResult> CrearModelo()
     {
+        var marcas =
+            await _marcaService.ObtenerActivasAsync();
+
+        ViewBag.Marcas = marcas;
+
         return View();
     }
 
@@ -231,7 +237,12 @@ public class CatalogoVehiculoController : Controller
         ModeloGuardarDto dto)
     {
         if (!ModelState.IsValid)
+        {
+            ViewBag.Marcas =
+                await _marcaService.ObtenerActivasAsync();
+
             return View(dto);
+        }
 
         try
         {
@@ -248,6 +259,20 @@ public class CatalogoVehiculoController : Controller
                 string.Empty,
                 ex.Message);
 
+            ViewBag.Marcas =
+                await _marcaService.ObtenerActivasAsync();
+
+            return View(dto);
+        }
+        catch (ArgumentException ex)
+        {
+            ModelState.AddModelError(
+                string.Empty,
+                ex.Message);
+
+            ViewBag.Marcas =
+                await _marcaService.ObtenerActivasAsync();
+
             return View(dto);
         }
     }
@@ -256,7 +281,8 @@ public class CatalogoVehiculoController : Controller
     [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> EditarModelo(int id)
     {
-        var modelo = await _modeloService.ObtenerPorIdAsync(id);
+        var modelo =
+            await _modeloService.ObtenerPorIdAsync(id);
 
         if (modelo == null)
             return NotFound();
@@ -291,7 +317,9 @@ public class CatalogoVehiculoController : Controller
         try
         {
             var actualizado =
-                await _modeloService.ActualizarAsync(id, dto);
+                await _modeloService.ActualizarAsync(
+                    id,
+                    dto);
 
             if (!actualizado)
                 return NotFound();
@@ -302,6 +330,16 @@ public class CatalogoVehiculoController : Controller
             return RedirectToAction(nameof(Modelos));
         }
         catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(
+                string.Empty,
+                ex.Message);
+
+            ViewBag.IdModelo = id;
+
+            return View(dto);
+        }
+        catch (ArgumentException ex)
         {
             ModelState.AddModelError(
                 string.Empty,
@@ -322,7 +360,9 @@ public class CatalogoVehiculoController : Controller
         bool activo)
     {
         var actualizado =
-            await _modeloService.CambiarEstadoAsync(id, activo);
+            await _modeloService.CambiarEstadoAsync(
+                id,
+                activo);
 
         if (!actualizado)
             return NotFound();
@@ -334,6 +374,7 @@ public class CatalogoVehiculoController : Controller
 
         return RedirectToAction(nameof(Modelos));
     }
+
 
     // =====================================================
     // TIPOS DE VEHÍCULO
@@ -396,9 +437,18 @@ public class CatalogoVehiculoController : Controller
             TempData["Success"] =
                 "Tipo de vehículo creado correctamente.";
 
-            return RedirectToAction(nameof(TiposVehiculo));
+            return RedirectToAction(
+                nameof(TiposVehiculo));
         }
         catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(
+                string.Empty,
+                ex.Message);
+
+            return View(dto);
+        }
+        catch (ArgumentException ex)
         {
             ModelState.AddModelError(
                 string.Empty,
@@ -424,7 +474,8 @@ public class CatalogoVehiculoController : Controller
             Activo = tipo.Activo
         };
 
-        ViewBag.IdTipoVehiculo = tipo.IdTipoVehiculo;
+        ViewBag.IdTipoVehiculo =
+            tipo.IdTipoVehiculo;
 
         return View(dto);
     }
@@ -457,9 +508,20 @@ public class CatalogoVehiculoController : Controller
             TempData["Success"] =
                 "Tipo de vehículo actualizado correctamente.";
 
-            return RedirectToAction(nameof(TiposVehiculo));
+            return RedirectToAction(
+                nameof(TiposVehiculo));
         }
         catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(
+                string.Empty,
+                ex.Message);
+
+            ViewBag.IdTipoVehiculo = id;
+
+            return View(dto);
+        }
+        catch (ArgumentException ex)
         {
             ModelState.AddModelError(
                 string.Empty,
@@ -492,8 +554,10 @@ public class CatalogoVehiculoController : Controller
                 ? "Tipo de vehículo activado correctamente."
                 : "Tipo de vehículo desactivado correctamente.";
 
-        return RedirectToAction(nameof(TiposVehiculo));
+        return RedirectToAction(
+            nameof(TiposVehiculo));
     }
+
 
     // =====================================================
     // TIPOS DE COMBUSTIBLE
@@ -516,12 +580,15 @@ public class CatalogoVehiculoController : Controller
         var tipos =
             await _tipoCombustibleService.ObtenerActivasAsync();
 
-        return View("TiposCombustible", tipos);
+        return View(
+            "TiposCombustible",
+            tipos);
     }
 
     // GET: CatalogoVehiculo/DetalleTipoCombustible/5
     [Authorize(Policy = Permisos.VehiculosVer)]
-    public async Task<IActionResult> DetalleTipoCombustible(int id)
+    public async Task<IActionResult> DetalleTipoCombustible(
+        int id)
     {
         var tipo =
             await _tipoCombustibleService.ObtenerPorIdAsync(id);
@@ -556,9 +623,18 @@ public class CatalogoVehiculoController : Controller
             TempData["Success"] =
                 "Tipo de combustible creado correctamente.";
 
-            return RedirectToAction(nameof(TiposCombustible));
+            return RedirectToAction(
+                nameof(TiposCombustible));
         }
         catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(
+                string.Empty,
+                ex.Message);
+
+            return View(dto);
+        }
+        catch (ArgumentException ex)
         {
             ModelState.AddModelError(
                 string.Empty,
@@ -570,7 +646,8 @@ public class CatalogoVehiculoController : Controller
 
     // GET: CatalogoVehiculo/EditarTipoCombustible/5
     [Authorize(Policy = Permisos.VehiculosEditar)]
-    public async Task<IActionResult> EditarTipoCombustible(int id)
+    public async Task<IActionResult> EditarTipoCombustible(
+        int id)
     {
         var tipo =
             await _tipoCombustibleService.ObtenerPorIdAsync(id);
@@ -584,7 +661,8 @@ public class CatalogoVehiculoController : Controller
             Activo = tipo.Activo
         };
 
-        ViewBag.IdTipoCombustible = tipo.IdTipoCombustible;
+        ViewBag.IdTipoCombustible =
+            tipo.IdTipoCombustible;
 
         return View(dto);
     }
@@ -617,9 +695,20 @@ public class CatalogoVehiculoController : Controller
             TempData["Success"] =
                 "Tipo de combustible actualizado correctamente.";
 
-            return RedirectToAction(nameof(TiposCombustible));
+            return RedirectToAction(
+                nameof(TiposCombustible));
         }
         catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(
+                string.Empty,
+                ex.Message);
+
+            ViewBag.IdTipoCombustible = id;
+
+            return View(dto);
+        }
+        catch (ArgumentException ex)
         {
             ModelState.AddModelError(
                 string.Empty,
@@ -652,6 +741,7 @@ public class CatalogoVehiculoController : Controller
                 ? "Tipo de combustible activado correctamente."
                 : "Tipo de combustible desactivado correctamente.";
 
-        return RedirectToAction(nameof(TiposCombustible));
+        return RedirectToAction(
+            nameof(TiposCombustible));
     }
 }

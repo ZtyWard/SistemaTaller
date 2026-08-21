@@ -16,9 +16,18 @@ public class ModeloConfiguration : IEntityTypeConfiguration<Modelo>
             .HasMaxLength(100)
             .IsRequired();
 
+        builder.Property(x => x.ImagenUrl)
+            .HasMaxLength(1000)
+            .IsRequired(false);
+
+        builder.Property(x => x.FuenteImagen)
+            .HasMaxLength(500)
+            .IsRequired(false);
+
         builder.Property(x => x.Activo)
             .HasDefaultValue(true);
 
+        // No permitir duplicar un modelo dentro de una misma marca.
         builder.HasIndex(x => new
         {
             x.IdMarca,

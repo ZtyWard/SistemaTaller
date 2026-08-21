@@ -17,7 +17,7 @@
             <h1>Modelos</h1>
 
             <p>
-                Administra los modelos asociados a las marcas.
+                Administra los modelos asociados a las marcas del taller.
             </p>
 
         </div>
@@ -49,9 +49,17 @@
 
     <div class="axis-toolbar">
 
-        <span class="axis-record-count">
-            @Model.Count() modelos registrados
-        </span>
+        <div>
+
+            <strong>
+                @Model.Count() modelos
+            </strong>
+
+            <span class="axis-table-secondary-text">
+                registrados en el catálogo
+            </span>
+
+        </div>
 
     </div>
 
@@ -63,13 +71,31 @@
             <table class="axis-table">
 
                 <thead>
+
                     <tr>
-                        <th>Modelo</th>
-                        <th>Marca</th>
-                        <th>Identificador</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
+
+                        <th>
+                            MODELO
+                        </th>
+
+                        <th>
+                            MARCA
+                        </th>
+
+                        <th>
+                            IDENTIFICADOR
+                        </th>
+
+                        <th>
+                            ESTADO
+                        </th>
+
+                        <th>
+                            ACCIONES
+                        </th>
+
                     </tr>
+
                 </thead>
 
                 <tbody>
@@ -77,10 +103,24 @@
                     @if (!Model.Any())
                     {
                         <tr>
+
                             <td colspan="5"
                                 class="axis-empty">
-                                No hay modelos registrados.
+
+                                <div style="padding:40px 20px;">
+
+                                    <strong>
+                                        No hay modelos registrados
+                                    </strong>
+
+                                    <div class="axis-table-secondary-text">
+                                        Comienza agregando el primer modelo al catálogo.
+                                    </div>
+
+                                </div>
+
                             </td>
+
                         </tr>
                     }
                     else
@@ -94,8 +134,10 @@
                                     <div class="axis-client-cell">
 
                                         <div class="axis-client-avatar">
-                                            @modelo.Nombre.Substring(0, 1).ToUpper()
-                                        </div>
+                                            @(string.IsNullOrWhiteSpace(modelo.Nombre)
+                                                                                ? "?"
+                                                                                : modelo.Nombre.Substring(0, 1).ToUpper())
+                                </div>
 
                                         <div>
 
@@ -113,17 +155,28 @@
 
                                 </td>
 
+
                                 <td>
-                                    #@modelo.IdMarca
+
+                                    <strong>
+                                        @modelo.MarcaNombre
+                                    </strong>
+
+                                    <small class="axis-table-secondary-text">
+                                        #@modelo.IdMarca
+                                    </small>
+
                                 </td>
+
 
                                 <td>
                                     #@modelo.IdModelo
                                 </td>
 
+
                                 <td>
 
-                                    @if (modelo.Activo)
+                            @if (modelo.Activo)
                                     {
                                         <span class="axis-status axis-status-active">
                                             Activo
@@ -137,6 +190,7 @@
                                     }
 
                         </td>
+
 
                         <td>
 

@@ -11,6 +11,9 @@ public interface IProductoRepository : IRepository<Producto>
     Task<Producto?> ObtenerPorCodigoAsync(
         string codigo);
 
+    Task<Producto?> ObtenerPorCodigoBarrasAsync(
+        string codigoBarras);
+
     Task<IEnumerable<Producto>> ObtenerPorCategoriaAsync(
         int idCategoriaProducto);
 }

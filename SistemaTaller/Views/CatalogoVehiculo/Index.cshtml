@@ -1,0 +1,395 @@
+﻿@{
+    ViewData["Title"] = "Catálogo de vehículos";
+}
+
+<section class="axis-page">
+
+    <div class="axis-page-header">
+
+        <div>
+
+            <span class="axis-page-kicker">
+                CATÁLOGOS · VEHÍCULOS
+            </span>
+
+            <h1>Catálogo de vehículos</h1>
+
+            <p>
+                Administra marcas, modelos, tipos de vehículo y combustibles.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         INTRODUCCIÓN
+         ===================================================== -->
+
+    <div class="axis-form-card"
+         style="margin-bottom: 24px;">
+
+        <div style="display:flex;
+                    align-items:center;
+                    gap:18px;">
+
+            <div style="width:56px;
+                        height:56px;
+                        border-radius:16px;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        font-size:25px;
+                        background:rgba(255,255,255,.06);
+                        border:1px solid rgba(255,255,255,.10);">
+
+                🚗
+
+            </div>
+
+            <div>
+
+                <div class="axis-form-section-title"
+                     style="margin-bottom:6px;">
+
+                    CONFIGURACIÓN DEL CATÁLOGO
+
+                </div>
+
+                <p style="margin:0;
+                          color:rgba(255,255,255,.55);">
+
+                    Define la información base que utilizará AXIS
+                    para registrar y administrar vehículos.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         CATÁLOGOS
+         ===================================================== -->
+
+    <div style="display:grid;
+                grid-template-columns:repeat(2, minmax(0, 1fr));
+                gap:20px;">
+
+
+        <!-- =================================================
+             MARCAS
+             ================================================= -->
+
+        <div class="axis-form-card">
+
+            <div style="display:flex;
+                        justify-content:space-between;
+                        align-items:flex-start;
+                        gap:20px;">
+
+                <div>
+
+                    <div style="font-size:30px;
+                                margin-bottom:15px;">
+                        🏷️
+                    </div>
+
+                    <span class="axis-page-kicker">
+                        CATÁLOGO
+                    </span>
+
+                    <h2 style="margin-top:8px;">
+                        Marcas
+                    </h2>
+
+                    <p style="color:rgba(255,255,255,.55);">
+                        Administra las marcas disponibles para
+                        los vehículos del taller.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div style="display:flex;
+                        gap:10px;
+                        margin-top:24px;
+                        flex-wrap:wrap;">
+
+                <a asp-action="Marcas"
+                   class="axis-button axis-button-primary">
+
+                    Ver marcas
+
+                </a>
+
+                <a asp-action="CrearMarca"
+                   class="axis-button axis-button-secondary">
+
+                    + Nueva marca
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             MODELOS
+             ================================================= -->
+
+        <div class="axis-form-card">
+
+            <div>
+
+                <div style="font-size:30px;
+                            margin-bottom:15px;">
+                    🚘
+                </div>
+
+                <span class="axis-page-kicker">
+                    CATÁLOGO
+                </span>
+
+                <h2 style="margin-top:8px;">
+                    Modelos
+                </h2>
+
+                <p style="color:rgba(255,255,255,.55);">
+                    Administra los modelos asociados a cada marca.
+                    Aquí posteriormente estará la búsqueda mediante
+                    la API externa.
+                </p>
+
+            </div>
+
+            <div style="display:flex;
+                        gap:10px;
+                        margin-top:24px;
+                        flex-wrap:wrap;">
+
+                <a asp-action="Modelos"
+                   class="axis-button axis-button-primary">
+
+                    Ver modelos
+
+                </a>
+
+                <a asp-action="CrearModelo"
+                   class="axis-button axis-button-secondary">
+
+                    + Nuevo modelo
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TIPOS DE VEHÍCULO
+             ================================================= -->
+
+        <div class="axis-form-card">
+
+            <div>
+
+                <div style="font-size:30px;
+                            margin-bottom:15px;">
+                    🚙
+                </div>
+
+                <span class="axis-page-kicker">
+                    CLASIFICACIÓN
+                </span>
+
+                <h2 style="margin-top:8px;">
+                    Tipos de vehículo
+                </h2>
+
+                <p style="color:rgba(255,255,255,.55);">
+                    Define categorías como sedán, SUV, pickup,
+                    motocicleta, camión y otros tipos.
+                </p>
+
+            </div>
+
+            <div style="display:flex;
+                        gap:10px;
+                        margin-top:24px;
+                        flex-wrap:wrap;">
+
+                <a asp-action="TiposVehiculo"
+                   class="axis-button axis-button-primary">
+
+                    Ver tipos
+
+                </a>
+
+                <a asp-action="CrearTipoVehiculo"
+                   class="axis-button axis-button-secondary">
+
+                    + Nuevo tipo
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             COMBUSTIBLES
+             ================================================= -->
+
+        <div class="axis-form-card">
+
+            <div>
+
+                <div style="font-size:30px;
+                            margin-bottom:15px;">
+                    ⛽
+                </div>
+
+                <span class="axis-page-kicker">
+                    CLASIFICACIÓN
+                </span>
+
+                <h2 style="margin-top:8px;">
+                    Tipos de combustible
+                </h2>
+
+                <p style="color:rgba(255,255,255,.55);">
+                    Administra los tipos de combustible utilizados
+                    por los vehículos registrados.
+                </p>
+
+            </div>
+
+            <div style="display:flex;
+                        gap:10px;
+                        margin-top:24px;
+                        flex-wrap:wrap;">
+
+                <a asp-action="TiposCombustible"
+                   class="axis-button axis-button-primary">
+
+                    Ver combustibles
+
+                </a>
+
+                <a asp-action="CrearTipoCombustible"
+                   class="axis-button axis-button-secondary">
+
+                    + Nuevo combustible
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FLUJO DEL CATÁLOGO
+         ===================================================== -->
+
+    <div class="axis-form-card"
+         style="margin-top:24px;">
+
+        <div class="axis-form-section-title"
+             style="margin-bottom:18px;">
+
+            ESTRUCTURA DEL CATÁLOGO
+
+        </div>
+
+        <div style="display:grid;
+                    grid-template-columns:repeat(4, minmax(0, 1fr));
+                    gap:12px;">
+
+            <div style="padding:18px;
+                        border:1px solid rgba(255,255,255,.08);
+                        border-radius:14px;
+                        background:rgba(255,255,255,.025);">
+
+                <strong>01</strong>
+
+                <div style="margin-top:8px;">
+                    Marca
+                </div>
+
+                <small style="color:rgba(255,255,255,.45);">
+                    Toyota, Ford, Honda...
+                </small>
+
+            </div>
+
+
+            <div style="padding:18px;
+                        border:1px solid rgba(255,255,255,.08);
+                        border-radius:14px;
+                        background:rgba(255,255,255,.025);">
+
+                <strong>02</strong>
+
+                <div style="margin-top:8px;">
+                    Modelo
+                </div>
+
+                <small style="color:rgba(255,255,255,.45);">
+                    Corolla, Civic, Ranger...
+                </small>
+
+            </div>
+
+
+            <div style="padding:18px;
+                        border:1px solid rgba(255,255,255,.08);
+                        border-radius:14px;
+                        background:rgba(255,255,255,.025);">
+
+                <strong>03</strong>
+
+                <div style="margin-top:8px;">
+                    Tipo
+                </div>
+
+                <small style="color:rgba(255,255,255,.45);">
+                    Sedán, SUV, Pickup...
+                </small>
+
+            </div>
+
+
+            <div style="padding:18px;
+                        border:1px solid rgba(255,255,255,.08);
+                        border-radius:14px;
+                        background:rgba(255,255,255,.025);">
+
+                <strong>04</strong>
+
+                <div style="margin-top:8px;">
+                    Combustible
+                </div>
+
+                <small style="color:rgba(255,255,255,.45);">
+                    Gasolina, diésel, híbrido...
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

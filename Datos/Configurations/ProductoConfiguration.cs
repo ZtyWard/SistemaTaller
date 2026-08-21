@@ -13,16 +13,44 @@ public class ProductoConfiguration : IEntityTypeConfiguration<Producto>
             table.HasTrigger("TR_Auditoria_Producto");
         });
 
+        // ==========================================
+        // CLAVE PRIMARIA
+        // ==========================================
+
         builder.HasKey(x => x.IdProducto);
+
+
+        // ==========================================
+        // IDENTIFICACIÓN
+        // ==========================================
 
         builder.Property(x => x.Codigo)
             .HasMaxLength(450)
             .IsRequired();
 
+        builder.Property(x => x.CodigoBarras)
+            .HasMaxLength(50)
+            .IsRequired(false);
+
+
+        // ==========================================
+        // INFORMACIÓN DEL PRODUCTO
+        // ==========================================
+
         builder.Property(x => x.Nombre)
             .IsRequired();
 
-        builder.Property(x => x.Descripcion);
+        builder.Property(x => x.Descripcion)
+            .IsRequired(false);
+
+        builder.Property(x => x.ImagenUrl)
+            .HasMaxLength(500)
+            .IsRequired(false);
+
+
+        // ==========================================
+        // PRECIOS
+        // ==========================================
 
         builder.Property(x => x.PrecioCompra)
             .HasPrecision(18, 2)
@@ -32,6 +60,11 @@ public class ProductoConfiguration : IEntityTypeConfiguration<Producto>
             .HasPrecision(18, 2)
             .IsRequired();
 
+
+        // ==========================================
+        // INVENTARIO
+        // ==========================================
+
         builder.Property(x => x.Stock)
             .IsRequired();
 
@@ -40,15 +73,40 @@ public class ProductoConfiguration : IEntityTypeConfiguration<Producto>
             .IsRequired();
 
         builder.Property(x => x.Activo)
-            .HasDefaultValue(true);
+            .HasDefaultValue(true)
+            .IsRequired();
+
+
+        // ==========================================
+        // ÍNDICES
+        // ==========================================
 
         builder.HasIndex(x => x.Codigo)
             .IsUnique();
+
+        // El código de barras puede ser NULL
+        // para productos antiguos.
+        //
+        // Cuando exista un código de barras,
+        // debe ser único.
+        builder.HasIndex(x => x.CodigoBarras)
+            .IsUnique()
+            .HasFilter("[CodigoBarras] IS NOT NULL");
+
+
+        // ==========================================
+        // CATEGORÍA
+        // ==========================================
 
         builder.HasOne(x => x.CategoriaProducto)
             .WithMany(x => x.Productos)
             .HasForeignKey(x => x.IdCategoriaProducto)
             .OnDelete(DeleteBehavior.Restrict);
+
+
+        // ==========================================
+        // MOVIMIENTOS DE INVENTARIO
+        // ==========================================
 
         builder.HasMany(x => x.MovimientosInventario)
             .WithOne(x => x.Producto)

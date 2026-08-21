@@ -1,0 +1,612 @@
+﻿/* =========================================================
+   AXIS - SCANNER
+   ========================================================= */
+
+.scanner-page {
+    min-height: 100vh;
+    padding: 48px 6%;
+    background: radial-gradient( circle at top right, rgba(255,255,255,.035), transparent 35% ), #09090b;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.scanner-header {
+    max-width: 1100px;
+    margin: 0 auto 36px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.scanner-eyebrow {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    color: #77777f;
+}
+
+.scanner-header h1 {
+    margin: 0;
+    font-size: clamp(42px, 6vw, 64px);
+    line-height: .95;
+    color: #f5f5f7;
+}
+
+.scanner-header p {
+    max-width: 600px;
+    margin: 14px 0 0;
+    color: #85858e;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.scanner-back-button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 0 18px;
+    border: 1px solid #29292f;
+    border-radius: 10px;
+    color: #dedee2;
+    text-decoration: none;
+    background: #111114;
+    transition: background .2s ease, border-color .2s ease;
+}
+
+    .scanner-back-button:hover {
+        background: #18181c;
+        border-color: #414148;
+    }
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.scanner-main {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.scanner-card,
+.scanner-result {
+    border: 1px solid #25252b;
+    border-radius: 22px;
+    background: linear-gradient( 145deg, #151518, #0f0f12 );
+    box-shadow: 0 30px 80px rgba(0,0,0,.25);
+}
+
+.scanner-card {
+    padding: 28px;
+}
+
+.scanner-card-header,
+.scanner-result-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.scanner-section-label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    color: #77777f;
+}
+
+.scanner-card h2,
+.scanner-result h2 {
+    margin: 0;
+    font-size: 25px;
+    color: #f2f2f4;
+}
+
+.scanner-card-header p {
+    margin: 7px 0 0;
+    color: #77777f;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.scanner-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 13px;
+    border: 1px solid #29352f;
+    border-radius: 999px;
+    color: #9fe0b7;
+    background: #101713;
+    font-size: 11px;
+}
+
+.scanner-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #72d79c;
+    box-shadow: 0 0 12px rgba(114,215,156,.7);
+}
+
+
+/* =========================================================
+   CAMERA
+   ========================================================= */
+
+.scanner-camera-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 650px;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid #2c2c32;
+    border-radius: 18px;
+    background: #050506;
+}
+
+.scanner-camera {
+    width: 100%;
+    min-height: 390px;
+}
+
+    .scanner-camera video {
+        width: 100% !important;
+        height: 390px !important;
+        object-fit: cover;
+    }
+
+#qr-reader__dashboard_section {
+    display: none !important;
+}
+
+#qr-reader__header_message {
+    display: none !important;
+}
+
+#qr-reader img {
+    display: none !important;
+}
+
+
+/* =========================================================
+   SCAN FRAME
+   ========================================================= */
+
+.scanner-frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(68%, 360px);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.scanner-corner {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    border-color: #fff;
+    border-style: solid;
+    filter: drop-shadow( 0 0 8px rgba(255,255,255,.35) );
+}
+
+    .scanner-corner.top-left {
+        top: 0;
+        left: 0;
+        border-width: 3px 0 0 3px;
+        border-radius: 8px 0 0 0;
+    }
+
+    .scanner-corner.top-right {
+        top: 0;
+        right: 0;
+        border-width: 3px 3px 0 0;
+        border-radius: 0 8px 0 0;
+    }
+
+    .scanner-corner.bottom-left {
+        bottom: 0;
+        left: 0;
+        border-width: 0 0 3px 3px;
+        border-radius: 0 0 0 8px;
+    }
+
+    .scanner-corner.bottom-right {
+        right: 0;
+        bottom: 0;
+        border-width: 0 3px 3px 0;
+        border-radius: 0 0 8px 0;
+    }
+
+.scanner-line {
+    position: absolute;
+    left: 8%;
+    right: 8%;
+    top: 50%;
+    height: 2px;
+    background: #fff;
+    box-shadow: 0 0 12px rgba(255,255,255,.7);
+    animation: scannerLine 2s ease-in-out infinite;
+}
+
+@keyframes scannerLine {
+
+    0%, 100% {
+        transform: translateY(-115px);
+        opacity: .55;
+    }
+
+    50% {
+        transform: translateY(115px);
+        opacity: 1;
+    }
+}
+
+
+/* =========================================================
+   HELP
+   ========================================================= */
+
+.scanner-help {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 18px auto 0;
+    color: #73737b;
+    font-size: 12px;
+    text-align: center;
+}
+
+    .scanner-help p {
+        margin: 0;
+    }
+
+
+/* =========================================================
+   MANUAL
+   ========================================================= */
+
+.scanner-manual {
+    max-width: 650px;
+    margin: 28px auto 0;
+}
+
+.scanner-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+    color: #626269;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+}
+
+    .scanner-divider::before,
+    .scanner-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #29292f;
+    }
+
+.scanner-manual-form {
+    display: flex;
+    gap: 10px;
+}
+
+    .scanner-manual-form input {
+        flex: 1;
+        height: 44px;
+        padding: 0 14px;
+        border: 1px solid #29292f;
+        border-radius: 10px;
+        outline: none;
+        color: #eeeeef;
+        background: #111114;
+    }
+
+        .scanner-manual-form input:focus {
+            border-color: #55555d;
+        }
+
+    .scanner-manual-form button {
+        padding: 0 20px;
+        border: 1px solid #e7e7e9;
+        border-radius: 10px;
+        cursor: pointer;
+        color: #111;
+        background: #eeeef0;
+        font-weight: 600;
+    }
+
+
+/* =========================================================
+   RESULT
+   ========================================================= */
+
+.scanner-result {
+    margin-top: 24px;
+    padding: 28px;
+}
+
+.scanner-result-header {
+    padding-bottom: 22px;
+    border-bottom: 1px solid #29292f;
+}
+
+    .scanner-result-header p {
+        margin: 6px 0 0;
+        color: #77777f;
+    }
+
+.scanner-product-status {
+    padding: 8px 13px;
+    border: 1px solid #294133;
+    border-radius: 999px;
+    color: #9de1b7;
+    background: #101813;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   PRODUCT
+   ========================================================= */
+
+.scanner-product-content {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 30px;
+    padding: 28px 0;
+}
+
+.scanner-product-image-wrapper {
+    width: 220px;
+    height: 220px;
+    overflow: hidden;
+    border: 1px solid #303038;
+    border-radius: 18px;
+    background: #19191e;
+}
+
+.scanner-product-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: #d9d9dd;
+    background: radial-gradient( circle, #303039, #18181d );
+    font-size: 70px;
+    font-weight: 700;
+}
+
+.scanner-product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   INFO
+   ========================================================= */
+
+.scanner-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid #29292f;
+    border-left: 1px solid #29292f;
+}
+
+.scanner-info-item {
+    padding: 17px;
+    border-right: 1px solid #29292f;
+    border-bottom: 1px solid #29292f;
+}
+
+    .scanner-info-item span,
+    .scanner-description span {
+        display: block;
+        margin-bottom: 7px;
+        color: #686870;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: .13em;
+    }
+
+    .scanner-info-item strong {
+        color: #e8e8eb;
+        font-size: 14px;
+    }
+
+.scanner-description {
+    padding-top: 20px;
+}
+
+    .scanner-description p {
+        margin: 0;
+        color: #a1a1a9;
+        line-height: 1.6;
+    }
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.scanner-result-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 22px;
+    border-top: 1px solid #29292f;
+}
+
+.scanner-primary-button,
+.scanner-secondary-button {
+    min-height: 42px;
+    padding: 0 17px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.scanner-primary-button {
+    border: 1px solid #e7e7e9;
+    color: #111;
+    background: #eeeef0;
+}
+
+.scanner-secondary-button {
+    border: 1px solid #303038;
+    color: #dddde1;
+    background: #141417;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.scanner-error {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 20px;
+    padding: 16px 18px;
+    border: 1px solid #4b2b2b;
+    border-radius: 14px;
+    background: #1a1010;
+}
+
+.scanner-error-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: #ffb1b1;
+    background: #3a1919;
+    font-weight: 700;
+}
+
+.scanner-error strong {
+    color: #f2c0c0;
+    font-size: 13px;
+}
+
+.scanner-error p {
+    margin: 4px 0 0;
+    color: #a67f7f;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .scanner-page {
+        padding: 24px 14px 40px;
+    }
+
+    .scanner-header {
+        align-items: flex-start;
+        flex-direction: column;
+        margin-bottom: 22px;
+    }
+
+        .scanner-header h1 {
+            font-size: 42px;
+        }
+
+    .scanner-back-button {
+        width: 100%;
+    }
+
+    .scanner-card,
+    .scanner-result {
+        padding: 18px;
+        border-radius: 17px;
+    }
+
+    .scanner-card-header,
+    .scanner-result-header {
+        flex-direction: column;
+    }
+
+    .scanner-status {
+        align-self: flex-start;
+    }
+
+    .scanner-camera {
+        min-height: 360px;
+    }
+
+        .scanner-camera video {
+            height: 360px !important;
+        }
+
+    .scanner-manual-form {
+        flex-direction: column;
+    }
+
+        .scanner-manual-form button {
+            height: 44px;
+        }
+
+    .scanner-product-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .scanner-product-image-wrapper {
+        width: 100%;
+        max-width: 260px;
+        height: 260px;
+        margin: 0 auto;
+    }
+
+    .scanner-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .scanner-result-actions {
+        flex-direction: column;
+    }
+
+    .scanner-primary-button,
+    .scanner-secondary-button {
+        width: 100%;
+    }
+}

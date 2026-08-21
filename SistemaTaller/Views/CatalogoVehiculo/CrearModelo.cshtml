@@ -2,9 +2,32 @@
 
 @{
     ViewData["Title"] = "Nuevo modelo";
+
+    var marcas =
+        ViewBag.Marcas as IEnumerable<Negocios.DTOs.MarcaDto>
+        ?? Enumerable.Empty<Negocios.DTOs.MarcaDto>();
+
+    var buscarModelosUrl =
+        Url.Action(
+            "BuscarModelos",
+            "CatalogoVehiculoApi");
+
+    var buscarModelosPorAnioUrl =
+        Url.Action(
+            "BuscarModelosPorAnio",
+            "CatalogoVehiculoApi");
+
+    var obtenerTiposUrl =
+        Url.Action(
+            "ObtenerTipos",
+            "CatalogoVehiculoApi");
 }
 
 <section class="axis-page">
+
+    <!-- =====================================================
+         ENCABEZADO
+         ===================================================== -->
 
     <div class="axis-page-header">
 
@@ -17,7 +40,8 @@
             <h1>Nuevo modelo</h1>
 
             <p>
-                Registra un nuevo modelo de vehículo.
+                Registra un modelo utilizando información real
+                del catálogo de vehículos.
             </p>
 
         </div>
@@ -30,6 +54,10 @@
     </div>
 
 
+    <!-- =====================================================
+         FORMULARIO
+         ===================================================== -->
+
     <div class="axis-form-card">
 
         <form asp-action="CrearModelo"
@@ -38,10 +66,19 @@
 
             @Html.AntiForgeryToken()
 
+
+            <!-- =================================================
+                 VALIDACIONES
+                 ================================================= -->
+
             <div asp-validation-summary="ModelOnly"
                  class="axis-form-validation">
             </div>
 
+
+            <!-- =================================================
+                 INFORMACIÓN DEL MODELO
+                 ================================================= -->
 
             <div class="axis-form-section">
 
@@ -49,27 +86,112 @@
                     Información del modelo
                 </div>
 
+
                 <div class="axis-form-grid">
+
+
+                    <!-- =========================================
+                         MARCA
+                         ========================================= -->
 
                     <div class="axis-field">
 
                         <label asp-for="IdMarca">
-                            ID de marca
+                            Marca
                         </label>
 
-                        <input asp-for="IdMarca"
-                               type="number"
-                               min="1"
-                               placeholder="Ej. 1" />
+                        <select asp-for="IdMarca"
+                                id="IdMarca">
+
+                            <option value="">
+                                Selecciona una marca
+                            </option>
+
+                            @foreach (var marca in marcas)
+                            {
+                                <option value="@marca.IdMarca"
+                                        data-marca-nombre="@marca.Nombre">
+
+                                    @marca.Nombre
+
+                                </option>
+                            }
+
+                        </select>
 
                         <span asp-validation-for="IdMarca"></span>
 
+                        @if (!marcas.Any())
+                        {
+                            <small>
+                                No existen marcas activas.
+                                Debes registrar una marca primero.
+                            </small>
+                        }
+                        else
+                        {
+                            <small>
+                                Selecciona el fabricante del modelo.
+                            </small>
+                        }
+
+                    </div>
+
+
+                    <!-- =========================================
+                         AÑO
+                         ========================================= -->
+
+                    <div class="axis-field">
+
+                        <label for="AnioVehiculo">
+                            Año del vehículo
+                        </label>
+
+                        <input type="number"
+                               id="AnioVehiculo"
+                               min="1900"
+                               max="@(DateTime.Now.Year + 1)"
+                               placeholder="Ej. 2024"
+                               disabled />
+
                         <small>
-                            Identificador de la marca a la que pertenece.
+                            Permite consultar los modelos disponibles
+                            para ese año.
                         </small>
 
                     </div>
 
+
+                    <!-- =========================================
+                         TIPO DE VEHÍCULO
+                         ========================================= -->
+
+                    <div class="axis-field">
+
+                        <label for="TipoVehiculoApi">
+                            Tipo de vehículo
+                        </label>
+
+                        <select id="TipoVehiculoApi"
+                                disabled>
+
+                            <option value="">
+                                Selecciona una marca primero
+                            </option>
+
+                        </select>
+
+                        <small>
+                            Tipos proporcionados por el catálogo externo.
+                        </small>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         NOMBRE DEL MODELO
+                         ========================================= -->
 
                     <div class="axis-field">
 
@@ -78,18 +200,30 @@
                         </label>
 
                         <input asp-for="Nombre"
-                               placeholder="Ej. Corolla" />
+                               id="Nombre"
+                               placeholder="Ej. Corolla"
+                               autocomplete="off" />
 
                         <span asp-validation-for="Nombre"></span>
 
+                        <small>
+                            Si la API no encuentra el modelo,
+                            puedes escribirlo manualmente.
+                        </small>
+
                     </div>
 
+
+                    <!-- =========================================
+                         ESTADO
+                         ========================================= -->
 
                     <div class="axis-field axis-checkbox-field">
 
                         <label class="axis-checkbox">
 
-                            <input asp-for="Activo" />
+                            <input asp-for="Activo"
+                                   id="Activo" />
 
                             <span>
                                 Modelo activo
@@ -104,6 +238,157 @@
             </div>
 
 
+            <!-- =================================================
+                 BÚSQUEDA INTELIGENTE
+                 ================================================= -->
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Búsqueda inteligente
+                </div>
+
+
+                <div style="padding:18px 0;">
+
+                    <div style="font-weight:600;">
+                        🔎 Buscar modelo real
+                    </div>
+
+                    <div class="axis-table-secondary-text"
+                         style="margin-top:6px;">
+
+                        AXIS consulta información real del fabricante
+                        y permite seleccionar un modelo disponible.
+
+                    </div>
+
+
+                    <!-- =========================================
+                         BUSCADOR
+                         ========================================= -->
+
+                    <div id="busquedaVehiculoContainer"
+                         style="margin-top:20px;">
+
+                        <div class="axis-field">
+
+                            <label for="BusquedaModelo">
+                                Buscar modelo
+                            </label>
+
+                            <div style="position:relative;">
+
+                                <input type="text"
+                                       id="BusquedaModelo"
+                                       placeholder="Selecciona una marca..."
+                                       autocomplete="off"
+                                       disabled />
+
+                                <span id="EstadoBusqueda"
+                                      style="
+                                          position:absolute;
+                                          right:14px;
+                                          top:50%;
+                                          transform:translateY(-50%);
+                                          font-size:12px;
+                                          opacity:.65;
+                                          display:none;">
+                                    Buscando...
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =====================================
+                             RESULTADOS
+                             ===================================== -->
+
+                        <div id="ResultadosModelo"
+                             style="
+                                 display:none;
+                                 margin-top:10px;
+                                 border:1px solid rgba(255,255,255,.10);
+                                 border-radius:12px;
+                                 overflow:hidden;
+                                 background:rgba(20,20,24,.98);
+                                 max-height:300px;
+                                 overflow-y:auto;">
+                        </div>
+
+
+                        <!-- =====================================
+                             SIN RESULTADOS
+                             ===================================== -->
+
+                        <div id="SinResultadosModelo"
+                             style="
+                                 display:none;
+                                 margin-top:10px;
+                                 padding:14px 16px;
+                                 border:1px solid rgba(255,255,255,.08);
+                                 border-radius:10px;
+                                 opacity:.75;">
+
+                            No encontramos ese modelo para la
+                            combinación seleccionada.
+
+                            <div style="margin-top:5px;">
+                                Puedes escribir el nombre manualmente.
+                            </div>
+
+                        </div>
+
+
+                        <!-- =====================================
+                             MODELO SELECCIONADO
+                             ===================================== -->
+
+                        <div id="ModeloSeleccionado"
+                             style="
+                                 display:none;
+                                 margin-top:14px;
+                                 padding:14px 16px;
+                                 border-radius:10px;
+                                 background:rgba(255,255,255,.04);
+                                 border:1px solid rgba(255,255,255,.08);">
+
+                            <div style="
+                                font-size:10px;
+                                text-transform:uppercase;
+                                letter-spacing:.08em;
+                                opacity:.55;">
+                                Modelo seleccionado
+                            </div>
+
+                            <div id="ModeloSeleccionadoNombre"
+                                 style="
+                                     margin-top:5px;
+                                     font-weight:600;">
+                            </div>
+
+                            <div id="ModeloSeleccionadoDetalle"
+                                 style="
+                                     margin-top:5px;
+                                     font-size:12px;
+                                     opacity:.60;">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 ACCIONES
+                 ================================================= -->
+
             <div class="axis-form-actions">
 
                 <a asp-action="Modelos"
@@ -112,7 +397,8 @@
                 </a>
 
                 <button type="submit"
-                        class="axis-button axis-button-primary">
+                        class="axis-button axis-button-primary"
+                        @(marcas.Any() ? "" : "disabled")>
                     Crear modelo
                 </button>
 
@@ -124,6 +410,720 @@
 
 </section>
 
+
 @section Scripts {
+
     <partial name="_ValidationScriptsPartial" />
+
+
+    <script>
+
+        // =====================================================
+        // URLS
+        // =====================================================
+
+        const buscarModelosUrl =
+            '@buscarModelosUrl';
+
+        const buscarModelosPorAnioUrl =
+            '@buscarModelosPorAnioUrl';
+
+        const obtenerTiposUrl =
+            '@obtenerTiposUrl';
+
+
+        // =====================================================
+        // ELEMENTOS
+        // =====================================================
+
+        const marcaSelect =
+            document.getElementById('IdMarca');
+
+        const nombreInput =
+            document.getElementById('Nombre');
+
+        const anioInput =
+            document.getElementById('AnioVehiculo');
+
+        const tipoSelect =
+            document.getElementById('TipoVehiculoApi');
+
+        const busquedaInput =
+            document.getElementById('BusquedaModelo');
+
+        const resultadosContainer =
+            document.getElementById('ResultadosModelo');
+
+        const sinResultados =
+            document.getElementById('SinResultadosModelo');
+
+        const estadoBusqueda =
+            document.getElementById('EstadoBusqueda');
+
+        const modeloSeleccionado =
+            document.getElementById('ModeloSeleccionado');
+
+        const modeloSeleccionadoNombre =
+            document.getElementById('ModeloSeleccionadoNombre');
+
+        const modeloSeleccionadoDetalle =
+            document.getElementById('ModeloSeleccionadoDetalle');
+
+
+        // =====================================================
+        // ESTADO
+        // =====================================================
+
+        let temporizadorBusqueda = null;
+
+        let modelosDisponibles = [];
+
+
+        // =====================================================
+        // OBTENER MARCA
+        // =====================================================
+
+        function obtenerNombreMarca() {
+
+            const opcion =
+                marcaSelect.options[
+                    marcaSelect.selectedIndex
+                ];
+
+            if (!opcion) {
+                return '';
+            }
+
+            return opcion.dataset.marcaNombre || '';
+        }
+
+
+        // =====================================================
+        // LIMPIAR RESULTADOS
+        // =====================================================
+
+        function limpiarResultados() {
+
+            resultadosContainer.innerHTML = '';
+
+            resultadosContainer.style.display =
+                'none';
+
+            sinResultados.style.display =
+                'none';
+
+            modeloSeleccionado.style.display =
+                'none';
+
+            estadoBusqueda.style.display =
+                'none';
+
+            modelosDisponibles = [];
+
+        }
+
+
+        // =====================================================
+        // LIMPIAR TIPOS
+        // =====================================================
+
+        function limpiarTipos() {
+
+            tipoSelect.innerHTML = `
+                <option value="">
+                    Selecciona una marca primero
+                </option>
+            `;
+
+            tipoSelect.disabled = true;
+
+        }
+
+
+        // =====================================================
+        // CARGAR TIPOS
+        // =====================================================
+
+        async function cargarTipos(marca) {
+
+            limpiarTipos();
+
+            if (!marca) {
+                return;
+            }
+
+            try {
+
+                const url =
+                    `${obtenerTiposUrl}?marca=${encodeURIComponent(marca)}`;
+
+                const response =
+                    await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        `HTTP ${response.status}`
+                    );
+
+                }
+
+                const data =
+                    await response.json();
+
+                const resultados =
+                    data.resultados || [];
+
+
+                tipoSelect.innerHTML = `
+                    <option value="">
+                        Selecciona un tipo
+                    </option>
+                `;
+
+
+                resultados.forEach(tipo => {
+
+                    const option =
+                        document.createElement('option');
+
+                    option.value =
+                        tipo.vehicleTypeId;
+
+                    option.textContent =
+                        tipo.vehicleTypeName;
+
+                    tipoSelect.appendChild(
+                        option
+                    );
+
+                });
+
+
+                if (resultados.length > 0) {
+
+                    tipoSelect.disabled =
+                        false;
+
+                }
+                else {
+
+                    tipoSelect.innerHTML = `
+                        <option value="">
+                            No hay tipos disponibles
+                        </option>
+                    `;
+
+                }
+
+            }
+            catch (error) {
+
+                console.error(
+                    'Error obteniendo tipos:',
+                    error
+                );
+
+                tipoSelect.innerHTML = `
+                    <option value="">
+                        No se pudieron cargar los tipos
+                    </option>
+                `;
+
+            }
+
+        }
+
+
+        // =====================================================
+        // CAMBIO DE MARCA
+        // =====================================================
+
+        marcaSelect.addEventListener(
+            'change',
+            async function () {
+
+                limpiarResultados();
+
+                busquedaInput.value = '';
+
+                const marca =
+                    obtenerNombreMarca();
+
+
+                if (!marca) {
+
+                    anioInput.disabled = true;
+
+                    busquedaInput.disabled = true;
+
+                    anioInput.value = '';
+
+                    busquedaInput.placeholder =
+                        'Selecciona una marca...';
+
+                    limpiarTipos();
+
+                    return;
+                }
+
+
+                anioInput.disabled = false;
+
+                busquedaInput.disabled = false;
+
+                busquedaInput.placeholder =
+                    `Buscar modelo de ${marca}...`;
+
+
+                await cargarTipos(marca);
+
+            }
+        );
+
+
+        // =====================================================
+        // CAMBIO DE AÑO
+        // =====================================================
+
+        anioInput.addEventListener(
+            'change',
+            function () {
+
+                limpiarResultados();
+
+                busquedaInput.value = '';
+
+            }
+        );
+
+
+        // =====================================================
+        // BUSCADOR
+        // =====================================================
+
+        busquedaInput.addEventListener(
+            'input',
+            function () {
+
+                clearTimeout(
+                    temporizadorBusqueda
+                );
+
+
+                const consulta =
+                    busquedaInput.value.trim();
+
+
+                limpiarResultados();
+
+
+                if (consulta.length < 2) {
+                    return;
+                }
+
+
+                temporizadorBusqueda =
+                    setTimeout(
+                        () => buscarModelos(),
+                        350
+                    );
+
+            }
+        );
+
+
+        // =====================================================
+        // BUSCAR MODELOS
+        // =====================================================
+
+        async function buscarModelos() {
+
+            const marca =
+                obtenerNombreMarca();
+
+            const año =
+                parseInt(
+                    anioInput.value
+                );
+
+
+            if (!marca) {
+                return;
+            }
+
+
+            estadoBusqueda.style.display =
+                'inline';
+
+
+            try {
+
+                let resultados = [];
+
+
+                // =============================================
+                // CON AÑO
+                // =============================================
+
+                if (!isNaN(año)) {
+
+                    const url =
+                        `${buscarModelosPorAnioUrl}` +
+                        `?marca=${encodeURIComponent(marca)}` +
+                        `&año=${año}`;
+
+
+                    const response =
+                        await fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            `HTTP ${response.status}`
+                        );
+
+                    }
+
+
+                    const data =
+                        await response.json();
+
+
+                    resultados =
+                        data.resultados || [];
+
+                }
+
+                // =============================================
+                // SIN AÑO
+                // =============================================
+
+                else {
+
+                    const url =
+                        `${buscarModelosUrl}` +
+                        `?consulta=${encodeURIComponent(marca)}`;
+
+
+                    const response =
+                        await fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            `HTTP ${response.status}`
+                        );
+
+                    }
+
+
+                    const data =
+                        await response.json();
+
+
+                    resultados =
+                        data.resultados || [];
+
+                }
+
+
+                // =============================================
+                // FILTRAR CONSULTA
+                // =============================================
+
+                const consulta =
+                    busquedaInput.value
+                        .trim()
+                        .toLowerCase();
+
+
+                resultados =
+                    resultados.filter(modelo => {
+
+                        const nombre =
+                            (modelo.modelName || '')
+                                .toLowerCase();
+
+                        return nombre.includes(
+                            consulta
+                        );
+
+                    });
+
+
+                estadoBusqueda.style.display =
+                    'none';
+
+
+                modelosDisponibles =
+                    resultados;
+
+
+                if (resultados.length === 0) {
+
+                    sinResultados.style.display =
+                        'block';
+
+                    return;
+
+                }
+
+
+                mostrarResultados(
+                    resultados
+                );
+
+            }
+            catch (error) {
+
+                console.error(
+                    'Error buscando modelos:',
+                    error
+                );
+
+                estadoBusqueda.style.display =
+                    'none';
+
+                sinResultados.style.display =
+                    'block';
+
+            }
+
+        }
+
+
+        // =====================================================
+        // MOSTRAR RESULTADOS
+        // =====================================================
+
+        function mostrarResultados(resultados) {
+
+            resultadosContainer.innerHTML = '';
+
+            resultadosContainer.style.display =
+                'block';
+
+
+            resultados.forEach(modelo => {
+
+                const item =
+                    document.createElement('button');
+
+
+                item.type =
+                    'button';
+
+
+                item.style.cssText = `
+                    display:block;
+                    width:100%;
+                    padding:13px 16px;
+                    border:0;
+                    border-bottom:1px solid rgba(255,255,255,.06);
+                    background:transparent;
+                    color:inherit;
+                    text-align:left;
+                    cursor:pointer;
+                    font-family:inherit;
+                `;
+
+
+                const año =
+                    modelo.modelYear
+                    ? ` · ${modelo.modelYear}`
+                    : '';
+
+
+                item.innerHTML = `
+                    <div style="
+                        font-weight:600;">
+                        ${escapeHtml(modelo.modelName)}
+                    </div>
+
+                    <div style="
+                        margin-top:3px;
+                        font-size:12px;
+                        opacity:.55;">
+                        ${escapeHtml(modelo.makeName)}${año}
+                    </div>
+                `;
+
+
+                item.addEventListener(
+                    'mouseenter',
+                    function () {
+
+                        item.style.background =
+                            'rgba(255,255,255,.05)';
+
+                    }
+                );
+
+
+                item.addEventListener(
+                    'mouseleave',
+                    function () {
+
+                        item.style.background =
+                            'transparent';
+
+                    }
+                );
+
+
+                item.addEventListener(
+                    'click',
+                    function () {
+
+                        seleccionarModelo(
+                            modelo
+                        );
+
+                    }
+                );
+
+
+                resultadosContainer.appendChild(
+                    item
+                );
+
+            });
+
+        }
+
+
+        // =====================================================
+        // SELECCIONAR MODELO
+        // =====================================================
+
+        function seleccionarModelo(modelo) {
+
+            nombreInput.value =
+                modelo.modelName || '';
+
+
+            busquedaInput.value =
+                modelo.modelName || '';
+
+
+            if (modelo.modelYear) {
+
+                anioInput.value =
+                    modelo.modelYear;
+
+            }
+
+
+            resultadosContainer.innerHTML = '';
+
+            resultadosContainer.style.display =
+                'none';
+
+
+            sinResultados.style.display =
+                'none';
+
+
+            modeloSeleccionadoNombre.textContent =
+                `${modelo.makeName} ${modelo.modelName}`;
+
+
+            let detalle =
+                `ID del modelo: ${modelo.modelId}`;
+
+
+            if (modelo.modelYear) {
+
+                detalle +=
+                    ` · Año: ${modelo.modelYear}`;
+
+            }
+
+
+            modeloSeleccionadoDetalle.textContent =
+                detalle;
+
+
+            modeloSeleccionado.style.display =
+                'block';
+
+        }
+
+
+        // =====================================================
+        // ESCAPAR HTML
+        // =====================================================
+
+        function escapeHtml(valor) {
+
+            if (
+                valor === null ||
+                valor === undefined
+            ) {
+                return '';
+            }
+
+
+            return String(valor)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+
+        }
+
+
+        // =====================================================
+        // INICIALIZAR
+        // =====================================================
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+
+                const marca =
+                    obtenerNombreMarca();
+
+
+                if (marca) {
+
+                    anioInput.disabled =
+                        false;
+
+                    busquedaInput.disabled =
+                        false;
+
+                    busquedaInput.placeholder =
+                        `Buscar modelo de ${marca}...`;
+
+                    cargarTipos(
+                        marca
+                    );
+
+                }
+
+            }
+        );
+
+    </script>
+
 }

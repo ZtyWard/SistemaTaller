@@ -2,11 +2,21 @@
 using Datos.Interfaces;
 using Datos.Models;
 using Datos.Repositories;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
 using Negocios.Interfaces;
 using Negocios.Services;
 using Negocios.Seguridad;
+
+// =====================================================
+// INTEGRACIÓN API EXTERNA - VEHÍCULOS
+// =====================================================
+
+using Negocios.IntegracionesExternas.Vehiculos.Configuration;
+using Negocios.IntegracionesExternas.Vehiculos.Interfaces;
+using Negocios.IntegracionesExternas.Vehiculos.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -121,7 +131,7 @@ builder.Services.AddScoped<
     ConfiguracionGeneralRepository>();
 
 // =====================================================
-// CATÁLOGOS
+// CATÁLOGOS - DATOS
 // =====================================================
 
 builder.Services.AddScoped<ICategoriaProductoRepository, CategoriaProductoRepository>();
@@ -131,6 +141,41 @@ builder.Services.AddScoped<ITipoVehiculoRepository, TipoVehiculoRepository>();
 builder.Services.AddScoped<ITipoCombustibleRepository, TipoCombustibleRepository>();
 builder.Services.AddScoped<IPuestoRepository, PuestoRepository>();
 builder.Services.AddScoped<IEspecialidadRepository, EspecialidadRepository>();
+
+// =====================================================
+// API EXTERNA - CONFIGURACIÓN
+// =====================================================
+//
+// Vincula la sección "VehiculoApi" de appsettings.json
+// con la clase VehiculoApiOptions.
+//
+// =====================================================
+
+builder.Services.Configure<VehiculoApiOptions>(
+    builder.Configuration.GetSection("VehiculoApi"));
+
+// =====================================================
+// API EXTERNA - HTTP CLIENT
+// =====================================================
+//
+// Registramos nuestra implementación concreta detrás
+// de la interfaz.
+//
+// Controller
+//     ↓
+// IVehiculoApiService
+//     ↓
+// VehiculoApiService
+//     ↓
+// HttpClient
+//     ↓
+// API externa
+//
+// =====================================================
+
+builder.Services.AddHttpClient<
+    IVehiculoApiService,
+    VehiculoApiService>();
 
 // =====================================================
 // SERVICES - NEGOCIOS
@@ -203,7 +248,7 @@ builder.Services.AddScoped<
     ConfiguracionGeneralService>();
 
 // =====================================================
-// CATÁLOGOS
+// CATÁLOGOS - NEGOCIOS
 // =====================================================
 
 builder.Services.AddScoped<ICategoriaProductoService, CategoriaProductoService>();

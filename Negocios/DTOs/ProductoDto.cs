@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Negocios.DTOs;
+﻿namespace Negocios.DTOs;
 
 public class ProductoDto
 {
@@ -32,4 +26,16 @@ public class ProductoDto
     public int StockMinimo { get; set; }
 
     public bool Activo { get; set; }
+
+    // =====================================================
+    // CÓDIGO DE BARRAS
+    // =====================================================
+
+    public string? CodigoBarras { get; set; }
+
+    // =====================================================
+    // IMAGEN
+    // =====================================================
+
+    public string? ImagenUrl { get; set; }
 }

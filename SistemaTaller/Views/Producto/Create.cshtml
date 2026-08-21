@@ -3,6 +3,11 @@
 @{
     Layout = "_LayoutInterno";
     ViewData["Title"] = "Nuevo producto";
+
+    var categorias =
+        ViewBag.Categorias
+        as IEnumerable<Negocios.DTOs.CategoriaProductoDto>
+        ?? Enumerable.Empty<Negocios.DTOs.CategoriaProductoDto>();
 }
 
 <section class="axis-page">
@@ -41,6 +46,7 @@
 
         <form asp-action="Create"
               method="post"
+              enctype="multipart/form-data"
               class="axis-form">
 
             @Html.AntiForgeryToken()
@@ -50,7 +56,9 @@
             </div>
 
 
+            <!-- ========================================= -->
             <!-- IDENTIFICACIÓN -->
+            <!-- ========================================= -->
 
             <div class="axis-form-section">
 
@@ -63,13 +71,33 @@
                     <div class="axis-field">
 
                         <label asp-for="Codigo">
-                            Código
+                            Código interno
                         </label>
 
                         <input asp-for="Codigo"
-                               placeholder="Código del producto" />
+                               placeholder="Ej. FIL-001"
+                               autocomplete="off" />
 
                         <span asp-validation-for="Codigo"></span>
+
+                    </div>
+
+
+                    <div class="axis-field">
+
+                        <label>
+                            Código de barras
+                        </label>
+
+                        <input type="text"
+                               value="Se generará automáticamente"
+                               readonly
+                               disabled
+                               class="axis-input-disabled" />
+
+                        <small>
+                            AXIS generará automáticamente un código único.
+                        </small>
 
                     </div>
 
@@ -81,7 +109,8 @@
                         </label>
 
                         <input asp-for="Nombre"
-                               placeholder="Nombre del producto" />
+                               placeholder="Nombre del producto"
+                               autocomplete="off" />
 
                         <span asp-validation-for="Nombre"></span>
 
@@ -91,13 +120,23 @@
                     <div class="axis-field">
 
                         <label asp-for="IdCategoriaProducto">
-                            ID categoría
+                            Categoría
                         </label>
 
-                        <input asp-for="IdCategoriaProducto"
-                               type="number"
-                               min="1"
-                               placeholder="Ej. 1" />
+                        <select asp-for="IdCategoriaProducto">
+
+                            <option value="">
+                                Seleccione una categoría
+                            </option>
+
+                            @foreach (var categoria in categorias)
+                            {
+                                <option value="@categoria.IdCategoriaProducto">
+                                    @categoria.Nombre
+                                </option>
+                            }
+
+                        </select>
 
                         <span asp-validation-for="IdCategoriaProducto"></span>
 
@@ -112,8 +151,7 @@
 
                         <textarea asp-for="Descripcion"
                                   rows="4"
-                                  placeholder="Descripción del producto...">
-                        </textarea>
+                                  placeholder="Descripción del producto..."></textarea>
 
                         <span asp-validation-for="Descripcion"></span>
 
@@ -124,7 +162,44 @@
             </div>
 
 
+            <!-- ========================================= -->
+            <!-- IMAGEN -->
+            <!-- ========================================= -->
+
+            <div class="axis-form-section">
+
+                <div class="axis-form-section-title">
+                    Imagen del producto
+                </div>
+
+                <div class="axis-form-grid">
+
+                    <div class="axis-field axis-field-full">
+
+                        <label for="Imagen">
+                            Fotografía
+                        </label>
+
+                        <input type="file"
+                               id="Imagen"
+                               name="Imagen"
+                               accept=".jpg,.jpeg,.png,.webp" />
+
+                        <small>
+                            Formatos permitidos: JPG, JPEG, PNG y WEBP.
+                            Máximo 5 MB.
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================= -->
             <!-- PRECIOS -->
+            <!-- ========================================= -->
 
             <div class="axis-form-section">
 
@@ -172,7 +247,9 @@
             </div>
 
 
+            <!-- ========================================= -->
             <!-- INVENTARIO -->
+            <!-- ========================================= -->
 
             <div class="axis-form-section">
 
@@ -192,6 +269,10 @@
                                type="number"
                                min="0"
                                placeholder="0" />
+
+                        <small>
+                            Solo corresponde al inventario inicial.
+                        </small>
 
                         <span asp-validation-for="Stock"></span>
 
@@ -241,6 +322,10 @@
             </div>
 
 
+            <!-- ========================================= -->
+            <!-- ACCIONES -->
+            <!-- ========================================= -->
+
             <div class="axis-form-actions">
 
                 <a asp-action="Index"
@@ -261,6 +346,9 @@
 
 </section>
 
+
 @section Scripts {
+
     <partial name="_ValidationScriptsPartial" />
+
 }

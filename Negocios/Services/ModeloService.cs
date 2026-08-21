@@ -41,10 +41,22 @@ public class ModeloService : IModeloService
     {
         Validar(dto);
 
+        var nombreNormalizado = dto.Nombre.Trim();
+
+        var existe = await _repository.ExisteAsync(x =>
+            x.IdMarca == dto.IdMarca &&
+            x.Nombre.ToLower() == nombreNormalizado.ToLower());
+
+        if (existe)
+        {
+            throw new InvalidOperationException(
+                "Ya existe un modelo con ese nombre para la marca seleccionada.");
+        }
+
         var modelo = new Modelo
         {
             IdMarca = dto.IdMarca,
-            Nombre = dto.Nombre.Trim(),
+            Nombre = nombreNormalizado,
             Activo = dto.Activo
         };
 
@@ -63,8 +75,21 @@ public class ModeloService : IModeloService
         if (modelo == null)
             return false;
 
+        var nombreNormalizado = dto.Nombre.Trim();
+
+        var existe = await _repository.ExisteAsync(x =>
+            x.IdModelo != id &&
+            x.IdMarca == dto.IdMarca &&
+            x.Nombre.ToLower() == nombreNormalizado.ToLower());
+
+        if (existe)
+        {
+            throw new InvalidOperationException(
+                "Ya existe otro modelo con ese nombre para la marca seleccionada.");
+        }
+
         modelo.IdMarca = dto.IdMarca;
-        modelo.Nombre = dto.Nombre.Trim();
+        modelo.Nombre = nombreNormalizado;
         modelo.Activo = dto.Activo;
 
         _repository.Actualizar(modelo);
@@ -105,6 +130,12 @@ public class ModeloService : IModeloService
             throw new ArgumentException(
                 "El nombre del modelo es obligatorio.");
         }
+
+        if (dto.Nombre.Trim().Length < 2)
+        {
+            throw new ArgumentException(
+                "El nombre del modelo debe tener al menos 2 caracteres.");
+        }
     }
 
     private static ModeloDto MapearDto(Modelo modelo)
@@ -114,6 +145,7 @@ public class ModeloService : IModeloService
             IdModelo = modelo.IdModelo,
             IdMarca = modelo.IdMarca,
             Nombre = modelo.Nombre,
+            MarcaNombre = modelo.Marca?.Nombre ?? "Sin marca",
             Activo = modelo.Activo
         };
     }
