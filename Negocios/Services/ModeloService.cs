@@ -14,38 +14,76 @@ public class ModeloService : IModeloService
         _repository = repository;
     }
 
+    // =====================================================
+    // OBTENER TODOS
+    // =====================================================
+
     public async Task<IEnumerable<ModeloDto>> ObtenerTodosAsync()
     {
-        var modelos = await _repository.ObtenerTodosAsync();
+        var modelos =
+            await _repository.ObtenerTodosAsync();
 
         return modelos.Select(MapearDto);
     }
+
+    // =====================================================
+    // OBTENER ACTIVOS
+    // =====================================================
 
     public async Task<IEnumerable<ModeloDto>> ObtenerActivasAsync()
     {
-        var modelos = await _repository.ObtenerActivasAsync();
+        var modelos =
+            await _repository.ObtenerActivasAsync();
 
         return modelos.Select(MapearDto);
     }
 
+    // =====================================================
+    // OBTENER ACTIVOS POR MARCA
+    // =====================================================
+
+    public async Task<IEnumerable<ModeloDto>> ObtenerActivasPorMarcaAsync(
+        int idMarca)
+    {
+        if (idMarca <= 0)
+            return Enumerable.Empty<ModeloDto>();
+
+        var modelos =
+            await _repository.ObtenerActivasPorMarcaAsync(idMarca);
+
+        return modelos.Select(MapearDto);
+    }
+
+    // =====================================================
+    // OBTENER POR ID
+    // =====================================================
+
     public async Task<ModeloDto?> ObtenerPorIdAsync(int id)
     {
-        var modelo = await _repository.ObtenerPorIdAsync(id);
+        var modelo =
+            await _repository.ObtenerPorIdAsync(id);
 
         return modelo == null
             ? null
             : MapearDto(modelo);
     }
 
+    // =====================================================
+    // CREAR
+    // =====================================================
+
     public async Task CrearAsync(ModeloGuardarDto dto)
     {
         Validar(dto);
 
-        var nombreNormalizado = dto.Nombre.Trim();
+        var nombreNormalizado =
+            dto.Nombre.Trim();
 
-        var existe = await _repository.ExisteAsync(x =>
-            x.IdMarca == dto.IdMarca &&
-            x.Nombre.ToLower() == nombreNormalizado.ToLower());
+        var existe =
+            await _repository.ExisteAsync(x =>
+                x.IdMarca == dto.IdMarca &&
+                x.Nombre.ToLower() ==
+                nombreNormalizado.ToLower());
 
         if (existe)
         {
@@ -57,12 +95,19 @@ public class ModeloService : IModeloService
         {
             IdMarca = dto.IdMarca,
             Nombre = nombreNormalizado,
+            ImagenUrl = dto.ImagenUrl,
+            FuenteImagen = dto.FuenteImagen,
             Activo = dto.Activo
         };
 
         await _repository.AgregarAsync(modelo);
+
         await _repository.GuardarCambiosAsync();
     }
+
+    // =====================================================
+    // ACTUALIZAR
+    // =====================================================
 
     public async Task<bool> ActualizarAsync(
         int id,
@@ -70,17 +115,21 @@ public class ModeloService : IModeloService
     {
         Validar(dto);
 
-        var modelo = await _repository.ObtenerPorIdAsync(id);
+        var modelo =
+            await _repository.ObtenerPorIdAsync(id);
 
         if (modelo == null)
             return false;
 
-        var nombreNormalizado = dto.Nombre.Trim();
+        var nombreNormalizado =
+            dto.Nombre.Trim();
 
-        var existe = await _repository.ExisteAsync(x =>
-            x.IdModelo != id &&
-            x.IdMarca == dto.IdMarca &&
-            x.Nombre.ToLower() == nombreNormalizado.ToLower());
+        var existe =
+            await _repository.ExisteAsync(x =>
+                x.IdModelo != id &&
+                x.IdMarca == dto.IdMarca &&
+                x.Nombre.ToLower() ==
+                nombreNormalizado.ToLower());
 
         if (existe)
         {
@@ -90,6 +139,8 @@ public class ModeloService : IModeloService
 
         modelo.IdMarca = dto.IdMarca;
         modelo.Nombre = nombreNormalizado;
+        modelo.ImagenUrl = dto.ImagenUrl;
+        modelo.FuenteImagen = dto.FuenteImagen;
         modelo.Activo = dto.Activo;
 
         _repository.Actualizar(modelo);
@@ -99,11 +150,16 @@ public class ModeloService : IModeloService
         return true;
     }
 
+    // =====================================================
+    // CAMBIAR ESTADO
+    // =====================================================
+
     public async Task<bool> CambiarEstadoAsync(
         int id,
         bool activo)
     {
-        var modelo = await _repository.ObtenerPorIdAsync(id);
+        var modelo =
+            await _repository.ObtenerPorIdAsync(id);
 
         if (modelo == null)
             return false;
@@ -116,6 +172,10 @@ public class ModeloService : IModeloService
 
         return true;
     }
+
+    // =====================================================
+    // VALIDACIONES
+    // =====================================================
 
     private static void Validar(ModeloGuardarDto dto)
     {
@@ -138,6 +198,10 @@ public class ModeloService : IModeloService
         }
     }
 
+    // =====================================================
+    // MAPEO
+    // =====================================================
+
     private static ModeloDto MapearDto(Modelo modelo)
     {
         return new ModeloDto
@@ -145,7 +209,8 @@ public class ModeloService : IModeloService
             IdModelo = modelo.IdModelo,
             IdMarca = modelo.IdMarca,
             Nombre = modelo.Nombre,
-            MarcaNombre = modelo.Marca?.Nombre ?? "Sin marca",
+            MarcaNombre =
+                modelo.Marca?.Nombre ?? "Sin marca",
             Activo = modelo.Activo
         };
     }

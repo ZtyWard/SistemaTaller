@@ -33,6 +33,18 @@ public class ModeloRepository : Repository<Modelo>, IModeloRepository
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<Modelo>> ObtenerActivasPorMarcaAsync(
+        int idMarca)
+    {
+        return await _context.Modelos
+            .AsNoTracking()
+            .Where(x =>
+                x.IdMarca == idMarca &&
+                x.Activo)
+            .OrderBy(x => x.Nombre)
+            .ToListAsync();
+    }
+
     public async Task<Modelo?> ObtenerPorIdAsync(int id)
     {
         return await _context.Modelos

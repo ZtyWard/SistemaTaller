@@ -480,10 +480,14 @@
 
 
         // =====================================================
-        // OBTENER MARCA
+        // OBTENER NOMBRE DE MARCA
         // =====================================================
 
         function obtenerNombreMarca() {
+
+            if (!marcaSelect) {
+                return '';
+            }
 
             const opcion =
                 marcaSelect.options[
@@ -494,7 +498,106 @@
                 return '';
             }
 
-            return opcion.dataset.marcaNombre || '';
+            return (
+                opcion.dataset.marcaNombre ||
+                opcion.textContent ||
+                ''
+            ).trim();
+
+        }
+
+
+        // =====================================================
+        // OBTENER PROPIEDAD DE MODELO
+        //
+        // NHTSA actualmente nos está devolviendo:
+        //
+        // Make_ID
+        // Make_Name
+        // Model_ID
+        // Model_Name
+        //
+        // Pero dejamos compatibilidad con:
+        //
+        // makeId
+        // makeName
+        // modelId
+        // modelName
+        // =====================================================
+
+        function obtenerNombreModelo(modelo) {
+
+            return (
+                modelo.Model_Name ??
+                modelo.modelName ??
+                modelo.ModelName ??
+                ''
+            ).toString().trim();
+
+        }
+
+
+        function obtenerNombreMarcaModelo(modelo) {
+
+            return (
+                modelo.Make_Name ??
+                modelo.makeName ??
+                modelo.MakeName ??
+                ''
+            ).toString().trim();
+
+        }
+
+
+        function obtenerIdModelo(modelo) {
+
+            return (
+                modelo.Model_ID ??
+                modelo.modelId ??
+                modelo.ModelId ??
+                0
+            );
+
+        }
+
+
+        function obtenerAnioModelo(modelo) {
+
+            return (
+                modelo.modelYear ??
+                modelo.ModelYear ??
+                modelo.model_year ??
+                null
+            );
+
+        }
+
+
+        // =====================================================
+        // OBTENER PROPIEDADES DE TIPO
+        // =====================================================
+
+        function obtenerIdTipo(tipo) {
+
+            return (
+                tipo.vehicleTypeId ??
+                tipo.VehicleTypeId ??
+                tipo.Vehicle_Type_Id ??
+                ''
+            );
+
+        }
+
+
+        function obtenerNombreTipo(tipo) {
+
+            return (
+                tipo.vehicleTypeName ??
+                tipo.VehicleTypeName ??
+                tipo.Vehicle_Type_Name ??
+                ''
+            ).toString().trim();
+
         }
 
 
@@ -557,13 +660,19 @@
                 const url =
                     `${obtenerTiposUrl}?marca=${encodeURIComponent(marca)}`;
 
+
                 const response =
-                    await fetch(url, {
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'application/json'
+                    await fetch(
+                        url,
+                        {
+                            method: 'GET',
+
+                            headers: {
+                                'Accept': 'application/json'
+                            }
                         }
-                    });
+                    );
+
 
                 if (!response.ok) {
 
@@ -573,11 +682,15 @@
 
                 }
 
+
                 const data =
                     await response.json();
 
+
                 const resultados =
-                    data.resultados || [];
+                    Array.isArray(data.resultados)
+                        ? data.resultados
+                        : [];
 
 
                 tipoSelect.innerHTML = `
@@ -592,11 +705,14 @@
                     const option =
                         document.createElement('option');
 
+
                     option.value =
-                        tipo.vehicleTypeId;
+                        obtenerIdTipo(tipo);
+
 
                     option.textContent =
-                        tipo.vehicleTypeName;
+                        obtenerNombreTipo(tipo);
+
 
                     tipoSelect.appendChild(
                         option
@@ -619,6 +735,9 @@
                         </option>
                     `;
 
+                    tipoSelect.disabled =
+                        true;
+
                 }
 
             }
@@ -629,11 +748,16 @@
                     error
                 );
 
+
                 tipoSelect.innerHTML = `
                     <option value="">
                         No se pudieron cargar los tipos
                     </option>
                 `;
+
+
+                tipoSelect.disabled =
+                    true;
 
             }
 
@@ -652,17 +776,20 @@
 
                 busquedaInput.value = '';
 
+                anioInput.value = '';
+
+
                 const marca =
                     obtenerNombreMarca();
 
 
                 if (!marca) {
 
-                    anioInput.disabled = true;
+                    anioInput.disabled =
+                        true;
 
-                    busquedaInput.disabled = true;
-
-                    anioInput.value = '';
+                    busquedaInput.disabled =
+                        true;
 
                     busquedaInput.placeholder =
                         'Selecciona una marca...';
@@ -670,18 +797,23 @@
                     limpiarTipos();
 
                     return;
+
                 }
 
 
-                anioInput.disabled = false;
+                anioInput.disabled =
+                    false;
 
-                busquedaInput.disabled = false;
+                busquedaInput.disabled =
+                    false;
 
                 busquedaInput.placeholder =
                     `Buscar modelo de ${marca}...`;
 
 
-                await cargarTipos(marca);
+                await cargarTipos(
+                    marca
+                );
 
             }
         );
@@ -717,7 +849,8 @@
 
 
                 const consulta =
-                    busquedaInput.value.trim();
+                    busquedaInput.value
+                        .trim();
 
 
                 limpiarResultados();
@@ -730,7 +863,11 @@
 
                 temporizadorBusqueda =
                     setTimeout(
-                        () => buscarModelos(),
+                        function () {
+
+                            buscarModelos();
+
+                        },
                         350
                     );
 
@@ -747,10 +884,17 @@
             const marca =
                 obtenerNombreMarca();
 
+
             const año =
                 parseInt(
-                    anioInput.value
+                    anioInput.value,
+                    10
                 );
+
+
+            const consulta =
+                busquedaInput.value
+                    .trim();
 
 
             if (!marca) {
@@ -758,8 +902,17 @@
             }
 
 
+            if (consulta.length < 2) {
+                return;
+            }
+
+
             estadoBusqueda.style.display =
                 'inline';
+
+
+            sinResultados.style.display =
+                'none';
 
 
             try {
@@ -776,16 +929,27 @@
                     const url =
                         `${buscarModelosPorAnioUrl}` +
                         `?marca=${encodeURIComponent(marca)}` +
-                        `&año=${año}`;
+                        `&año=${encodeURIComponent(año)}`;
+
+
+                    console.log(
+                        'Consultando API:',
+                        url
+                    );
 
 
                     const response =
-                        await fetch(url, {
-                            method: 'GET',
-                            headers: {
-                                'Accept': 'application/json'
+                        await fetch(
+                            url,
+                            {
+                                method: 'GET',
+
+                                headers: {
+                                    'Accept':
+                                        'application/json'
+                                }
                             }
-                        });
+                        );
 
 
                     if (!response.ok) {
@@ -801,8 +965,16 @@
                         await response.json();
 
 
+                    console.log(
+                        'Respuesta API:',
+                        data
+                    );
+
+
                     resultados =
-                        data.resultados || [];
+                        Array.isArray(data.resultados)
+                            ? data.resultados
+                            : [];
 
                 }
 
@@ -817,13 +989,24 @@
                         `?consulta=${encodeURIComponent(marca)}`;
 
 
+                    console.log(
+                        'Consultando API:',
+                        url
+                    );
+
+
                     const response =
-                        await fetch(url, {
-                            method: 'GET',
-                            headers: {
-                                'Accept': 'application/json'
+                        await fetch(
+                            url,
+                            {
+                                method: 'GET',
+
+                                headers: {
+                                    'Accept':
+                                        'application/json'
+                                }
                             }
-                        });
+                        );
 
 
                     if (!response.ok) {
@@ -839,8 +1022,16 @@
                         await response.json();
 
 
+                    console.log(
+                        'Respuesta API:',
+                        data
+                    );
+
+
                     resultados =
-                        data.resultados || [];
+                        Array.isArray(data.resultados)
+                            ? data.resultados
+                            : [];
 
                 }
 
@@ -849,24 +1040,26 @@
                 // FILTRAR CONSULTA
                 // =============================================
 
-                const consulta =
-                    busquedaInput.value
-                        .trim()
-                        .toLowerCase();
+                const consultaNormalizada =
+                    consulta.toLowerCase();
 
 
                 resultados =
-                    resultados.filter(modelo => {
+                    resultados.filter(
+                        function (modelo) {
 
-                        const nombre =
-                            (modelo.modelName || '')
-                                .toLowerCase();
+                            const nombre =
+                                obtenerNombreModelo(
+                                    modelo
+                                ).toLowerCase();
 
-                        return nombre.includes(
-                            consulta
-                        );
 
-                    });
+                            return nombre.includes(
+                                consultaNormalizada
+                            );
+
+                        }
+                    );
 
 
                 estadoBusqueda.style.display =
@@ -877,6 +1070,16 @@
                     resultados;
 
 
+                console.log(
+                    'Modelos encontrados:',
+                    resultados
+                );
+
+
+                // =============================================
+                // SIN RESULTADOS
+                // =============================================
+
                 if (resultados.length === 0) {
 
                     sinResultados.style.display =
@@ -886,6 +1089,10 @@
 
                 }
 
+
+                // =============================================
+                // MOSTRAR
+                // =============================================
 
                 mostrarResultados(
                     resultados
@@ -899,8 +1106,18 @@
                     error
                 );
 
+
                 estadoBusqueda.style.display =
                     'none';
+
+
+                resultadosContainer.innerHTML =
+                    '';
+
+
+                resultadosContainer.style.display =
+                    'none';
+
 
                 sinResultados.style.display =
                     'block';
@@ -916,96 +1133,126 @@
 
         function mostrarResultados(resultados) {
 
-            resultadosContainer.innerHTML = '';
+            resultadosContainer.innerHTML =
+                '';
+
 
             resultadosContainer.style.display =
                 'block';
 
 
-            resultados.forEach(modelo => {
+            resultados.forEach(
+                function (modelo) {
 
-                const item =
-                    document.createElement('button');
-
-
-                item.type =
-                    'button';
-
-
-                item.style.cssText = `
-                    display:block;
-                    width:100%;
-                    padding:13px 16px;
-                    border:0;
-                    border-bottom:1px solid rgba(255,255,255,.06);
-                    background:transparent;
-                    color:inherit;
-                    text-align:left;
-                    cursor:pointer;
-                    font-family:inherit;
-                `;
-
-
-                const año =
-                    modelo.modelYear
-                    ? ` · ${modelo.modelYear}`
-                    : '';
-
-
-                item.innerHTML = `
-                    <div style="
-                        font-weight:600;">
-                        ${escapeHtml(modelo.modelName)}
-                    </div>
-
-                    <div style="
-                        margin-top:3px;
-                        font-size:12px;
-                        opacity:.55;">
-                        ${escapeHtml(modelo.makeName)}${año}
-                    </div>
-                `;
-
-
-                item.addEventListener(
-                    'mouseenter',
-                    function () {
-
-                        item.style.background =
-                            'rgba(255,255,255,.05)';
-
-                    }
-                );
-
-
-                item.addEventListener(
-                    'mouseleave',
-                    function () {
-
-                        item.style.background =
-                            'transparent';
-
-                    }
-                );
-
-
-                item.addEventListener(
-                    'click',
-                    function () {
-
-                        seleccionarModelo(
+                    const nombreModelo =
+                        obtenerNombreModelo(
                             modelo
                         );
 
-                    }
-                );
+
+                    const nombreMarca =
+                        obtenerNombreMarcaModelo(
+                            modelo
+                        );
 
 
-                resultadosContainer.appendChild(
-                    item
-                );
+                    const idModelo =
+                        obtenerIdModelo(
+                            modelo
+                        );
 
-            });
+
+                    const año =
+                        obtenerAnioModelo(
+                            modelo
+                        );
+
+
+                    const item =
+                        document.createElement(
+                            'button'
+                        );
+
+
+                    item.type =
+                        'button';
+
+
+                    item.style.cssText = `
+                        display:block;
+                        width:100%;
+                        padding:13px 16px;
+                        border:0;
+                        border-bottom:1px solid rgba(255,255,255,.06);
+                        background:transparent;
+                        color:inherit;
+                        text-align:left;
+                        cursor:pointer;
+                        font-family:inherit;
+                    `;
+
+
+                    const añoTexto =
+                        año
+                            ? ` · ${año}`
+                            : '';
+
+
+                    item.innerHTML = `
+                        <div style="
+                            font-weight:600;">
+                            ${escapeHtml(nombreModelo)}
+                        </div>
+
+                        <div style="
+                            margin-top:3px;
+                            font-size:12px;
+                            opacity:.55;">
+                            ${escapeHtml(nombreMarca)}${añoTexto}
+                        </div>
+                    `;
+
+
+                    item.addEventListener(
+                        'mouseenter',
+                        function () {
+
+                            item.style.background =
+                                'rgba(255,255,255,.05)';
+
+                        }
+                    );
+
+
+                    item.addEventListener(
+                        'mouseleave',
+                        function () {
+
+                            item.style.background =
+                                'transparent';
+
+                        }
+                    );
+
+
+                    item.addEventListener(
+                        'click',
+                        function () {
+
+                            seleccionarModelo(
+                                modelo
+                            );
+
+                        }
+                    );
+
+
+                    resultadosContainer.appendChild(
+                        item
+                    );
+
+                }
+            );
 
         }
 
@@ -1016,23 +1263,61 @@
 
         function seleccionarModelo(modelo) {
 
+            const nombreModelo =
+                obtenerNombreModelo(
+                    modelo
+                );
+
+
+            const nombreMarca =
+                obtenerNombreMarcaModelo(
+                    modelo
+                );
+
+
+            const idModelo =
+                obtenerIdModelo(
+                    modelo
+                );
+
+
+            const año =
+                obtenerAnioModelo(
+                    modelo
+                );
+
+
+            // =================================================
+            // NOMBRE
+            // =================================================
+
             nombreInput.value =
-                modelo.modelName || '';
+                nombreModelo;
 
 
             busquedaInput.value =
-                modelo.modelName || '';
+                nombreModelo;
 
 
-            if (modelo.modelYear) {
+            // =================================================
+            // AÑO
+            // =================================================
+
+            if (año) {
 
                 anioInput.value =
-                    modelo.modelYear;
+                    año;
 
             }
 
 
-            resultadosContainer.innerHTML = '';
+            // =================================================
+            // OCULTAR RESULTADOS
+            // =================================================
+
+            resultadosContainer.innerHTML =
+                '';
+
 
             resultadosContainer.style.display =
                 'none';
@@ -1042,18 +1327,26 @@
                 'none';
 
 
+            estadoBusqueda.style.display =
+                'none';
+
+
+            // =================================================
+            // MOSTRAR SELECCIONADO
+            // =================================================
+
             modeloSeleccionadoNombre.textContent =
-                `${modelo.makeName} ${modelo.modelName}`;
+                `${nombreMarca} ${nombreModelo}`;
 
 
             let detalle =
-                `ID del modelo: ${modelo.modelId}`;
+                `ID del modelo: ${idModelo}`;
 
 
-            if (modelo.modelYear) {
+            if (año) {
 
                 detalle +=
-                    ` · Año: ${modelo.modelYear}`;
+                    ` · Año: ${año}`;
 
             }
 
@@ -1064,6 +1357,12 @@
 
             modeloSeleccionado.style.display =
                 'block';
+
+
+            console.log(
+                'Modelo seleccionado:',
+                modelo
+            );
 
         }
 
@@ -1078,16 +1377,33 @@
                 valor === null ||
                 valor === undefined
             ) {
+
                 return '';
+
             }
 
 
             return String(valor)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
+                .replace(
+                    /&/g,
+                    '&amp;'
+                )
+                .replace(
+                    /</g,
+                    '&lt;'
+                )
+                .replace(
+                    />/g,
+                    '&gt;'
+                )
+                .replace(
+                    /"/g,
+                    '&quot;'
+                )
+                .replace(
+                    /'/g,
+                    '&#039;'
+                );
 
         }
 
@@ -1096,30 +1412,55 @@
         // INICIALIZAR
         // =====================================================
 
+        async function inicializarFormulario() {
+
+            const marca =
+                obtenerNombreMarca();
+
+
+            if (!marca) {
+
+                anioInput.disabled =
+                    true;
+
+                busquedaInput.disabled =
+                    true;
+
+                limpiarTipos();
+
+                return;
+
+            }
+
+
+            anioInput.disabled =
+                false;
+
+
+            busquedaInput.disabled =
+                false;
+
+
+            busquedaInput.placeholder =
+                `Buscar modelo de ${marca}...`;
+
+
+            await cargarTipos(
+                marca
+            );
+
+        }
+
+
+        // =====================================================
+        // DOM READY
+        // =====================================================
+
         document.addEventListener(
             'DOMContentLoaded',
             function () {
 
-                const marca =
-                    obtenerNombreMarca();
-
-
-                if (marca) {
-
-                    anioInput.disabled =
-                        false;
-
-                    busquedaInput.disabled =
-                        false;
-
-                    busquedaInput.placeholder =
-                        `Buscar modelo de ${marca}...`;
-
-                    cargarTipos(
-                        marca
-                    );
-
-                }
+                inicializarFormulario();
 
             }
         );

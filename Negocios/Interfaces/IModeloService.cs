@@ -8,6 +8,9 @@ public interface IModeloService
 
     Task<IEnumerable<ModeloDto>> ObtenerActivasAsync();
 
+    Task<IEnumerable<ModeloDto>> ObtenerActivasPorMarcaAsync(
+        int idMarca);
+
     Task<ModeloDto?> ObtenerPorIdAsync(int id);
 
     Task CrearAsync(ModeloGuardarDto dto);

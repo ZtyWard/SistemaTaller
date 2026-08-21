@@ -37,7 +37,6 @@ public class VehiculoController : Controller
     // CONSULTAR VEHÍCULOS
     // =====================================================
 
-    // GET: Vehiculo
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> Index()
     {
@@ -47,7 +46,6 @@ public class VehiculoController : Controller
         return View(vehiculos);
     }
 
-    // GET: Vehiculo/Activos
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> Activos()
     {
@@ -57,7 +55,6 @@ public class VehiculoController : Controller
         return View("Index", vehiculos);
     }
 
-    // GET: Vehiculo/PorCliente/5
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> PorCliente(
         int idCliente)
@@ -69,7 +66,6 @@ public class VehiculoController : Controller
         return View("Index", vehiculos);
     }
 
-    // GET: Vehiculo/Details/5
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> Details(int id)
     {
@@ -82,7 +78,6 @@ public class VehiculoController : Controller
         return View(vehiculo);
     }
 
-    // GET: Vehiculo/BuscarPorPlaca
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> BuscarPorPlaca(
         string placa)
@@ -106,10 +101,37 @@ public class VehiculoController : Controller
     }
 
     // =====================================================
-    // CARGAR CATÁLOGOS PARA FORMULARIOS
+    // MODELOS POR MARCA
     // =====================================================
 
-    private async Task CargarClasificacionesAsync()
+    [HttpGet]
+    [Authorize(Policy = Permisos.VehiculosVer)]
+    public async Task<IActionResult> ObtenerModelosPorMarca(
+        int idMarca)
+    {
+        if (idMarca <= 0)
+            return Json(Array.Empty<object>());
+
+        var modelos =
+            await _modeloService.ObtenerActivasPorMarcaAsync(
+                idMarca);
+
+        var resultado =
+            modelos.Select(x => new
+            {
+                id = x.IdModelo,
+                nombre = x.Nombre
+            });
+
+        return Json(resultado);
+    }
+
+    // =====================================================
+    // CARGAR CATÁLOGOS
+    // =====================================================
+
+    private async Task CargarClasificacionesAsync(
+        int? idMarca = null)
     {
         var clientes =
             await _clienteService.ObtenerActivosAsync();
@@ -117,14 +139,17 @@ public class VehiculoController : Controller
         var marcas =
             await _marcaService.ObtenerActivasAsync();
 
-        var modelos =
-            await _modeloService.ObtenerActivasAsync();
-
         var tiposVehiculo =
             await _tipoVehiculoService.ObtenerActivasAsync();
 
         var tiposCombustible =
             await _tipoCombustibleService.ObtenerActivasAsync();
+
+        var modelos =
+            idMarca.HasValue && idMarca.Value > 0
+                ? await _modeloService.ObtenerActivasPorMarcaAsync(
+                    idMarca.Value)
+                : Enumerable.Empty<ModeloDto>();
 
         ViewBag.Clientes = clientes
             .Select(x => new SelectListItem
@@ -173,7 +198,6 @@ public class VehiculoController : Controller
     // CREAR VEHÍCULO
     // =====================================================
 
-    // GET: Vehiculo/Create
     [Authorize(Policy = Permisos.VehiculosCrear)]
     public async Task<IActionResult> Create()
     {
@@ -182,7 +206,6 @@ public class VehiculoController : Controller
         return View();
     }
 
-    // POST: Vehiculo/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.VehiculosCrear)]
@@ -191,7 +214,8 @@ public class VehiculoController : Controller
     {
         if (!ModelState.IsValid)
         {
-            await CargarClasificacionesAsync();
+            await CargarClasificacionesAsync(
+                dto.IdMarca);
 
             return View(dto);
         }
@@ -211,7 +235,8 @@ public class VehiculoController : Controller
                 string.Empty,
                 ex.Message);
 
-            await CargarClasificacionesAsync();
+            await CargarClasificacionesAsync(
+                dto.IdMarca);
 
             return View(dto);
         }
@@ -221,7 +246,6 @@ public class VehiculoController : Controller
     // EDITAR VEHÍCULO
     // =====================================================
 
-    // GET: Vehiculo/Edit/5
     [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> Edit(int id)
     {
@@ -238,7 +262,6 @@ public class VehiculoController : Controller
             IdModelo = vehiculo.IdModelo,
             IdTipoVehiculo = vehiculo.IdTipoVehiculo,
             IdTipoCombustible = vehiculo.IdTipoCombustible,
-
             Placa = vehiculo.Placa,
             VIN = vehiculo.VIN,
             Anio = vehiculo.Anio,
@@ -249,12 +272,12 @@ public class VehiculoController : Controller
         ViewBag.IdVehiculo =
             vehiculo.IdVehiculo;
 
-        await CargarClasificacionesAsync();
+        await CargarClasificacionesAsync(
+            vehiculo.IdMarca);
 
         return View(dto);
     }
 
-    // POST: Vehiculo/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.VehiculosEditar)]
@@ -266,7 +289,8 @@ public class VehiculoController : Controller
         {
             ViewBag.IdVehiculo = id;
 
-            await CargarClasificacionesAsync();
+            await CargarClasificacionesAsync(
+                dto.IdMarca);
 
             return View(dto);
         }
@@ -294,7 +318,8 @@ public class VehiculoController : Controller
 
             ViewBag.IdVehiculo = id;
 
-            await CargarClasificacionesAsync();
+            await CargarClasificacionesAsync(
+                dto.IdMarca);
 
             return View(dto);
         }
@@ -304,7 +329,6 @@ public class VehiculoController : Controller
     // DESACTIVAR VEHÍCULO
     // =====================================================
 
-    // POST: Vehiculo/Desactivar/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.VehiculosDesactivar)]
