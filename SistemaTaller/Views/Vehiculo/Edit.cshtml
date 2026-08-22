@@ -3,6 +3,11 @@
 @{
     Layout = "_LayoutInterno";
     ViewData["Title"] = "Editar vehículo";
+
+    var obtenerModelosUrl =
+        Url.Action(
+            "ObtenerModelosPorMarca",
+            "Vehiculo");
 }
 
 <section class="axis-page">
@@ -101,7 +106,8 @@
                         </label>
 
                         <select asp-for="IdMarca"
-                                asp-items="ViewBag.Marcas">
+                                asp-items="ViewBag.Marcas"
+                                id="IdMarca">
 
                             <option value="">
                                 Seleccione una marca
@@ -123,7 +129,8 @@
                         </label>
 
                         <select asp-for="IdModelo"
-                                asp-items="ViewBag.Modelos">
+                                asp-items="ViewBag.Modelos"
+                                id="IdModelo">
 
                             <option value="">
                                 Seleccione un modelo
@@ -132,6 +139,10 @@
                         </select>
 
                         <span asp-validation-for="IdModelo"></span>
+
+                        <small id="EstadoModelos">
+                            Modelos disponibles para la marca seleccionada.
+                        </small>
 
                     </div>
 
@@ -205,7 +216,8 @@
                             Placa
                         </label>
 
-                        <input asp-for="Placa" />
+                        <input asp-for="Placa"
+                               placeholder="Ej. ABC123" />
 
                         <span asp-validation-for="Placa"></span>
 
@@ -221,7 +233,8 @@
                         </label>
 
                         <input asp-for="Anio"
-                               type="number" />
+                               type="number"
+                               placeholder="Ej. 2022" />
 
                         <span asp-validation-for="Anio"></span>
 
@@ -236,7 +249,8 @@
                             Color
                         </label>
 
-                        <input asp-for="Color" />
+                        <input asp-for="Color"
+                               placeholder="Color del vehículo" />
 
                         <span asp-validation-for="Color"></span>
 
@@ -252,7 +266,8 @@
                         </label>
 
                         <input asp-for="Kilometraje"
-                               type="number" />
+                               type="number"
+                               placeholder="Ej. 85000" />
 
                         <span asp-validation-for="Kilometraje"></span>
 
@@ -287,8 +302,230 @@
 
 </section>
 
+
 @section Scripts {
 
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        // =====================================================
+        // URL
+        // =====================================================
+
+        const obtenerModelosUrl =
+            '@obtenerModelosUrl';
+
+
+        // =====================================================
+        // ELEMENTOS
+        // =====================================================
+
+        const marcaSelect =
+            document.getElementById('IdMarca');
+
+        const modeloSelect =
+            document.getElementById('IdModelo');
+
+        const estadoModelos =
+            document.getElementById('EstadoModelos');
+
+
+        // =====================================================
+        // CARGAR MODELOS
+        // =====================================================
+
+        async function cargarModelosPorMarca(
+            idMarca,
+            modeloSeleccionado = ''
+        ) {
+
+            modeloSelect.innerHTML = `
+                <option value="">
+                    Cargando modelos...
+                </option>
+            `;
+
+            modeloSelect.disabled = true;
+
+            estadoModelos.textContent =
+                'Cargando modelos...';
+
+
+            if (!idMarca) {
+
+                modeloSelect.innerHTML = `
+                    <option value="">
+                        Seleccione una marca primero
+                    </option>
+                `;
+
+                estadoModelos.textContent =
+                    'Seleccione una marca para cargar sus modelos.';
+
+                return;
+            }
+
+
+            try {
+
+                const url =
+                    `${obtenerModelosUrl}?idMarca=${encodeURIComponent(idMarca)}`;
+
+
+                const response =
+                    await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        `HTTP ${response.status}`
+                    );
+
+                }
+
+
+                const modelos =
+                    await response.json();
+
+
+                modeloSelect.innerHTML = `
+                    <option value="">
+                        Seleccione un modelo
+                    </option>
+                `;
+
+
+                if (
+                    !modelos ||
+                    modelos.length === 0
+                ) {
+
+                    modeloSelect.innerHTML = `
+                        <option value="">
+                            No hay modelos para esta marca
+                        </option>
+                    `;
+
+                    estadoModelos.textContent =
+                        'No existen modelos activos para esta marca.';
+
+                    return;
+                }
+
+
+                modelos.forEach(modelo => {
+
+                    const option =
+                        document.createElement('option');
+
+                    option.value =
+                        modelo.id;
+
+                    option.textContent =
+                        modelo.nombre;
+
+
+                    if (
+                        modeloSeleccionado &&
+                        String(modelo.id) ===
+                        String(modeloSeleccionado)
+                    ) {
+
+                        option.selected = true;
+
+                    }
+
+
+                    modeloSelect.appendChild(
+                        option
+                    );
+
+                });
+
+
+                modeloSelect.disabled = false;
+
+                estadoModelos.textContent =
+                    `${modelos.length} modelo(s) disponible(s).`;
+
+            }
+            catch (error) {
+
+                console.error(
+                    'Error cargando modelos:',
+                    error
+                );
+
+                modeloSelect.innerHTML = `
+                    <option value="">
+                        Error al cargar modelos
+                    </option>
+                `;
+
+                estadoModelos.textContent =
+                    'No se pudieron cargar los modelos.';
+
+            }
+
+        }
+
+
+        // =====================================================
+        // CAMBIO DE MARCA
+        // =====================================================
+
+        marcaSelect.addEventListener(
+            'change',
+            function () {
+
+                cargarModelosPorMarca(
+                    this.value
+                );
+
+            }
+        );
+
+
+        // =====================================================
+        // INICIALIZACIÓN
+        // =====================================================
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+
+                const marcaInicial =
+                    marcaSelect.value;
+
+                const modeloInicial =
+                    modeloSelect.value;
+
+
+                if (marcaInicial) {
+
+                    cargarModelosPorMarca(
+                        marcaInicial,
+                        modeloInicial
+                    );
+
+                }
+                else {
+
+                    modeloSelect.disabled =
+                        true;
+
+                }
+
+            }
+        );
+
+    </script>
 
 }

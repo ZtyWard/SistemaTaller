@@ -1,7 +1,12 @@
-﻿@model Negocios.DTOs.ModeloGuardarDto
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@model Negocios.DTOs.ModeloGuardarDto
 
 @{
     ViewData["Title"] = "Editar modelo";
+
+    var marcas =
+        ViewBag.Marcas as IEnumerable<Negocios.DTOs.MarcaDto>
+        ?? Enumerable.Empty<Negocios.DTOs.MarcaDto>();
 }
 
 <section class="axis-page">
@@ -52,20 +57,30 @@
 
                 <div class="axis-form-grid">
 
+
+                    <!-- MARCA -->
+
                     <div class="axis-field">
 
                         <label asp-for="IdMarca">
-                            ID de marca
+                            Marca
                         </label>
 
-                        <input asp-for="IdMarca"
-                               type="number"
-                               min="1" />
+                        <select asp-for="IdMarca"
+                                asp-items="@(new SelectList(marcas, "IdMarca", "Nombre"))">
+
+                            <option value="">
+                                Seleccione una marca
+                            </option>
+
+                        </select>
 
                         <span asp-validation-for="IdMarca"></span>
 
                     </div>
 
+
+                    <!-- NOMBRE -->
 
                     <div class="axis-field">
 
@@ -79,6 +94,8 @@
 
                     </div>
 
+
+                    <!-- ESTADO -->
 
                     <div class="axis-field axis-checkbox-field">
 
@@ -120,5 +137,7 @@
 </section>
 
 @section Scripts {
+
     <partial name="_ValidationScriptsPartial" />
+
 }

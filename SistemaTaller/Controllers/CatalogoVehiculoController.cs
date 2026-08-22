@@ -31,7 +31,6 @@ public class CatalogoVehiculoController : Controller
     // MARCAS
     // =====================================================
 
-    // GET: CatalogoVehiculo/Marcas
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> Marcas()
     {
@@ -40,7 +39,6 @@ public class CatalogoVehiculoController : Controller
         return View(marcas);
     }
 
-    // GET: CatalogoVehiculo/MarcasActivas
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> MarcasActivas()
     {
@@ -49,7 +47,6 @@ public class CatalogoVehiculoController : Controller
         return View("Marcas", marcas);
     }
 
-    // GET: CatalogoVehiculo/DetalleMarca/5
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> DetalleMarca(int id)
     {
@@ -61,14 +58,12 @@ public class CatalogoVehiculoController : Controller
         return View(marca);
     }
 
-    // GET: CatalogoVehiculo/CrearMarca
     [Authorize(Policy = Permisos.VehiculosCrear)]
     public IActionResult CrearMarca()
     {
         return View();
     }
 
-    // POST: CatalogoVehiculo/CrearMarca
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.VehiculosCrear)]
@@ -97,7 +92,6 @@ public class CatalogoVehiculoController : Controller
         }
     }
 
-    // GET: CatalogoVehiculo/EditarMarca/5
     [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> EditarMarca(int id)
     {
@@ -117,7 +111,6 @@ public class CatalogoVehiculoController : Controller
         return View(dto);
     }
 
-    // POST: CatalogoVehiculo/EditarMarca/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.VehiculosEditar)]
@@ -157,7 +150,6 @@ public class CatalogoVehiculoController : Controller
         }
     }
 
-    // POST: CatalogoVehiculo/CambiarEstadoMarca/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.VehiculosDesactivar)]
@@ -184,7 +176,6 @@ public class CatalogoVehiculoController : Controller
     // MODELOS
     // =====================================================
 
-    // GET: CatalogoVehiculo/Modelos
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> Modelos()
     {
@@ -194,7 +185,6 @@ public class CatalogoVehiculoController : Controller
         return View(modelos);
     }
 
-    // GET: CatalogoVehiculo/ModelosActivos
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> ModelosActivos()
     {
@@ -204,7 +194,6 @@ public class CatalogoVehiculoController : Controller
         return View("Modelos", modelos);
     }
 
-    // GET: CatalogoVehiculo/DetalleModelo/5
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> DetalleModelo(int id)
     {
@@ -217,7 +206,6 @@ public class CatalogoVehiculoController : Controller
         return View(modelo);
     }
 
-    // GET: CatalogoVehiculo/CrearModelo
     [Authorize(Policy = Permisos.VehiculosCrear)]
     public async Task<IActionResult> CrearModelo()
     {
@@ -229,7 +217,6 @@ public class CatalogoVehiculoController : Controller
         return View();
     }
 
-    // POST: CatalogoVehiculo/CrearModelo
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.VehiculosCrear)]
@@ -277,7 +264,10 @@ public class CatalogoVehiculoController : Controller
         }
     }
 
-    // GET: CatalogoVehiculo/EditarModelo/5
+    // =====================================================
+    // EDITAR MODELO
+    // =====================================================
+
     [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> EditarModelo(int id)
     {
@@ -296,10 +286,13 @@ public class CatalogoVehiculoController : Controller
 
         ViewBag.IdModelo = modelo.IdModelo;
 
+        // Cargar marcas para mostrar sus nombres
+        ViewBag.Marcas =
+            await _marcaService.ObtenerActivasAsync();
+
         return View(dto);
     }
 
-    // POST: CatalogoVehiculo/EditarModelo/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.VehiculosEditar)]
@@ -310,6 +303,9 @@ public class CatalogoVehiculoController : Controller
         if (!ModelState.IsValid)
         {
             ViewBag.IdModelo = id;
+
+            ViewBag.Marcas =
+                await _marcaService.ObtenerActivasAsync();
 
             return View(dto);
         }
@@ -337,6 +333,9 @@ public class CatalogoVehiculoController : Controller
 
             ViewBag.IdModelo = id;
 
+            ViewBag.Marcas =
+                await _marcaService.ObtenerActivasAsync();
+
             return View(dto);
         }
         catch (ArgumentException ex)
@@ -347,11 +346,13 @@ public class CatalogoVehiculoController : Controller
 
             ViewBag.IdModelo = id;
 
+            ViewBag.Marcas =
+                await _marcaService.ObtenerActivasAsync();
+
             return View(dto);
         }
     }
 
-    // POST: CatalogoVehiculo/CambiarEstadoModelo/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.VehiculosDesactivar)]
@@ -380,7 +381,6 @@ public class CatalogoVehiculoController : Controller
     // TIPOS DE VEHÍCULO
     // =====================================================
 
-    // GET: CatalogoVehiculo/TiposVehiculo
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> TiposVehiculo()
     {
@@ -390,7 +390,6 @@ public class CatalogoVehiculoController : Controller
         return View(tipos);
     }
 
-    // GET: CatalogoVehiculo/TiposVehiculoActivos
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> TiposVehiculoActivos()
     {
@@ -400,7 +399,6 @@ public class CatalogoVehiculoController : Controller
         return View("TiposVehiculo", tipos);
     }
 
-    // GET: CatalogoVehiculo/DetalleTipoVehiculo/5
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> DetalleTipoVehiculo(int id)
     {
@@ -413,14 +411,12 @@ public class CatalogoVehiculoController : Controller
         return View(tipo);
     }
 
-    // GET: CatalogoVehiculo/CrearTipoVehiculo
     [Authorize(Policy = Permisos.VehiculosCrear)]
     public IActionResult CrearTipoVehiculo()
     {
         return View();
     }
 
-    // POST: CatalogoVehiculo/CrearTipoVehiculo
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.VehiculosCrear)]
@@ -458,7 +454,6 @@ public class CatalogoVehiculoController : Controller
         }
     }
 
-    // GET: CatalogoVehiculo/EditarTipoVehiculo/5
     [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> EditarTipoVehiculo(int id)
     {
@@ -480,7 +475,6 @@ public class CatalogoVehiculoController : Controller
         return View(dto);
     }
 
-    // POST: CatalogoVehiculo/EditarTipoVehiculo/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.VehiculosEditar)]
@@ -533,7 +527,6 @@ public class CatalogoVehiculoController : Controller
         }
     }
 
-    // POST: CatalogoVehiculo/CambiarEstadoTipoVehiculo/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.VehiculosDesactivar)]
@@ -563,7 +556,6 @@ public class CatalogoVehiculoController : Controller
     // TIPOS DE COMBUSTIBLE
     // =====================================================
 
-    // GET: CatalogoVehiculo/TiposCombustible
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> TiposCombustible()
     {
@@ -573,7 +565,6 @@ public class CatalogoVehiculoController : Controller
         return View(tipos);
     }
 
-    // GET: CatalogoVehiculo/TiposCombustibleActivos
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> TiposCombustibleActivos()
     {
@@ -585,7 +576,6 @@ public class CatalogoVehiculoController : Controller
             tipos);
     }
 
-    // GET: CatalogoVehiculo/DetalleTipoCombustible/5
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> DetalleTipoCombustible(
         int id)
@@ -599,14 +589,12 @@ public class CatalogoVehiculoController : Controller
         return View(tipo);
     }
 
-    // GET: CatalogoVehiculo/CrearTipoCombustible
     [Authorize(Policy = Permisos.VehiculosCrear)]
     public IActionResult CrearTipoCombustible()
     {
         return View();
     }
 
-    // POST: CatalogoVehiculo/CrearTipoCombustible
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.VehiculosCrear)]
@@ -644,7 +632,6 @@ public class CatalogoVehiculoController : Controller
         }
     }
 
-    // GET: CatalogoVehiculo/EditarTipoCombustible/5
     [Authorize(Policy = Permisos.VehiculosEditar)]
     public async Task<IActionResult> EditarTipoCombustible(
         int id)
@@ -667,7 +654,6 @@ public class CatalogoVehiculoController : Controller
         return View(dto);
     }
 
-    // POST: CatalogoVehiculo/EditarTipoCombustible/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.VehiculosEditar)]
@@ -720,7 +706,6 @@ public class CatalogoVehiculoController : Controller
         }
     }
 
-    // POST: CatalogoVehiculo/CambiarEstadoTipoCombustible/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Policy = Permisos.VehiculosDesactivar)]

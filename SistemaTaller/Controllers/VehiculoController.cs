@@ -40,8 +40,7 @@ public class VehiculoController : Controller
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> Index()
     {
-        var vehiculos =
-            await _service.ObtenerTodosAsync();
+        var vehiculos = await _service.ObtenerTodosAsync();
 
         return View(vehiculos);
     }
@@ -49,19 +48,16 @@ public class VehiculoController : Controller
     [Authorize(Policy = Permisos.VehiculosVer)]
     public async Task<IActionResult> Activos()
     {
-        var vehiculos =
-            await _service.ObtenerActivosAsync();
+        var vehiculos = await _service.ObtenerActivosAsync();
 
         return View("Index", vehiculos);
     }
 
     [Authorize(Policy = Permisos.VehiculosVer)]
-    public async Task<IActionResult> PorCliente(
-        int idCliente)
+    public async Task<IActionResult> PorCliente(int idCliente)
     {
         var vehiculos =
-            await _service.ObtenerPorClienteAsync(
-                idCliente);
+            await _service.ObtenerPorClienteAsync(idCliente);
 
         return View("Index", vehiculos);
     }
@@ -79,15 +75,13 @@ public class VehiculoController : Controller
     }
 
     [Authorize(Policy = Permisos.VehiculosVer)]
-    public async Task<IActionResult> BuscarPorPlaca(
-        string placa)
+    public async Task<IActionResult> BuscarPorPlaca(string placa)
     {
         if (string.IsNullOrWhiteSpace(placa))
             return RedirectToAction(nameof(Index));
 
         var vehiculo =
-            await _service.ObtenerPorPlacaAsync(
-                placa);
+            await _service.ObtenerPorPlacaAsync(placa);
 
         if (vehiculo == null)
         {
@@ -147,51 +141,45 @@ public class VehiculoController : Controller
 
         var modelos =
             idMarca.HasValue && idMarca.Value > 0
-                ? await _modeloService.ObtenerActivasPorMarcaAsync(
-                    idMarca.Value)
+                ? await _modeloService
+                    .ObtenerActivasPorMarcaAsync(idMarca.Value)
                 : Enumerable.Empty<ModeloDto>();
 
-        ViewBag.Clientes = clientes
-            .Select(x => new SelectListItem
+        ViewBag.Clientes =
+            clientes.Select(x => new SelectListItem
             {
                 Value = x.IdCliente.ToString(),
                 Text =
-                    $"{x.IdCliente} — {x.Nombre} {x.Apellido1} {x.Apellido2}"
-                    .Trim()
-            })
-            .ToList();
+                    $"{x.Nombre} {x.Apellido1} {x.Apellido2}".Trim()
+            }).ToList();
 
-        ViewBag.Marcas = marcas
-            .Select(x => new SelectListItem
+        ViewBag.Marcas =
+            marcas.Select(x => new SelectListItem
             {
                 Value = x.IdMarca.ToString(),
                 Text = x.Nombre
-            })
-            .ToList();
+            }).ToList();
 
-        ViewBag.Modelos = modelos
-            .Select(x => new SelectListItem
+        ViewBag.Modelos =
+            modelos.Select(x => new SelectListItem
             {
                 Value = x.IdModelo.ToString(),
                 Text = x.Nombre
-            })
-            .ToList();
+            }).ToList();
 
-        ViewBag.TiposVehiculo = tiposVehiculo
-            .Select(x => new SelectListItem
+        ViewBag.TiposVehiculo =
+            tiposVehiculo.Select(x => new SelectListItem
             {
                 Value = x.IdTipoVehiculo.ToString(),
                 Text = x.Nombre
-            })
-            .ToList();
+            }).ToList();
 
-        ViewBag.TiposCombustible = tiposCombustible
-            .Select(x => new SelectListItem
+        ViewBag.TiposCombustible =
+            tiposCombustible.Select(x => new SelectListItem
             {
                 Value = x.IdTipoCombustible.ToString(),
                 Text = x.Nombre
-            })
-            .ToList();
+            }).ToList();
     }
 
     // =====================================================
@@ -214,8 +202,7 @@ public class VehiculoController : Controller
     {
         if (!ModelState.IsValid)
         {
-            await CargarClasificacionesAsync(
-                dto.IdMarca);
+            await CargarClasificacionesAsync(dto.IdMarca);
 
             return View(dto);
         }
@@ -235,8 +222,7 @@ public class VehiculoController : Controller
                 string.Empty,
                 ex.Message);
 
-            await CargarClasificacionesAsync(
-                dto.IdMarca);
+            await CargarClasificacionesAsync(dto.IdMarca);
 
             return View(dto);
         }

@@ -1,4 +1,9 @@
-﻿namespace Negocios.DTOs;
+﻿
+
+
+
+
+namespace Negocios.DTOs;
 
 public class ModeloGuardarDto
 {
